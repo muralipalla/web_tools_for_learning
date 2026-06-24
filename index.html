@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interactive Learning Lab</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <header class="site-header">
+    <nav class="top-nav">
+      <div class="brand">
+        <span class="brand-icon">✦</span>
+        <span>Interactive Learning Lab</span>
+      </div>
+
+      <div class="nav-links">
+        <a href="#physics">Physics</a>
+        <a href="#chemistry">Chemistry</a>
+        <a href="#mathematics">Mathematics</a>
+        <a href="#english">English</a>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="hero-text">
+        <p class="eyebrow">Quizzes • Simulations • Self Practice</p>
+        <h1>Interactive Learning Lab</h1>
+        <p class="hero-subtitle">
+          A collection of small learning apps for exploring concepts, practicing problems,
+          and building confidence in science, mathematics, and vocabulary.
+        </p>
+
+        <div class="hero-actions">
+          <a class="button primary" href="#physics">Explore Simulations</a>
+          <a class="button secondary" href="#chemistry">Start a Quiz</a>
+        </div>
+      </div>
+
+      <div class="hero-image-card">
+        <!--
+          Add your own image here:
+
+          1. Create this folder:
+             assets/images/
+
+          2. Put your image inside it.
+
+          3. Rename your image as:
+             learning-lab.jpg
+
+          Or change the src below to match your own filename.
+        -->
+        <img src="assets/images/IMG_2956.png" alt="Interactive learning illustration">
+        <p class="image-note">Spotted Owlet <strong> Pilani</strong></p>
+      </div>
+    </section>
+  </header>
+
+  <main class="page-content">
+    <section class="intro-card">
+      <h2>Choose a subject</h2>
+      <p>
+        Each section contains independent HTML apps. You can keep adding new simulations
+        and quizzes as separate pages inside your GitHub project.
+      </p>
+    </section>
+
+    <section class="subject-grid">
+      <article class="subject-card physics" id="physics">
+        <div class="subject-heading">
+          <div class="subject-icon">⚛</div>
+          <div>
+            <h2>Physics</h2>
+            <p>Animations and concept simulations</p>
+          </div>
+        </div>
+
+        <div class="link-grid">
+          <a class="app-link" href="simulations/projectile_trajectory.html">
+            <span>Projectile Trajectory</span>
+            <small>Motion simulation</small>
+          </a>
+
+          <a class="app-link" href="simulations/lattice_vibrations.html">
+            <span>Lattice Vibrations</span>
+            <small>Atomic vibration model</small>
+          </a>
+
+          <a class="app-link" href="simulations/wave.html">
+            <span>Wave Equation</span>
+            <small>Basic wave model</small>
+          </a>
+
+          <a class="app-link" href="simulations/wave2.html">
+            <span>Wave 2</span>
+            <small>Second wave app</small>
+          </a>
+
+          <a class="app-link" href="simulations/wave3.html">
+            <span>Wave 3</span>
+            <small>Third wave app</small>
+          </a>
+
+          <a class="app-link" href="simulations/black_body_model.html">
+            <span>Black Body</span>
+            <small>Radiation model</small>
+          </a>
+
+          <a class="app-link" href="simulations/black_body_model2.html">
+            <span>Black Body Version 2</span>
+            <small>Improved model</small>
+          </a>
+        </div>
+      </article>
+
+      <article class="subject-card chemistry" id="chemistry">
+        <div class="subject-heading">
+          <div class="subject-icon">🧪</div>
+          <div>
+            <h2>Chemistry</h2>
+            <p>Quizzes and lookup tools</p>
+          </div>
+        </div>
+
+        <div class="link-grid">
+          <a class="app-link" href="quizzes/oxidation_numbers_quiz.html">
+            <span>Oxidation Numbers Quiz</span>
+            <small>Practice oxidation states</small>
+          </a>
+
+          <a class="app-link" href="quizzes/atomic_symbol_lookup.html">
+            <span>Atomic Symbol Lookup</span>
+            <small>Atomic numbers and weights</small>
+          </a>
+        </div>
+      </article>
+
+      <article class="subject-card mathematics" id="mathematics">
+        <div class="subject-heading">
+          <div class="subject-icon">∑</div>
+          <div>
+            <h2>Mathematics</h2>
+            <p>Skill builders and practice apps</p>
+          </div>
+        </div>
+
+        <div class="link-grid">
+          <a class="app-link" href="quizzes/trig_angles_quiz.html">
+            <span>Trigonometry Angles</span>
+            <small>Special angle practice</small>
+          </a>
+
+          <a class="app-link" href="quizzes/multiplication_practice.html">
+            <span>Multiplication Practice</span>
+            <small>Speed and accuracy</small>
+          </a>
+        </div>
+      </article>
+
+      <article class="subject-card english" id="english">
+        <div class="subject-heading">
+          <div class="subject-icon">Aa</div>
+          <div>
+            <h2>English</h2>
+            <p>Vocabulary and language practice</p>
+          </div>
+        </div>
+
+        <div class="link-grid">
+          <a class="app-link" href="quizzes/vocabulary_daily_practice_quiz.html">
+            <span>Vocabulary Trainer</span>
+            <small>Daily word practice</small>
+          </a>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Interactive Learning Lab · Built with HTML, CSS, JavaScript, GitHub Pages, and Supabase</p>
+  </footer>
+</body>
+</html>

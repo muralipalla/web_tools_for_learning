@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Wave Phase and Superposition</title>
+
+<style>
+body{
+    margin:0;
+    background:#111;
+    color:white;
+    font-family:Arial;
+    overflow:hidden;
+}
+
+.controls{
+    position:absolute;
+    top:10px;
+    left:10px;
+
+    background:rgba(20,20,20,0.92);
+
+    padding:15px;
+
+    border-radius:10px;
+
+    width:270px;
+
+    z-index:10;
+}
+
+label{
+    display:block;
+    margin-top:10px;
+}
+
+canvas{
+    display:block;
+}
+</style>
+</head>
+
+<body>
+
+<div class="controls">
+
+<label>
+Wavelength
+<input type="range"
+id="wavelength"
+min="50"
+max="300"
+value="120">
+<span id="wv">120</span>
+</label>
+
+<label>
+Frequency
+<input type="range"
+id="frequency"
+min="0.2"
+max="5"
+step="0.1"
+value="1">
+<span id="fq">1</span>
+</label>
+
+<label>
+Amplitude
+<input type="range"
+id="amplitude"
+min="10"
+max="90"
+value="40">
+<span id="amp">40</span>
+</label>
+
+<label>
+Phase Difference (°)
+<input type="range"
+id="phase"
+min="0"
+max="360"
+value="90">
+<span id="ph">90</span>
+</label>
+
+</div>
+
+<canvas id="canvas"></canvas>
+
+<script>
+
+const canvas =
+document.getElementById("canvas");
+
+const ctx =
+canvas.getContext("2d");
+
+let particles=[];
+
+const spacing=12;
+
+function resize(){
+
+canvas.width=
+window.innerWidth;
+
+canvas.height=
+window.innerHeight;
+
+particles=[];
+
+for(
+let x=0;
+x<canvas.width;
+x+=spacing
+){
+particles.push(x);
+}
+
+}
+
+window.addEventListener(
+"resize",
+resize
+);
+
+resize();
+
+
+function drawWave(
+wave,
+color
+){
+
+ctx.beginPath();
+
+ctx.strokeStyle=color;
+ctx.lineWidth=2;
+
+ctx.moveTo(
+wave[0].x,
+wave[0].y
+);
+
+for(let p of wave){
+
+ctx.lineTo(
+p.x,
+p.y
+);
+
+}
+
+ctx.stroke();
+
+for(let p of wave){
+
+ctx.beginPath();
+
+ctx.fillStyle=color;
+
+ctx.arc(
+p.x,
+p.y,
+4,
+0,
+2*Math.PI
+);
+
+ctx.fill();
+
+}
+
+}
+
+
+function animate(time){
+
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+let wavelength=
++document.getElementById(
+"wavelength").value;
+
+let frequency=
++document.getElementById(
+"frequency").value;
+
+let amplitude=
++document.getElementById(
+"amplitude").value;
+
+let phaseDeg=
++document.getElementById(
+"phase").value;
+
+document.getElementById(
+"wv").innerHTML=
+wavelength;
+
+document.getElementById(
+"fq").innerHTML=
+frequency;
+
+document.getElementById(
+"amp").innerHTML=
+amplitude;
+
+document.getElementById(
+"ph").innerHTML=
+phaseDeg;
+
+let phaseShift=
+phaseDeg*Math.PI/180;
+
+let t=
+time*0.001;
+
+
+// closer graphs
+
+let combinedY=
+canvas.height*0.38;
+
+let resultY=
+canvas.height*0.68;
+
+
+// equilibrium lines
+
+ctx.strokeStyle=
+"rgba(255,255,255,0.25)";
+
+ctx.beginPath();
+ctx.moveTo(
+0,
+combinedY
+);
+ctx.lineTo(
+canvas.width,
+combinedY
+);
+ctx.stroke();
+
+ctx.beginPath();
+ctx.moveTo(
+0,
+resultY
+);
+ctx.lineTo(
+canvas.width,
+resultY
+);
+ctx.stroke();
+
+
+let wave1=[];
+let wave2=[];
+let resultant=[];
+
+
+for(let x of particles){
+
+let p1=
+
+(2*Math.PI*x/
+wavelength)
+
+-
+
+(2*Math.PI*
+frequency*t);
+
+let p2=
+p1+
+phaseShift;
+
+
+let y1=
+amplitude*
+Math.sin(p1);
+
+let y2=
+amplitude*
+Math.sin(p2);
+
+
+wave1.push({
+x:x,
+y:combinedY+y1
+});
+
+wave2.push({
+x:x,
+y:combinedY+y2
+});
+
+resultant.push({
+x:x,
+y:resultY+
+(y1+y2)
+});
+
+}
+
+
+// draw waves
+
+drawWave(
+wave1,
+"cyan"
+);
+
+drawWave(
+wave2,
+"orange"
+);
+
+drawWave(
+resultant,
+"lime");
+
+
+// labels
+
+ctx.fillStyle=
+"white";
+
+ctx.font=
+"18px Arial";
+
+ctx.fillText(
+"Combined: y1 (cyan) + y2 (orange)",
+20,
+combinedY-20
+);
+
+ctx.fillText(
+"Superposition: y1 + y2",
+20,
+resultY-20
+);
+
+}
+
+function loop(t){
+
+animate(t);
+
+requestAnimationFrame(
+loop
+);
+
+}
+
+loop(0);
+
+</script>
+
+</body>
+</html>

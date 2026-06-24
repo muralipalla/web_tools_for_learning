@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Electron Oscillation → EM Emission Visualization</title>
+
+<style>
+body{
+    margin:0;
+    overflow:hidden;
+    background:#050510;
+    color:white;
+    font-family:Arial;
+}
+
+canvas{
+    display:block;
+}
+
+.controls{
+    position:absolute;
+    top:12px;
+    left:12px;
+
+    background:rgba(20,20,35,0.9);
+
+    padding:14px;
+
+    border-radius:10px;
+
+    width:280px;
+
+    z-index:10;
+}
+
+label{
+    display:block;
+    margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="controls">
+
+<h3>Hot Electron Lattice</h3>
+
+<label>
+Temperature
+
+<input
+type="range"
+id="temp"
+min="0"
+max="100"
+value="25">
+
+<span id="tempVal">25</span>
+
+</label>
+
+<p>
+Higher temperature → stronger electron motion → more EM ripples
+</p>
+
+</div>
+
+<canvas id="canvas"></canvas>
+
+<script>
+
+const canvas=
+document.getElementById(
+"canvas"
+);
+
+const ctx=
+canvas.getContext(
+"2d"
+);
+
+let atoms=[];
+let emitters=[];
+
+const spacing=32;
+
+const rows=16;
+const cols=22;
+
+function resize(){
+
+canvas.width=
+window.innerWidth;
+
+canvas.height=
+window.innerHeight;
+
+createLattice();
+
+}
+
+window.addEventListener(
+"resize",
+resize
+);
+
+
+function createLattice(){
+
+atoms=[];
+emitters=[];
+
+let startX=
+(canvas.width-
+cols*spacing)/2;
+
+let startY=
+(canvas.height-
+rows*spacing)/2;
+
+
+for(
+let r=0;
+r<rows;
+r++
+){
+
+for(
+let c=0;
+c<cols;
+c++
+){
+
+atoms.push({
+
+x0:
+startX+
+c*spacing,
+
+y0:
+startY+
+r*spacing,
+
+px:
+Math.random()*100,
+
+py:
+Math.random()*100
+
+});
+
+}
+
+}
+
+
+// randomly choose emitters
+
+for(
+let i=0;
+i<14;
+i++
+){
+
+let index=
+Math.floor(
+Math.random()*
+atoms.length
+);
+
+emitters.push({
+
+atom:
+atoms[index],
+
+phase:
+Math.random()*100
+
+});
+
+}
+
+}
+
+resize();
+
+
+function drawWaveRing(
+x,
+y,
+radius,
+alpha
+){
+
+ctx.beginPath();
+
+ctx.strokeStyle=
+`rgba(
+100,
+220,
+255,
+${alpha}
+)`;
+
+ctx.lineWidth=2;
+
+ctx.arc(
+x,
+y,
+radius,
+0,
+2*Math.PI
+);
+
+ctx.stroke();
+
+}
+
+
+function animate(time){
+
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+let temp=
++document.getElementById(
+"temp"
+).value;
+
+document.getElementById(
+"tempVal"
+).innerHTML=
+temp;
+
+
+let amp=
+1+
+temp*0.22;
+
+let speed=
+0.001+
+temp*0.00004;
+
+let emission=
+temp*0.08;
+
+let t=
+time*speed;
+
+
+// lattice bonds
+
+ctx.strokeStyle=
+"rgba(120,120,255,0.08)";
+
+for(let a of atoms){
+
+let dx=
+amp*
+Math.sin(
+t+
+a.px
+);
+
+let dy=
+amp*
+Math.cos(
+1.2*t+
+a.py
+);
+
+let x=
+a.x0+dx;
+
+let y=
+a.y0+dy;
+
+
+ctx.beginPath();
+
+ctx.moveTo(
+a.x0,
+a.y0
+);
+
+ctx.lineTo(
+x,
+y
+);
+
+ctx.stroke();
+
+}
+
+
+// EM waves
+
+for(let e of emitters){
+
+let a=e.atom;
+
+let dx=
+amp*
+Math.sin(
+t+
+a.px
+);
+
+let dy=
+amp*
+Math.cos(
+1.2*t+
+a.py
+);
+
+let x=
+a.x0+dx;
+
+let y=
+a.y0+dy;
+
+
+let pulse=
+
+(
+time*0.03+
+e.phase
+)%70;
+
+
+for(
+let k=0;
+k<4;
+k++
+){
+
+let r=
+pulse+
+k*18;
+
+let alpha=
+Math.max(
+0,
+0.6-r/120
+);
+
+drawWaveRing(
+x,
+y,
+r*
+(0.5+
+emission),
+alpha
+);
+
+}
+
+}
+
+
+// atoms
+
+for(let a of atoms){
+
+let dx=
+amp*
+Math.sin(
+t+
+a.px
+);
+
+let dy=
+amp*
+Math.cos(
+1.2*t+
+a.py
+);
+
+let x=
+a.x0+dx;
+
+let y=
+a.y0+dy;
+
+
+// equilibrium
+
+ctx.beginPath();
+
+ctx.fillStyle=
+"rgba(255,255,255,0.12)";
+
+ctx.arc(
+a.x0,
+a.y0,
+1.2,
+0,
+2*Math.PI
+);
+
+ctx.fill();
+
+
+// moving electron cloud
+
+ctx.beginPath();
+
+let brightness=
+80+
+temp*1.7;
+
+ctx.fillStyle=
+`rgb(
+${brightness},
+230,
+255
+)`;
+
+ctx.arc(
+x,
+y,
+4,
+0,
+2*Math.PI
+);
+
+ctx.fill();
+
+ctx.strokeStyle=
+"white";
+
+ctx.stroke();
+
+}
+
+
+// labels
+
+ctx.fillStyle=
+"white";
+
+ctx.font=
+"18px Arial";
+
+ctx.fillText(
+"Electron oscillations",
+20,
+canvas.height-55
+);
+
+ctx.fillText(
+"EM emission strength ↑ with temperature",
+20,
+canvas.height-25
+);
+
+
+requestAnimationFrame(
+animate
+);
+
+}
+
+animate(0);
+
+</script>
+
+</body>
+</html>

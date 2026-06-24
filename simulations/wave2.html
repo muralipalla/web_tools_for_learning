@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Multi-Wave Phase Shift Animation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1c1c1e;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 15px;
+        }
+        h2 { margin-bottom: 5px; font-size: 22px; }
+        #canvas-container {
+            position: relative;
+            background-color: #0b0b0c;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.6);
+            border-radius: 8px;
+            border: 1px solid #2c2c2e;
+        }
+        canvas { display: block; }
+        .controls-panel {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #2c2c2e;
+            padding: 12px 25px;
+            border-radius: 8px;
+            width: 500px;
+        }
+        .control-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        label { font-weight: 500; width: 160px; }
+        input[type="range"] { width: 220px; }
+        span { font-family: monospace; font-weight: bold; min-width: 70px; text-align: right; }
+    </style>
+</head>
+<body>
+
+    <h2>Multi-Wave Projections & Adjustable Phase Difference</h2>
+    
+    <div id="canvas-container">
+        <canvas id="simCanvas" width="1000" height="650"></canvas>
+    </div>
+
+    <div class="controls-panel">
+        <div class="control-row">
+            <label for="basePhaseSlider">Base Phase ($\phi$): </label>
+            <input type="range" id="basePhaseSlider" min="0" max="6.28" step="0.05" value="0">
+            <span id="basePhaseValue">0.00 rad</span>
+        </div>
+        
+        <div class="control-row">
+            <label for="phaseDiffSlider">Phase Diff ($\Delta\theta$): </label>
+            <input type="range" id="phaseDiffSlider" min="0" max="6.28" step="0.05" value="1.05">
+            <span id="phaseDiffValue">1.05 rad</span>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        const basePhaseSlider = document.getElementById('basePhaseSlider');
+        const basePhaseValue = document.getElementById('basePhaseValue');
+        const phaseDiffSlider = document.getElementById('phaseDiffSlider');
+        const phaseDiffValue = document.getElementById('phaseDiffValue');
+
+        // --- Configuration Constants ---
+        const R = 90;                  // Radius of the circle
+        const centerX = 200;           // X-coordinate of circle center
+        const centerY = 420;           // Y-coordinate of circle center
+        const graphXStart = 380;       // Left boundary where the Y-graphs plot
+        const graphYStart = 280;       // Bottom boundary where the X-graphs plot (grows upward)
+        const omega = 0.035;           // Speed of rotation
+        
+        let time = 0;
+        let basePhase = 0;
+        let phaseDiff = 1.05;          // Initial phase difference (~60 degrees)
+
+        // Wave tracking history arrays (maxHistory increased to display multiple waves)
+        const maxHistory = 580;        
+        let historyYA = [], historyYB = [];
+        let historyXA = [], historyXB = [];
+
+        // Event Listeners for UI Sliders
+        basePhaseSlider.addEventListener('input', (e) => {
+            basePhase = parseFloat(e.target.value);
+            basePhaseValue.innerText = basePhase.toFixed(2) + " rad";
+        });
+
+        phaseDiffSlider.addEventListener('input', (e) => {
+            phaseDiff = parseFloat(e.target.value);
+            phaseDiffValue.innerText = phaseDiff.toFixed(2) + " rad";
+        });
+
+        function drawGridAndAxes() {
+            ctx.strokeStyle = '#2c2c2e';
+            ctx.lineWidth = 1;
+
+            // Main Reference Circle Grid Axes
+            ctx.beginPath();
+            ctx.moveTo(centerX - R - 30, centerY); ctx.lineTo(centerX + R + 30, centerY);
+            ctx.moveTo(centerX, centerY - R - 30); ctx.lineTo(centerX, centerY + R + 30);
+            ctx.stroke();
+
+            // Y-vs-Time Graph Base Line (Horizontal center line)
+            ctx.strokeStyle = '#3a3a3c';
+            ctx.beginPath();
+            ctx.moveTo(graphXStart, centerY);
+            ctx.lineTo(graphXStart + maxHistory, centerY);
+            ctx.stroke();
+
+            // X-vs-Time Graph Base Line (Vertical center line)
+            ctx.beginPath();
+            ctx.moveTo(centerX, graphYStart);
+            ctx.lineTo(centerX, graphYStart - maxHistory);
+            ctx.stroke();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            drawGridAndAxes();
+
+            // 1. Calculate angles for both vectors
+            const angleA = omega * time + basePhase;
+            const angleB = omega * time + basePhase + phaseDiff; // Shifted by Phase Difference
+
+            // Vector A Trigonometric Positions
+            const relXA = R * Math.cos(angleA);
+            const relYA = R * Math.sin(angleA);
+            const ptXA = centerX + relXA;
+            const ptYA = centerY - relYA; // Inverted for canvas Y coordinates
+
+            // Vector B Trigonometric Positions
+            const relXB = R * Math.cos(angleB);
+            const relYB = R * Math.sin(angleB);
+            const ptXB = centerX + relXB;
+            const ptYB = centerY - relYB;
+
+            // Save historical positions to display rolling continuous lines
+            historyYA.unshift(ptYA); historyYB.unshift(ptYB);
+            historyXA.unshift(ptXA); historyXB.unshift(ptXB);
+            
+            if (historyYA.length > maxHistory) {
+                historyYA.pop(); historyYB.pop();
+                historyXA.pop(); historyXB.pop();
+            }
+
+            // 2. Draw Main Reference Circle Layout
+            ctx.strokeStyle = '#48484a';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, R, 0, 2 * Math.PI);
+            ctx.stroke();
+
+            // 3. Draw Radius Vector A (Reference)
+            ctx.strokeStyle = '#30d158'; // Emerald Green / Teal tint
+            ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.moveTo(centerX, centerY); ctx.lineTo(ptXA, ptYA); ctx.stroke();
+            
+            ctx.fillStyle = '#30d158';
+            ctx.beginPath(); ctx.arc(ptXA, ptYA, 5, 0, 2 * Math.PI); ctx.fill();
+
+            // 4. Draw Radius Vector B (Phase Shifted)
+            ctx.strokeStyle = '#ff9f0a'; // Bright Orange
+            ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.moveTo(centerX, centerY); ctx.lineTo(ptXB, ptYB); ctx.stroke();
+            
+            ctx.fillStyle = '#ff9f0a';
+            ctx.beginPath(); ctx.arc(ptXB, ptYB, 5, 0, 2 * Math.PI); ctx.fill();
+
+            // 5. Plot Multiple Waves for Y Axis Projection (Extending to the Right)
+            // Wave A
+            ctx.strokeStyle = 'rgba(48, 209, 88, 0.85)';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            for (let i = 0; i < historyYA.length; i++) {
+                if (i === 0) ctx.moveTo(graphXStart + i, historyYA[i]);
+                else ctx.lineTo(graphXStart + i, historyYA[i]);
+            }
+            ctx.stroke();
+
+            // Wave B
+            ctx.strokeStyle = 'rgba(255, 159, 10, 0.85)';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            for (let i = 0; i < historyYB.length; i++) {
+                if (i === 0) ctx.moveTo(graphXStart + i, historyYB[i]);
+                else ctx.lineTo(graphXStart + i, historyYB[i]);
+            }
+            ctx.stroke();
+
+            // 6. Plot Multiple Waves for X Axis Projection (Extending Upward)
+            // Wave A
+            ctx.strokeStyle = 'rgba(48, 209, 88, 0.85)';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            for (let i = 0; i < historyXA.length; i++) {
+                const xOffset = historyXA[i] - centerX;
+                if (i === 0) ctx.moveTo(centerX + xOffset, graphYStart - i);
+                else ctx.lineTo(centerX + xOffset, graphYStart - i);
+            }
+            ctx.stroke();
+
+            // Wave B
+            ctx.strokeStyle = 'rgba(255, 159, 10, 0.85)';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            for (let i = 0; i < historyXB.length; i++) {
+                const xOffset = historyXB[i] - centerX;
+                if (i === 0) ctx.moveTo(centerX + xOffset, graphYStart - i);
+                else ctx.lineTo(centerX + xOffset, graphYStart - i);
+            }
+            ctx.stroke();
+
+            // 7. Dynamic Axis Projection Reference Dots
+            // Horizontal Axis Trackers (X values)
+            ctx.fillStyle = '#30d158'; ctx.beginPath(); ctx.arc(ptXA, centerY, 4, 0, 2 * Math.PI); ctx.fill();
+            ctx.fillStyle = '#ff9f0a'; ctx.beginPath(); ctx.arc(ptXB, centerY, 4, 0, 2 * Math.PI); ctx.fill();
+
+            // Vertical Axis Trackers (Y values)
+            ctx.fillStyle = '#30d158'; ctx.beginPath(); ctx.arc(centerX, ptYA, 4, 0, 2 * Math.PI); ctx.fill();
+            ctx.fillStyle = '#ff9f0a'; ctx.beginPath(); ctx.arc(centerX, ptYB, 4, 0, 2 * Math.PI); ctx.fill();
+
+            // Subtle Dotted Delineation lines from current Vector points to leading wave edge
+            ctx.setLineDash([3, 4]);
+            ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+            ctx.beginPath();
+            ctx.moveTo(ptXA, ptYA); ctx.lineTo(graphXStart, ptYA);
+            ctx.moveTo(ptXB, ptYB); ctx.lineTo(graphXStart, ptYB);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Increment execution loop step
+            time += 1;
+            
+            requestAnimationFrame(animate);
+        }
+
+        // Run animation loop on initialization
+        animate();
+    </script>
+</body>
+</html>

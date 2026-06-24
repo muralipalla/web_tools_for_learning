@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<title>Black Body Radiation Illustration</title>
+
+<style>
+
+body{
+    margin:0;
+    overflow:hidden;
+    background:black;
+    color:white;
+    font-family:Arial, sans-serif;
+}
+
+canvas{
+    display:block;
+}
+
+.controls{
+    position:absolute;
+    top:10px;
+    left:10px;
+
+    background:rgba(0,0,0,0.75);
+
+    padding:14px;
+    border-radius:12px;
+
+    width:220px;
+}
+
+label{
+    display:block;
+    margin-top:12px;
+}
+
+select,
+input{
+    width:100%;
+}
+
+#tempText{
+    margin-top:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="controls">
+
+    <label>
+        Temperature
+        <input type="range"
+               id="tempSlider"
+               min="0"
+               max="100"
+               value="50">
+    </label>
+
+    <label>
+        <input type="checkbox"
+               id="sunToggle">
+        Turn On Sunlight
+    </label>
+
+    <label>
+        Radiation Mode
+
+        <select id="radiationMode">
+
+            <option value="photons">
+                Photons
+            </option>
+
+            <option value="ripples">
+                Ripples
+            </option>
+
+        </select>
+    </label>
+
+    <div id="tempText"></div>
+
+</div>
+
+<canvas id="canvas"></canvas>
+
+<script>
+
+// ======================================================
+// Canvas
+// ======================================================
+
+const canvas =
+    document.getElementById("canvas");
+
+const ctx =
+    canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+
+// ======================================================
+// Controls
+// ======================================================
+
+const slider =
+    document.getElementById("tempSlider");
+
+const sunToggle =
+    document.getElementById("sunToggle");
+
+const radiationMode =
+    document.getElementById("radiationMode");
+
+const tempText =
+    document.getElementById("tempText");
+
+
+// ======================================================
+// Scene Parameters
+// ======================================================
+
+const centerX = canvas.width/2;
+const centerY = canvas.height/2;
+
+const radius = 260;
+
+let temperature = 50;
+
+
+// ======================================================
+// Storage Arrays
+// ======================================================
+
+const atoms = [];
+const photons = [];
+const ripples = [];
+const sunWaves = [];
+
+
+// ======================================================
+// Create Triangular Lattice
+// ======================================================
+
+function createLattice(){
+
+    const spacing = 22;
+
+    for(let row=-20; row<=20; row++){
+
+        for(let col=-20; col<=20; col++){
+
+            const x =
+                centerX +
+                col*spacing +
+                (row%2)*(spacing/2);
+
+            const y =
+                centerY +
+                row*spacing*0.866;
+
+            const dx = x-centerX;
+            const dy = y-centerY;
+
+            if(Math.sqrt(dx*dx+dy*dy) < radius){
+
+                atoms.push({
+
+                    baseX:x,
+                    baseY:y,
+
+                    phase:
+                        Math.random()*100,
+
+                    angle:
+                        Math.random()*Math.PI*2,
+
+                    amplitude:
+                        3 + Math.random()*2
+                });
+            }
+        }
+    }
+}
+
+createLattice();
+
+
+// ======================================================
+// Initialize Sun Waves
+// ======================================================
+
+function initializeSunWaves(){
+
+    sunWaves.length = 0;
+
+    for(let i=0;i<10;i++){
+
+        sunWaves.push({
+
+            x:-i*140,
+            speed:2.5
+        });
+    }
+}
+
+initializeSunWaves();
+
+
+// ======================================================
+// Radiation Emission
+// ======================================================
+
+function emitRadiation(atom){
+
+    const mode =
+        radiationMode.value;
+
+    // ---------------- PHOTONS ----------------
+
+    if(mode === "photons"){
+
+        photons.push({
+
+            x:atom.baseX,
+            y:atom.baseY,
+
+            vx:(Math.random()-0.5)*4,
+            vy:(Math.random()-0.5)*4,
+
+            life:100
+        });
+    }
+
+    // ---------------- RIPPLES ----------------
+
+    else{
+
+        ripples.push({
+
+            x:atom.baseX,
+            y:atom.baseY,
+
+            radius:2,
+            alpha:1.0,
+
+            maxRadius:60
+        });
+    }
+}
+
+
+// ======================================================
+// Emit Radiation Periodically
+// ======================================================
+
+setInterval(()=>{
+
+    if(Math.random() < 0.15){
+
+        const atom =
+            atoms[
+                Math.floor(
+                    Math.random()*atoms.length
+                )
+            ];
+
+        emitRadiation(atom);
+
+        // Cooling
+
+        if(!sunToggle.checked){
+
+            temperature -= 0.03;
+
+            if(temperature < 0)
+                temperature = 0;
+
+            slider.value = temperature;
+        }
+    }
+
+},120);
+
+
+// ======================================================
+// Slider Updates
+// ======================================================
+
+slider.addEventListener("input",()=>{
+
+    temperature =
+        parseFloat(slider.value);
+});
+
+
+// ======================================================
+// Draw Hexagonal Boundary
+// ======================================================
+
+function drawBoundary(){
+
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 2;
+
+    ctx.beginPath();
+
+    for(let i=0;i<6;i++){
+
+        const angle =
+            Math.PI/3*i + Math.PI/6;
+
+        const x =
+            centerX +
+            radius*Math.cos(angle);
+
+        const y =
+            centerY +
+            radius*Math.sin(angle);
+
+        if(i===0)
+            ctx.moveTo(x,y);
+        else
+            ctx.lineTo(x,y);
+    }
+
+    ctx.closePath();
+    ctx.stroke();
+}
+
+
+// ======================================================
+// Draw Atoms
+// ======================================================
+
+function drawAtoms(){
+
+    const frequency =
+        0.01 + temperature*0.002;
+
+    for(let atom of atoms){
+
+        atom.phase += frequency;
+
+        const dx =
+            Math.cos(atom.angle) *
+            Math.sin(atom.phase) *
+            atom.amplitude;
+
+        const dy =
+            Math.sin(atom.angle) *
+            Math.sin(atom.phase) *
+            atom.amplitude;
+
+        const x = atom.baseX + dx;
+        const y = atom.baseY + dy;
+
+        const brightness =
+            120 + temperature*1.2;
+
+        ctx.fillStyle =
+            `rgb(${brightness},
+                  ${brightness},
+                  ${brightness})`;
+
+        ctx.beginPath();
+
+        ctx.arc(x,y,4,0,Math.PI*2);
+
+        ctx.fill();
+    }
+}
+
+
+// ======================================================
+// Draw Photon Radiation
+// ======================================================
+
+function drawPhotons(){
+
+    for(let i=photons.length-1;i>=0;i--){
+
+        const p = photons[i];
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        p.life--;
+
+        ctx.strokeStyle =
+            "rgba(255,220,120,0.8)";
+
+        ctx.lineWidth = 2;
+
+        ctx.beginPath();
+
+        ctx.moveTo(p.x,p.y);
+
+        ctx.lineTo(
+            p.x - p.vx*4,
+            p.y - p.vy*4
+        );
+
+        ctx.stroke();
+
+        if(p.life <= 0){
+
+            photons.splice(i,1);
+        }
+    }
+}
+
+
+// ======================================================
+// Draw Ripple Radiation
+// ======================================================
+
+function drawRipples(){
+
+    for(let i=ripples.length-1;i>=0;i--){
+
+        const r = ripples[i];
+
+        r.radius += 1.2;
+        r.alpha -= 0.015;
+
+        ctx.strokeStyle =
+            `rgba(120,220,255,${r.alpha})`;
+
+        ctx.lineWidth = 2;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            r.x,
+            r.y,
+            r.radius,
+            0,
+            Math.PI*2
+        );
+
+        ctx.stroke();
+
+        if(r.radius > r.maxRadius ||
+           r.alpha <= 0){
+
+            ripples.splice(i,1);
+        }
+    }
+}
+
+
+// ======================================================
+// Draw Sunlight Plane Waves
+// ======================================================
+
+function drawSunlight(){
+
+    if(!sunToggle.checked)
+        return;
+
+    ctx.lineWidth = 2;
+
+    for(let wave of sunWaves){
+
+        wave.x += wave.speed;
+
+        ctx.strokeStyle =
+            "rgba(255,255,0,0.45)";
+
+        for(let y=0;y<canvas.height;y+=55){
+
+            ctx.beginPath();
+
+            for(let k=0;k<80;k++){
+
+                const xx =
+                    wave.x + k*8;
+
+                const yy =
+                    y +
+                    Math.sin(k*0.35)*8;
+
+                if(k===0)
+                    ctx.moveTo(xx,yy);
+                else
+                    ctx.lineTo(xx,yy);
+            }
+
+            ctx.stroke();
+        }
+
+        // Interaction region
+
+        if(wave.x > centerX-radius &&
+           wave.x < centerX+radius){
+
+            temperature += 0.01;
+
+            if(temperature > 75)
+                temperature = 75;
+
+            slider.value = temperature;
+        }
+
+        // recycle wave
+
+        if(wave.x > canvas.width + 150){
+
+            wave.x = -200;
+        }
+    }
+}
+
+
+// ======================================================
+// Main Animation Loop
+// ======================================================
+
+function animate(){
+
+    requestAnimationFrame(animate);
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    drawBoundary();
+
+    drawSunlight();
+
+    drawAtoms();
+
+    drawPhotons();
+
+    drawRipples();
+
+    tempText.innerHTML =
+        "Temperature = " +
+        temperature.toFixed(1);
+}
+
+animate();
+
+
+// ======================================================
+// Responsive Resize
+// ======================================================
+
+window.addEventListener("resize",()=>{
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Atomic Lattice Temperature Simulation</title>
+
+<style>
+body{
+    margin:0;
+    background:#111;
+    color:white;
+    font-family:Arial;
+    overflow:hidden;
+}
+
+.controls{
+    position:absolute;
+    top:15px;
+    left:15px;
+
+    background:rgba(20,20,20,0.9);
+
+    padding:15px;
+
+    border-radius:10px;
+
+    width:260px;
+
+    z-index:10;
+}
+
+label{
+    display:block;
+    margin-top:10px;
+}
+
+canvas{
+    display:block;
+}
+</style>
+</head>
+
+<body>
+
+<div class="controls">
+
+<h3>Square Atomic Lattice</h3>
+
+<label>
+Temperature
+<input type="range"
+id="temp"
+min="0"
+max="100"
+value="20">
+
+<span id="tempVal">20</span>
+</label>
+
+<p>
+Higher temperature → larger random motion → larger kinetic energy
+</p>
+
+</div>
+
+<canvas id="canvas"></canvas>
+
+<script>
+
+const canvas =
+document.getElementById("canvas");
+
+const ctx =
+canvas.getContext("2d");
+
+function resize(){
+
+canvas.width=
+window.innerWidth;
+
+canvas.height=
+window.innerHeight;
+
+createLattice();
+
+}
+
+window.addEventListener(
+"resize",
+resize
+);
+
+
+const atoms=[];
+
+const spacing=28;
+
+const rows=18;
+const cols=24;
+
+function createLattice(){
+
+atoms.length=0;
+
+let startX=
+(canvas.width-cols*spacing)/2;
+
+let startY=
+(canvas.height-rows*spacing)/2;
+
+for(
+let r=0;
+r<rows;
+r++
+){
+
+for(
+let c=0;
+c<cols;
+c++
+){
+
+atoms.push({
+
+x0:
+startX+
+c*spacing,
+
+y0:
+startY+
+r*spacing,
+
+phaseX:
+Math.random()*100,
+
+phaseY:
+Math.random()*100
+
+});
+
+}
+
+}
+
+}
+
+resize();
+
+
+function animate(time){
+
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+let temp=
++document.getElementById(
+"temp"
+).value;
+
+document.getElementById(
+"tempVal"
+).innerHTML=
+temp;
+
+
+// vibration amplitude
+
+let amplitude=
+temp*0.18;
+
+// motion speed
+
+let speed=
+0.001+
+temp*0.00003;
+
+let t=
+time*speed;
+
+
+// draw springs / lattice links
+
+ctx.strokeStyle=
+"rgba(120,120,255,0.15)";
+
+ctx.lineWidth=1;
+
+for(let atom of atoms){
+
+let dx=
+amplitude*
+Math.sin(
+t+
+atom.phaseX
+);
+
+let dy=
+amplitude*
+Math.cos(
+t*1.3+
+atom.phaseY
+);
+
+let x=
+atom.x0+dx;
+
+let y=
+atom.y0+dy;
+
+
+ctx.beginPath();
+
+ctx.moveTo(
+atom.x0,
+atom.y0
+);
+
+ctx.lineTo(
+x,
+y
+);
+
+ctx.stroke();
+
+}
+
+
+// atoms
+
+for(let atom of atoms){
+
+let dx=
+amplitude*
+Math.sin(
+t+
+atom.phaseX
+);
+
+let dy=
+amplitude*
+Math.cos(
+t*1.3+
+atom.phaseY
+);
+
+let x=
+atom.x0+dx;
+
+let y=
+atom.y0+dy;
+
+
+// equilibrium position
+
+ctx.beginPath();
+
+ctx.fillStyle=
+"rgba(255,255,255,0.15)";
+
+ctx.arc(
+atom.x0,
+atom.y0,
+1.5,
+0,
+2*Math.PI
+);
+
+ctx.fill();
+
+
+// moving atom
+
+ctx.beginPath();
+
+let glow=
+120+
+temp;
+
+ctx.fillStyle=
+`rgb(${glow},
+220,
+255)`;
+
+ctx.arc(
+x,
+y,
+4,
+0,
+2*Math.PI
+);
+
+ctx.fill();
+
+ctx.strokeStyle=
+"white";
+
+ctx.stroke();
+
+}
+
+ctx.fillStyle=
+"white";
+
+ctx.font=
+"18px Arial";
+
+ctx.fillText(
+"Temperature = "+
+temp,
+20,
+canvas.height-60
+);
+
+ctx.fillText(
+"Relative KE ∝ motion²",
+20,
+canvas.height-30
+);
+
+
+requestAnimationFrame(
+animate);
+
+}
+
+animate(0);
+
+</script>
+
+</body>
+</html>

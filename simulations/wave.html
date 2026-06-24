@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Circular Motion & Wave Projection Animation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+        h2 { margin-bottom: 10px; }
+        #canvas-container {
+            position: relative;
+            background-color: #111;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            border-radius: 8px;
+        }
+        canvas { display: block; }
+        .controls {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #2d2d2d;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+        input[type="range"] { width: 200px; }
+        span { font-weight: bold; min-width: 50px; }
+    </style>
+</head>
+<body>
+
+    <h2>Uniform Circular Motion & Axis Projections</h2>
+    
+    <div id="canvas-container">
+        <canvas id="simCanvas" width="900" height="600"></canvas>
+    </div>
+
+    <div class="controls">
+        <label for="phaseSlider">Phase ($\phi$): </label>
+        <input type="range" id="phaseSlider" min="0" max="6.28" step="0.05" value="0">
+        <span id="phaseValue">0.00 rad</span>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d');
+        const phaseSlider = document.getElementById('phaseSlider');
+        const phaseValue = document.getElementById('phaseValue');
+
+        // --- Configuration Constants ---
+        const R = 100;                 // Radius of the circle
+        const centerX = 200;           // X-coordinate of circle center
+        const centerY = 350;           // Y-coordinate of circle center
+        const graphXStart = 400;       // Left margin where the Y-graph plots
+        const graphYStart = 150;       // Top margin where the X-graph plots (drawn vertically inverted)
+        const omega = 0.02;            // Angular velocity (speed of rotation)
+        
+        let time = 0;
+        let phase = 0;
+        let historyX = [];             // Stores historical X positions for graphing
+        let historyY = [];             // Stores historical Y positions for graphing
+        const maxHistory = 450;        // Tail length of the graphs
+
+        // Update phase parameter from slider
+        phaseSlider.addEventListener('input', (e) => {
+            phase = parseFloat(e.target.value);
+            phaseValue.innerText = phase.toFixed(2) + " rad";
+        });
+
+        function drawGridAndAxes() {
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 1;
+
+            // Circle Axes
+            ctx.beginPath();
+            ctx.moveTo(centerX - R - 40, centerY); ctx.lineTo(centerX + R + 40, centerY);
+            ctx.moveTo(centerX, centerY - R - 40); ctx.lineTo(centerX, centerY + R + 40);
+            ctx.stroke();
+
+            // Y-vs-Time Graph Base Line
+            ctx.strokeStyle = '#444';
+            ctx.beginPath();
+            ctx.moveTo(graphXStart, centerY);
+            ctx.lineTo(graphXStart + maxHistory, centerY);
+            ctx.stroke();
+
+            // X-vs-Time Graph Base Line
+            ctx.beginPath();
+            ctx.moveTo(centerX, graphYStart);
+            ctx.lineTo(centerX, graphYStart - maxHistory);
+            ctx.stroke();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            drawGridAndAxes();
+
+            // 1. Calculate the uniform moving point (x, y) relative to circle center
+            // Adding phase shifts the point's starting position
+            const relativeX = R * Math.cos(omega * time + phase);
+            const relativeY = R * Math.sin(omega * time + phase); // Invert sign if you want standard counter-clockwise math orientation on screen grid
+
+            const pointX = centerX + relativeX;
+            const pointY = centerY - relativeY; // Canvas inversion: minus means going 'up' standard Cartesian axis
+
+            // Save historical positions to arrays for plotting over time
+            historyY.unshift(pointY);
+            historyX.unshift(pointX);
+            if (historyY.length > maxHistory) historyY.pop();
+            if (historyX.length > maxHistory) historyX.pop();
+
+            // 2. Draw Main Reference Circle
+            ctx.strokeStyle = '#555';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, R, 0, 2 * Math.PI);
+            ctx.stroke();
+
+            // 3. Draw rotating vector (0,0) to (x,y)
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(pointX, pointY);
+            ctx.stroke();
+
+            // Draw the rotating point itself
+            ctx.fillStyle = '#ff3366';
+            ctx.beginPath();
+            ctx.arc(pointX, pointY, 6, 0, 2 * Math.PI);
+            ctx.fill();
+
+            // 4. Track and draw projections on X and Y axes
+            ctx.fillStyle = '#00adb5'; // Color for Y tracking
+            ctx.beginPath();
+            ctx.arc(centerX, pointY, 5, 0, 2 * Math.PI); // Projection on Y axis
+            ctx.fill();
+
+            ctx.fillStyle = '#ff9f43'; // Color for X tracking
+            ctx.beginPath();
+            ctx.arc(pointX, centerY, 5, 0, 2 * Math.PI); // Projection on X axis
+            ctx.fill();
+
+            // Draw dotted tracking lines linking the point to its axis projections
+            ctx.setLineDash([5, 5]);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.beginPath();
+            ctx.moveTo(pointX, pointY); ctx.lineTo(centerX, pointY);
+            ctx.moveTo(pointX, pointY); ctx.lineTo(pointX, centerY);
+            ctx.stroke();
+            ctx.setLineDash([]); // Reset dash line
+
+            // 5. Plot Graph of Y as a function of time (Moving rightward)
+            ctx.strokeStyle = '#00adb5';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let i = 0; i < historyY.length; i++) {
+                if (i === 0) ctx.moveTo(graphXStart + i, historyY[i]);
+                else ctx.lineTo(graphXStart + i, historyY[i]);
+            }
+            ctx.stroke();
+
+            // Dotted tracking line from Y-axis projection to the graph's current leading edge
+            ctx.setLineDash([3, 3]);
+            ctx.strokeStyle = 'rgba(0, 173, 181, 0.4)';
+            ctx.beginPath();
+            ctx.moveTo(centerX, pointY);
+            ctx.lineTo(graphXStart, historyY[0]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // 6. Plot Graph of X as a function of time (Moving upward vertically)
+            ctx.strokeStyle = '#ff9f43';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let i = 0; i < historyX.length; i++) {
+                // Plot X displacement relative to circle center, shifting vertically upwards along time axis
+                const xOffset = historyX[i] - centerX;
+                if (i === 0) ctx.moveTo(centerX + xOffset, graphYStart - i);
+                else ctx.lineTo(centerX + xOffset, graphYStart - i);
+            }
+            ctx.stroke();
+
+            // Dotted tracking line from X-axis projection to the X-graph's current leading edge
+            ctx.setLineDash([3, 3]);
+            ctx.strokeStyle = 'rgba(255, 159, 67, 0.4)';
+            ctx.beginPath();
+            ctx.moveTo(pointX, centerY);
+            ctx.lineTo(historyX[0], graphYStart);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Increments time step for continuous uniform angular progression
+            time += 1;
+            
+            requestAnimationFrame(animate);
+        }
+
+        // Initialize and start loop
+        animate();
+    </script>
+</body>
+</html>

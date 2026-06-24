@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parametric Motion Visualizer</title>
+
+<style>
+body{
+    font-family:Arial, sans-serif;
+    margin:20px;
+}
+
+.controls{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+input{
+    padding:4px;
+}
+
+canvas{
+    border:1px solid black;
+}
+
+.info{
+    margin-top:10px;
+    font-size:18px;
+}
+
+button{
+    padding:5px 10px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Parametric Motion Visualizer</h2>
+
+<div class="controls">
+
+    <label>x(t):</label>
+    <input id="xExpr" size="30"
+           value="200*Math.cos(t)">
+
+    <label>y(t):</label>
+    <input id="yExpr" size="30"
+           value="200*Math.sin(t)">
+
+    <button onclick="drawTrajectory()">Plot</button>
+
+</div>
+
+<div class="controls">
+
+    <label>t min</label>
+    <input id="tMin" type="number"
+           value="0" step="0.1">
+
+    <label>t max</label>
+    <input id="tMax" type="number"
+           value="6.283" step="0.1">
+
+    <label>Samples</label>
+    <input id="samples" type="number"
+           value="1000" min="100">
+
+    <button onclick="updateTimeRange()">
+        Set Range
+    </button>
+
+</div>
+
+<div class="controls">
+
+    <input id="slider"
+           type="range"
+           min="0"
+           max="6.283"
+           step="0.001"
+           value="0"
+           style="width:400px;">
+
+    <span>
+        t = <span id="tValue">0</span>
+    </span>
+
+</div>
+
+<div class="controls">
+
+    <button id="playBtn">Play</button>
+
+    <label>Speed</label>
+
+    <input id="speed"
+           type="range"
+           min="0.1"
+           max="5"
+           value="1"
+           step="0.1">
+
+    <span id="speedValue">1x</span>
+
+</div>
+
+<canvas id="canvas"
+        width="900"
+        height="650"></canvas>
+
+<div class="info">
+    Position:
+    <span id="position">
+        (0,0)
+    </span>
+</div>
+
+<script>
+
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+const slider = document.getElementById("slider");
+
+let xFunc;
+let yFunc;
+
+let playing = false;
+let animationID;
+
+let scale = 1;
+let xCenter = 0;
+let yCenter = 0;
+
+function createFunction(expr){
+    return new Function(
+        "t",
+        "return " + expr
+    );
+}
+
+function worldToCanvas(x,y){
+
+    return {
+
+        x: canvas.width/2
+            + (x - xCenter)*scale,
+
+        y: canvas.height/2
+            - (y - yCenter)*scale
+
+    };
+}
+
+function updateTimeRange(){
+
+    const tMin =
+        parseFloat(
+            document.getElementById("tMin").value
+        );
+
+    const tMax =
+        parseFloat(
+            document.getElementById("tMax").value
+        );
+
+    slider.min = tMin;
+    slider.max = tMax;
+    slider.value = tMin;
+
+    redraw();
+}
+
+function computeBounds(){
+
+    const tMin =
+        parseFloat(
+            document.getElementById("tMin").value
+        );
+
+    const tMax =
+        parseFloat(
+            document.getElementById("tMax").value
+        );
+
+    const N =
+        parseInt(
+            document.getElementById("samples").value
+        );
+
+    let xmin = Infinity;
+    let xmax = -Infinity;
+
+    let ymin = Infinity;
+    let ymax = -Infinity;
+
+    for(let i=0;i<=N;i++){
+
+        let t =
+            tMin
+            +(tMax-tMin)*i/N;
+
+        let x = xFunc(t);
+        let y = yFunc(t);
+
+        xmin = Math.min(xmin,x);
+        xmax = Math.max(xmax,x);
+
+        ymin = Math.min(ymin,y);
+        ymax = Math.max(ymax,y);
+    }
+
+    xCenter = (xmin+xmax)/2;
+    yCenter = (ymin+ymax)/2;
+
+    const width = xmax-xmin;
+    const height = ymax-ymin;
+
+    const sx =
+        (canvas.width*0.8)/
+        Math.max(width,1);
+
+    const sy =
+        (canvas.height*0.8)/
+        Math.max(height,1);
+
+    scale = Math.min(sx,sy);
+}
+
+function drawAxes(){
+
+    ctx.strokeStyle="#cccccc";
+    ctx.lineWidth=1;
+
+    let p1 = worldToCanvas(-10000,0);
+    let p2 = worldToCanvas(10000,0);
+
+    ctx.beginPath();
+    ctx.moveTo(p1.x,p1.y);
+    ctx.lineTo(p2.x,p2.y);
+    ctx.stroke();
+
+    p1 = worldToCanvas(0,-10000);
+    p2 = worldToCanvas(0,10000);
+
+    ctx.beginPath();
+    ctx.moveTo(p1.x,p1.y);
+    ctx.lineTo(p2.x,p2.y);
+    ctx.stroke();
+}
+
+function drawTrajectory(){
+
+    try{
+
+        xFunc =
+            createFunction(
+                document.getElementById("xExpr").value
+            );
+
+        yFunc =
+            createFunction(
+                document.getElementById("yExpr").value
+            );
+
+        computeBounds();
+
+        redraw();
+
+    }
+    catch(err){
+
+        alert("Invalid function");
+
+        console.error(err);
+    }
+}
+
+function redraw(){
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    drawAxes();
+
+    const tMin =
+        parseFloat(
+            document.getElementById("tMin").value
+        );
+
+    const tMax =
+        parseFloat(
+            document.getElementById("tMax").value
+        );
+
+    const N =
+        parseInt(
+            document.getElementById("samples").value
+        );
+
+    ctx.strokeStyle="blue";
+    ctx.lineWidth=2;
+
+    let first=true;
+
+    ctx.beginPath();
+
+    for(let i=0;i<=N;i++){
+
+        let t =
+            tMin
+            +(tMax-tMin)*i/N;
+
+        let x = xFunc(t);
+        let y = yFunc(t);
+
+        let p =
+            worldToCanvas(x,y);
+
+        if(first){
+
+            ctx.moveTo(
+                p.x,
+                p.y
+            );
+
+            first=false;
+        }
+        else{
+
+            ctx.lineTo(
+                p.x,
+                p.y
+            );
+        }
+    }
+
+    ctx.stroke();
+
+    let t =
+        parseFloat(
+            slider.value
+        );
+
+    let x = xFunc(t);
+    let y = yFunc(t);
+
+    let p =
+        worldToCanvas(x,y);
+
+    ctx.fillStyle="red";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        p.x,
+        p.y,
+        7,
+        0,
+        2*Math.PI
+    );
+
+    ctx.fill();
+
+    document.getElementById("tValue")
+        .textContent =
+        t.toFixed(3);
+
+    document.getElementById("position")
+        .textContent =
+        "("
+        + x.toFixed(3)
+        + ", "
+        + y.toFixed(3)
+        + ")";
+}
+
+slider.addEventListener(
+    "input",
+    redraw
+);
+
+document.getElementById("speed")
+.addEventListener(
+    "input",
+    function(){
+
+        document.getElementById(
+            "speedValue"
+        ).textContent =
+        this.value + "x";
+    }
+);
+
+document.getElementById("playBtn")
+.addEventListener(
+    "click",
+    function(){
+
+        if(!playing){
+
+            playing=true;
+
+            this.textContent="Pause";
+
+            animate();
+        }
+        else{
+
+            playing=false;
+
+            this.textContent="Play";
+
+            cancelAnimationFrame(
+                animationID
+            );
+        }
+    }
+);
+
+function animate(){
+
+    if(!playing) return;
+
+    const tMin =
+        parseFloat(slider.min);
+
+    const tMax =
+        parseFloat(slider.max);
+
+    const speed =
+        parseFloat(
+            document.getElementById("speed").value
+        );
+
+    let t =
+        parseFloat(
+            slider.value
+        );
+
+    t +=
+        speed
+        *(tMax-tMin)
+        /1000;
+
+    if(t>tMax)
+        t=tMin;
+
+    slider.value=t;
+
+    redraw();
+
+    animationID =
+        requestAnimationFrame(
+            animate
+        );
+}
+
+updateTimeRange();
+drawTrajectory();
+
+</script>
+
+</body>
+</html>

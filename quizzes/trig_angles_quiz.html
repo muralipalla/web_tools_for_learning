@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Trig Speed Quiz</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f4f4;
+padding:30px;
+}
+
+.container{
+max-width:800px;
+margin:auto;
+background:white;
+padding:25px;
+border-radius:10px;
+}
+
+.timer{
+font-size:24px;
+font-weight:bold;
+color:darkred;
+margin-bottom:20px;
+}
+
+.questionBox{
+border:1px solid #ddd;
+padding:20px;
+border-radius:10px;
+min-height:220px;
+}
+
+button{
+padding:10px 18px;
+margin:10px;
+font-size:16px;
+}
+
+.progress{
+margin-bottom:15px;
+font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Trigonometric Formula Speed Quiz</h1>
+
+<div class="timer">
+Time:
+<span id="timer">00:00</span>
+</div>
+
+<div class="progress">
+Question
+<span id="qnum"></span>/20
+</div>
+
+<div class="questionBox">
+
+<h2 id="question"></h2>
+
+<div id="options"></div>
+
+</div>
+
+<br>
+
+<button onclick="prevQuestion()">
+Previous
+</button>
+
+<button onclick="nextQuestion()">
+Next
+</button>
+
+<button onclick="submitQuiz()">
+Submit
+</button>
+
+<h2 id="result"></h2>
+
+</div>
+
+<script>
+
+const templates=[
+
+["sin(90°+θ)","cosθ"],
+["sin(90°-θ)","cosθ"],
+["cos(90°+θ)","-sinθ"],
+["cos(90°-θ)","sinθ"],
+
+["sin(180°-θ)","sinθ"],
+["sin(180°+θ)","-sinθ"],
+
+["cos(180°-θ)","-cosθ"],
+["cos(180°+θ)","-cosθ"],
+
+["sin(270°-θ)","-cosθ"],
+["sin(270°+θ)","-cosθ"],
+
+["cos(270°-θ)","-sinθ"],
+["cos(270°+θ)","sinθ"],
+
+["tan(180°+θ)","tanθ"],
+["tan(180°-θ)","-tanθ"],
+
+["tan(90°-θ)","cotθ"],
+["cot(90°-θ)","tanθ"],
+
+["sec(180°-θ)","-secθ"],
+["cosec(180°-θ)","cosecθ"],
+
+["sec(360°-θ)","secθ"],
+["cos(360°-θ)","cosθ"]
+
+];
+
+const pool=[
+"sinθ",
+"-sinθ",
+"cosθ",
+"-cosθ",
+"tanθ",
+"-tanθ",
+"cotθ",
+"-cotθ",
+"secθ",
+"-secθ",
+"cosecθ",
+"-cosecθ"
+];
+
+function shuffle(a){
+
+for(let i=a.length-1;i>0;i--){
+
+let j=Math.floor(
+Math.random()*(i+1)
+);
+
+[a[i],a[j]]=[a[j],a[i]];
+
+}
+
+}
+
+shuffle(templates);
+
+let quiz=templates.slice(0,20);
+
+quiz=quiz.map(q=>{
+
+let opts=[q[1]];
+
+while(opts.length<4){
+
+let c=
+pool[
+Math.floor(
+Math.random()*pool.length
+)
+];
+
+if(!opts.includes(c))
+opts.push(c);
+
+}
+
+shuffle(opts);
+
+return{
+question:q[0],
+answer:q[1],
+options:opts
+};
+
+});
+
+let current=0;
+
+let answers=new Array(20);
+
+function showQuestion(){
+
+document.getElementById(
+"qnum"
+).innerText=current+1;
+
+document.getElementById(
+"question"
+).innerHTML=
+quiz[current].question+" = ?";
+
+let html="";
+
+quiz[current].options.forEach(op=>{
+
+let checked=
+answers[current]===op
+?"checked":"";
+
+html+=`
+
+<label>
+
+<input
+type="radio"
+name="ans"
+value="${op}"
+${checked}
+onclick="saveAnswer('${op}')"
+>
+
+${op}
+
+</label>
+
+<br><br>
+
+`;
+
+});
+
+document.getElementById(
+"options"
+).innerHTML=html;
+
+}
+
+function saveAnswer(v){
+
+answers[current]=v;
+
+}
+
+function nextQuestion(){
+
+if(current<19){
+
+current++;
+
+showQuestion();
+
+}
+
+}
+
+function prevQuestion(){
+
+if(current>0){
+
+current--;
+
+showQuestion();
+
+}
+
+}
+
+function submitQuiz(){
+
+let score=0;
+
+for(let i=0;i<20;i++){
+
+if(
+answers[i]===
+quiz[i].answer
+)
+score++;
+
+}
+
+document.getElementById(
+"result"
+).innerHTML=
+
+`
+Score :
+${score}/20
+
+<br>
+
+Time Taken :
+${seconds}
+seconds
+
+`;
+
+}
+
+let seconds=0;
+
+setInterval(()=>{
+
+seconds++;
+
+let m=
+Math.floor(
+seconds/60
+);
+
+let s=
+seconds%60;
+
+document.getElementById(
+"timer"
+).innerText=
+
+String(m)
+.padStart(2,'0')
+
++":"
+
++
+
+String(s)
+.padStart(2,'0');
+
+},1000);
+
+showQuestion();
+
+</script>
+
+</body>
+</html>
