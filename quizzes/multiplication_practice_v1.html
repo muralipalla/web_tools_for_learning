@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multiplication Tables Speed Practice</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --dark: #020617;
+      --dark-panel: rgba(15, 23, 42, 0.90);
+      --dark-panel-2: rgba(30, 41, 59, 0.76);
+      --dark-border: rgba(148, 163, 184, 0.25);
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --cyan: #38bdf8;
+      --amber: #f59e0b;
+      --green: #34d399;
+      --red: #fb7185;
+      --blue-soft: #bfdbfe;
+      --violet: #a78bfa;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.22), transparent 32rem),
+        radial-gradient(circle at bottom right, rgba(245, 158, 11, 0.14), transparent 30rem),
+        linear-gradient(135deg, #020617, #0f172a 55%, #111827);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .site-header {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 22px 18px 10px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 16px;
+      color: var(--blue-soft);
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .hero {
+      background:
+        linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.62)),
+        radial-gradient(circle at 25% 25%, rgba(56, 189, 248, 0.22), transparent 20rem);
+      border: 1px solid var(--dark-border);
+      border-radius: 28px;
+      padding: clamp(22px, 4vw, 38px);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--blue-soft);
+      font-size: 0.8rem;
+      font-weight: 900;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 4.1rem);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+    }
+
+    .subtitle {
+      max-width: 880px;
+      margin: 16px 0 0;
+      color: #cbd5e1;
+      line-height: 1.65;
+      font-size: clamp(1rem, 1.5vw, 1.13rem);
+    }
+
+    main {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 350px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .practice-card,
+    .control-card,
+    .note-card,
+    .history-card {
+      background: var(--dark-panel);
+      border: 1px solid var(--dark-border);
+      border-radius: 24px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .practice-card {
+      padding: 18px;
+    }
+
+    .quiz-panel {
+      min-height: 440px;
+      border-radius: 20px;
+      padding: clamp(20px, 4vw, 34px);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(56, 189, 248, 0.16), transparent 18rem),
+        radial-gradient(circle at 80% 90%, rgba(245, 158, 11, 0.10), transparent 18rem),
+        rgba(2, 6, 23, 0.66);
+      border: 1px solid rgba(148, 163, 184, 0.20);
+      display: grid;
+      align-content: center;
+      text-align: center;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .challenge-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      color: #dbeafe;
+      font-weight: 850;
+      margin-bottom: 16px;
+    }
+
+    .start-title {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+    }
+
+    .start-text {
+      max-width: 620px;
+      margin: 16px auto 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .stat {
+      background: rgba(15, 23, 42, 0.86);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 16px;
+      padding: 10px 11px;
+      text-align: left;
+    }
+
+    .stat strong {
+      display: block;
+      color: #e0f2fe;
+      font-size: 0.85rem;
+      margin-bottom: 3px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 850;
+    }
+
+    #question {
+      font-size: clamp(3.2rem, 9vw, 6.8rem);
+      font-weight: 950;
+      letter-spacing: -0.08em;
+      line-height: 1;
+      margin: 24px 0;
+      color: #f8fafc;
+      text-shadow: 0 0 34px rgba(56, 189, 248, 0.20);
+    }
+
+    .answer-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    select {
+      width: 100%;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      border-radius: 15px;
+      padding: 15px 16px;
+      background: rgba(2, 6, 23, 0.65);
+      color: #e5e7eb;
+      font-size: 1.1rem;
+      outline: none;
+    }
+
+    input[type="number"] {
+      font-size: 1.45rem;
+      text-align: center;
+      font-weight: 900;
+    }
+
+    input::placeholder {
+      color: rgba(203, 213, 225, 0.55);
+    }
+
+    input:focus,
+    select:focus {
+      border-color: rgba(56, 189, 248, 0.72);
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.14);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--cyan);
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      border-radius: 15px;
+      padding: 15px 18px;
+      font: inherit;
+      font-weight: 850;
+      color: #0f172a;
+      background: #e0f2fe;
+      transition: transform 120ms ease, background 120ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      background: #bae6fd;
+    }
+
+    button.secondary {
+      background: #334155;
+      color: #ffffff;
+      border: 1px solid var(--dark-border);
+    }
+
+    button.secondary:hover {
+      background: #475569;
+    }
+
+    button.green {
+      background: #bbf7d0;
+    }
+
+    button.green:hover {
+      background: #86efac;
+    }
+
+    .feedback {
+      min-height: 30px;
+      margin-top: 14px;
+      font-weight: 900;
+      font-size: 1.05rem;
+    }
+
+    .feedback.correct {
+      color: #86efac;
+    }
+
+    .feedback.wrong {
+      color: #fecdd3;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .result-box {
+      border-radius: 18px;
+      padding: 16px;
+      background: rgba(15, 23, 42, 0.82);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+    }
+
+    .result-box strong {
+      display: block;
+      font-size: 1.8rem;
+      color: #e0f2fe;
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+
+    .result-box span {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .side-panel {
+      display: grid;
+      gap: 14px;
+    }
+
+    .control-card,
+    .note-card,
+    .history-card {
+      padding: 18px;
+    }
+
+    .control-card h2,
+    .note-card h2,
+    .history-card h2 {
+      margin: 0 0 14px;
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+    }
+
+    .control-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+      margin-bottom: 8px;
+      color: #f8fafc;
+      font-weight: 850;
+      font-size: 0.94rem;
+    }
+
+    label span {
+      min-width: 78px;
+      text-align: right;
+      color: #bae6fd;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.88rem;
+    }
+
+    .table-chip-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 8px;
+    }
+
+    .table-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 40px;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      background: rgba(30, 41, 59, 0.72);
+      color: #dbeafe;
+      padding: 8px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 850;
+      user-select: none;
+      transition: transform 120ms ease, background 120ms ease;
+    }
+
+    .table-chip:hover {
+      transform: translateY(-1px);
+      background: rgba(56, 189, 248, 0.18);
+      border-color: rgba(56, 189, 248, 0.45);
+    }
+
+    .table-chip.active {
+      background: rgba(56, 189, 248, 0.25);
+      border-color: rgba(56, 189, 248, 0.7);
+      color: #f8fafc;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .hint {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.4;
+    }
+
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 16px;
+      background: rgba(2, 6, 23, 0.42);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+    }
+
+    .history-table th,
+    .history-table td {
+      padding: 10px 9px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+      text-align: left;
+      font-size: 0.88rem;
+    }
+
+    .history-table th {
+      color: #e0f2fe;
+      background: rgba(15, 23, 42, 0.74);
+    }
+
+    .history-table td {
+      color: var(--muted);
+    }
+
+    .empty-history {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .note-card p,
+    .note-card li {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.94rem;
+    }
+
+    .note-card ul {
+      margin: 10px 0 0;
+      padding-left: 1.15rem;
+    }
+
+    .formula-box {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(2, 6, 23, 0.56);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      color: #dbeafe;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      line-height: 1.55;
+      font-size: 0.88rem;
+    }
+
+    .wrong-list {
+      margin-top: 14px;
+      display: none;
+      text-align: left;
+    }
+
+    .wrong-list h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      color: #fecdd3;
+    }
+
+    .wrong-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 9px 10px;
+      border-radius: 13px;
+      background: rgba(251, 113, 133, 0.10);
+      border: 1px solid rgba(251, 113, 133, 0.20);
+      color: #fecdd3;
+      margin-bottom: 7px;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 980px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .site-header,
+      main {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .hero {
+        border-radius: 22px;
+      }
+
+      .stats-bar,
+      .result-grid,
+      .answer-row {
+        grid-template-columns: 1fr;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <a class="back-link" href="../index.html">← Back to Interactive Learning Lab</a>
+
+    <section class="hero">
+      <p class="eyebrow">Maths Practice • Speed Recall • Daily Training</p>
+      <h1>Multiplication Tables Speed Practice</h1>
+      <p class="subtitle">
+        A 21-day challenge for fast multiplication recall. Practice selected tables, track
+        speed and accuracy, and review wrong answers at the end of each session.
+      </p>
+    </section>
+  </header>
+
+  <main>
+    <section class="practice-card">
+      <div class="quiz-panel">
+        <section id="start-screen" class="screen active">
+          <div class="challenge-badge">🚀 Day <span id="day-display">1</span> of 21</div>
+          <h2 class="start-title">Ready for today’s practice?</h2>
+          <p class="start-text">
+            You will answer a set of multiplication questions. Try to answer accurately first,
+            then gradually improve speed over repeated sessions.
+          </p>
+
+          <div class="button-row" style="justify-content:center; margin-top:22px;">
+            <button class="green" id="startBtn">Start Practice Session</button>
+          </div>
+        </section>
+
+        <section id="quiz-screen" class="screen">
+          <div class="stats-bar">
+            <div class="stat">
+              <strong>Progress</strong>
+              <span id="progress">0/20</span>
+            </div>
+            <div class="stat">
+              <strong>Time</strong>
+              <span id="timer">0.0s</span>
+            </div>
+            <div class="stat">
+              <strong>Correct</strong>
+              <span id="correctStat">0</span>
+            </div>
+            <div class="stat">
+              <strong>Streak</strong>
+              <span id="streakStat">0</span>
+            </div>
+          </div>
+
+          <div id="question">14 × 7</div>
+
+          <div class="answer-row">
+            <input type="number" id="answerInput" placeholder="Type answer" autocomplete="off" />
+            <button id="submitBtn">Submit</button>
+          </div>
+
+          <div id="feedback" class="feedback"></div>
+        </section>
+
+        <section id="result-screen" class="screen">
+          <div class="challenge-badge">Session complete</div>
+          <h2 class="start-title">Good work!</h2>
+
+          <div class="result-grid">
+            <div class="result-box">
+              <strong id="finalSpeed">0.00s</strong>
+              <span>Average speed</span>
+            </div>
+            <div class="result-box">
+              <strong id="finalAccuracy">0%</strong>
+              <span>Accuracy</span>
+            </div>
+            <div class="result-box">
+              <strong id="finalBestStreak">0</strong>
+              <span>Best streak</span>
+            </div>
+          </div>
+
+          <div class="button-row" style="justify-content:center;">
+            <button id="againBtn">Practice Again</button>
+            <button id="reviewBtn" class="secondary">Review mistakes</button>
+          </div>
+
+          <div id="wrongList" class="wrong-list">
+            <h3>Questions to revise</h3>
+            <div id="wrongItems"></div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <aside class="side-panel">
+      <section class="control-card">
+        <h2>Session settings</h2>
+
+        <div class="control-group">
+          <label for="questionCount">
+            Questions
+            <span id="questionCountValue">20</span>
+          </label>
+          <input id="questionCount" type="range" min="10" max="50" step="5" value="20" />
+        </div>
+
+        <div class="control-group">
+          <label for="factorMode">
+            Factor mode
+          </label>
+          <select id="factorMode">
+            <option value="selected">Selected tables × selected tables</option>
+            <option value="oneToTen">Selected tables × 1 to 10</option>
+            <option value="oneToTwenty">Selected tables × 1 to 20</option>
+          </select>
+          <div class="hint">
+            The original quiz used selected tables on both sides. You can change this here.
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label>Choose tables</label>
+          <div id="tableChips" class="table-chip-grid"></div>
+          <div class="button-row">
+            <button id="selectDefaultBtn" class="secondary">Default</button>
+            <button id="selectAllBtn" class="secondary">All 1–20</button>
+            <button id="clearBtn" class="secondary">Clear</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="history-card">
+        <h2>Your progress</h2>
+        <div id="historyBox"></div>
+        <div class="button-row">
+          <button id="clearHistoryBtn" class="secondary">Clear history</button>
+        </div>
+      </section>
+
+      <section class="note-card">
+        <h2>Practice method</h2>
+
+        <div class="formula-box">
+          Speed = total time / questions<br>
+          Accuracy = correct answers / total questions
+        </div>
+
+        <p>
+          First aim for accuracy. Then repeat short sessions daily and try to reduce average time.
+          Tables such as 13–19 become easier when the same products appear repeatedly.
+        </p>
+
+        <ul>
+          <li>Wrong answers are shown after the session.</li>
+          <li>Progress is saved locally in your browser.</li>
+          <li>Use short daily sessions rather than one long session.</li>
+        </ul>
+      </section>
+    </aside>
+  </main>
+
+  <script>
+    const defaultTables = [3, 4, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+    let selectedTables = new Set(defaultTables);
+
+    let questions = [];
+    let currentIndex = 0;
+    let correctCount = 0;
+    let wrongAnswers = [];
+    let startTime = 0;
+    let timerInterval = null;
+    let streak = 0;
+    let bestStreak = 0;
+    let currentAttemptWrong = false;
+
+    const startScreen = document.getElementById("start-screen");
+    const quizScreen = document.getElementById("quiz-screen");
+    const resultScreen = document.getElementById("result-screen");
+
+    const questionEl = document.getElementById("question");
+    const answerInput = document.getElementById("answerInput");
+    const feedbackEl = document.getElementById("feedback");
+
+    const progressEl = document.getElementById("progress");
+    const timerEl = document.getElementById("timer");
+    const correctStat = document.getElementById("correctStat");
+    const streakStat = document.getElementById("streakStat");
+
+    const questionCountSlider = document.getElementById("questionCount");
+    const questionCountValue = document.getElementById("questionCountValue");
+    const factorMode = document.getElementById("factorMode");
+
+    const finalSpeed = document.getElementById("finalSpeed");
+    const finalAccuracy = document.getElementById("finalAccuracy");
+    const finalBestStreak = document.getElementById("finalBestStreak");
+
+    const wrongList = document.getElementById("wrongList");
+    const wrongItems = document.getElementById("wrongItems");
+
+    function showScreen(screen) {
+      [startScreen, quizScreen, resultScreen].forEach(item => item.classList.remove("active"));
+      screen.classList.add("active");
+    }
+
+    function randomChoice(array) {
+      return array[Math.floor(Math.random() * array.length)];
+    }
+
+    function createTableChips() {
+      const container = document.getElementById("tableChips");
+      container.innerHTML = "";
+
+      for (let n = 1; n <= 20; n++) {
+        const chip = document.createElement("span");
+        chip.className = "table-chip";
+        chip.textContent = n;
+        chip.dataset.table = n;
+
+        if (selectedTables.has(n)) chip.classList.add("active");
+
+        chip.addEventListener("click", () => {
+          if (selectedTables.has(n)) selectedTables.delete(n);
+          else selectedTables.add(n);
+
+          if (selectedTables.size === 0) selectedTables.add(n);
+          createTableChips();
+        });
+
+        container.appendChild(chip);
+      }
+    }
+
+    function getSecondFactorPool() {
+      const selected = Array.from(selectedTables);
+
+      if (factorMode.value === "oneToTen") {
+        return Array.from({ length: 10 }, (_, i) => i + 1);
+      }
+
+      if (factorMode.value === "oneToTwenty") {
+        return Array.from({ length: 20 }, (_, i) => i + 1);
+      }
+
+      return selected;
+    }
+
+    function generateQuestions() {
+      const selected = Array.from(selectedTables);
+      const secondPool = getSecondFactorPool();
+      const totalQuestions = Number(questionCountSlider.value);
+
+      questions = [];
+
+      for (let i = 0; i < totalQuestions; i++) {
+        const a = randomChoice(selected);
+        const b = randomChoice(secondPool);
+
+        questions.push({
+          a,
+          b,
+          q: `${a} × ${b}`,
+          answer: a * b
+        });
+      }
+    }
+
+    function startGame() {
+      generateQuestions();
+
+      currentIndex = 0;
+      correctCount = 0;
+      wrongAnswers = [];
+      streak = 0;
+      bestStreak = 0;
+      currentAttemptWrong = false;
+
+      showScreen(quizScreen);
+      startTime = Date.now();
+
+      clearInterval(timerInterval);
+      timerInterval = setInterval(updateTimer, 100);
+
+      showQuestion();
+      answerInput.focus();
+    }
+
+    function updateTimer() {
+      const elapsed = (Date.now() - startTime) / 1000;
+      timerEl.textContent = `${elapsed.toFixed(1)}s`;
+    }
+
+    function showQuestion() {
+      if (currentIndex >= questions.length) {
+        endGame();
+        return;
+      }
+
+      const q = questions[currentIndex];
+
+      questionEl.textContent = q.q;
+      answerInput.value = "";
+      feedbackEl.textContent = "";
+      feedbackEl.className = "feedback";
+      currentAttemptWrong = false;
+
+      updateStats();
+    }
+
+    function updateStats() {
+      progressEl.textContent = `${Math.min(currentIndex + 1, questions.length)}/${questions.length}`;
+      correctStat.textContent = correctCount;
+      streakStat.textContent = streak;
+    }
+
+    function submitAnswer() {
+      if (currentIndex >= questions.length) return;
+
+      const raw = answerInput.value.trim();
+      if (!raw) return;
+
+      const value = Number(raw);
+      const q = questions[currentIndex];
+
+      if (value === q.answer) {
+        if (!currentAttemptWrong) {
+          correctCount++;
+          streak++;
+          bestStreak = Math.max(bestStreak, streak);
+        }
+
+        feedbackEl.textContent = currentAttemptWrong ? "Correct now — revise this once more." : "Correct!";
+        feedbackEl.className = "feedback correct";
+
+        currentIndex++;
+        updateStats();
+
+        setTimeout(showQuestion, 220);
+      } else {
+        currentAttemptWrong = true;
+        streak = 0;
+
+        wrongAnswers.push({
+          question: q.q,
+          correct: q.answer,
+          yourAnswer: raw
+        });
+
+        feedbackEl.textContent = "Not correct. Try again.";
+        feedbackEl.className = "feedback wrong";
+        updateStats();
+
+        answerInput.select();
+      }
+    }
+
+    function endGame() {
+      clearInterval(timerInterval);
+
+      const totalTime = (Date.now() - startTime) / 1000;
+      const avgSpeed = totalTime / questions.length;
+      const accuracy = (correctCount / questions.length) * 100;
+
+      finalSpeed.textContent = `${avgSpeed.toFixed(2)}s`;
+      finalAccuracy.textContent = `${accuracy.toFixed(0)}%`;
+      finalBestStreak.textContent = bestStreak;
+
+      saveResult(avgSpeed, accuracy, questions.length, bestStreak);
+      renderWrongList();
+      updateHistoryTable();
+
+      showScreen(resultScreen);
+    }
+
+    function renderWrongList() {
+      if (wrongAnswers.length === 0) {
+        wrongItems.innerHTML = `<div class="wrong-item"><span>No wrong answers.</span><strong>Excellent!</strong></div>`;
+        return;
+      }
+
+      const unique = [];
+      const seen = new Set();
+
+      for (const item of wrongAnswers) {
+        const key = `${item.question}-${item.correct}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          unique.push(item);
+        }
+      }
+
+      wrongItems.innerHTML = unique.map(item => `
+        <div class="wrong-item">
+          <span>${item.question}</span>
+          <strong>${item.correct}</strong>
+        </div>
+      `).join("");
+    }
+
+    function saveResult(speed, accuracy, count, bestStreakValue) {
+      const history = JSON.parse(localStorage.getItem("multiplication_practice_history_v1") || "[]");
+
+      history.unshift({
+        date: new Date().toLocaleDateString(),
+        speed: speed.toFixed(2),
+        accuracy: accuracy.toFixed(0),
+        count,
+        bestStreak: bestStreakValue
+      });
+
+      localStorage.setItem("multiplication_practice_history_v1", JSON.stringify(history.slice(0, 8)));
+    }
+
+    function updateHistoryTable() {
+      const history = JSON.parse(localStorage.getItem("multiplication_practice_history_v1") || "[]");
+      const historyBox = document.getElementById("historyBox");
+
+      if (history.length === 0) {
+        historyBox.innerHTML = `<p class="empty-history">No practice history yet. Complete a session to see your progress here.</p>`;
+        return;
+      }
+
+      historyBox.innerHTML = `
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Speed</th>
+              <th>Acc.</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${history.map(h => `
+              <tr>
+                <td>${h.date}</td>
+                <td>${h.speed}s</td>
+                <td>${h.accuracy}%</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function updateDayDisplay() {
+      const history = JSON.parse(localStorage.getItem("multiplication_practice_history_v1") || "[]");
+      const day = Math.min(21, history.length + 1);
+      document.getElementById("day-display").textContent = day;
+    }
+
+    document.getElementById("startBtn").addEventListener("click", startGame);
+    document.getElementById("againBtn").addEventListener("click", () => {
+      showScreen(startScreen);
+      updateDayDisplay();
+    });
+
+    document.getElementById("reviewBtn").addEventListener("click", () => {
+      wrongList.style.display = wrongList.style.display === "block" ? "none" : "block";
+    });
+
+    document.getElementById("submitBtn").addEventListener("click", submitAnswer);
+
+    answerInput.addEventListener("keydown", event => {
+      if (event.key === "Enter") submitAnswer();
+    });
+
+    questionCountSlider.addEventListener("input", () => {
+      questionCountValue.textContent = questionCountSlider.value;
+    });
+
+    document.getElementById("selectDefaultBtn").addEventListener("click", () => {
+      selectedTables = new Set(defaultTables);
+      createTableChips();
+    });
+
+    document.getElementById("selectAllBtn").addEventListener("click", () => {
+      selectedTables = new Set(Array.from({ length: 20 }, (_, i) => i + 1));
+      createTableChips();
+    });
+
+    document.getElementById("clearBtn").addEventListener("click", () => {
+      selectedTables = new Set([3]);
+      createTableChips();
+    });
+
+    document.getElementById("clearHistoryBtn").addEventListener("click", () => {
+      localStorage.removeItem("multiplication_practice_history_v1");
+      updateHistoryTable();
+      updateDayDisplay();
+    });
+
+    createTableChips();
+    updateHistoryTable();
+    updateDayDisplay();
+  </script>
+</body>
+</html>

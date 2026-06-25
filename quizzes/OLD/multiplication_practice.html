@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JEE Speed Math: 21-Day Challenge</title>
+    <title>Multiplication Tables Speed Practice: 21-Day Challenge</title>
     <style>
         :root {
             --primary: #2563eb;
@@ -85,7 +85,7 @@
 <body>
 
     <div class="container" id="game-container">
-        <h1>🚀 JEE Speed Trainer</h1>
+        <h1>🚀 Multiplication Tables Practice</h1>
         <p>Day <span id="day-display">1</span> of 21</p>
         
         <div id="start-screen">
@@ -146,7 +146,8 @@
         function generateQuestions() {
             for(let i=0; i<totalQuestions; i++) {
                 const t = tables[Math.floor(Math.random() * tables.length)];
-                const n = Math.floor(Math.random() * 10) + 1;
+             //   const n = Math.floor(Math.random() * 10) + 1;
+				const n = tables[Math.floor(Math.random() * tables.length)];
                 questions.push({ q: `${t} × ${n}`, a: t * n });
             }
         }

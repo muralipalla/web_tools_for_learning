@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trigonometric Angle Identities Quiz</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --dark: #020617;
+      --dark-panel: rgba(15, 23, 42, 0.90);
+      --dark-panel-2: rgba(30, 41, 59, 0.76);
+      --dark-border: rgba(148, 163, 184, 0.25);
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --cyan: #38bdf8;
+      --amber: #f59e0b;
+      --green: #34d399;
+      --red: #fb7185;
+      --blue-soft: #bfdbfe;
+      --violet: #a78bfa;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.22), transparent 32rem),
+        radial-gradient(circle at bottom right, rgba(245, 158, 11, 0.14), transparent 30rem),
+        linear-gradient(135deg, #020617, #0f172a 55%, #111827);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .site-header {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 22px 18px 10px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 16px;
+      color: var(--blue-soft);
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .hero {
+      background:
+        linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.62)),
+        radial-gradient(circle at 25% 25%, rgba(56, 189, 248, 0.22), transparent 20rem);
+      border: 1px solid var(--dark-border);
+      border-radius: 28px;
+      padding: clamp(22px, 4vw, 38px);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--blue-soft);
+      font-size: 0.8rem;
+      font-weight: 900;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 4.1rem);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+    }
+
+    .subtitle {
+      max-width: 900px;
+      margin: 16px 0 0;
+      color: #cbd5e1;
+      line-height: 1.65;
+      font-size: clamp(1rem, 1.5vw, 1.13rem);
+    }
+
+    main {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 350px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .quiz-card,
+    .control-card,
+    .note-card,
+    .review-card {
+      background: var(--dark-panel);
+      border: 1px solid var(--dark-border);
+      border-radius: 24px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .quiz-card {
+      padding: 18px;
+    }
+
+    .quiz-panel {
+      min-height: 455px;
+      border-radius: 20px;
+      padding: clamp(20px, 4vw, 34px);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(56, 189, 248, 0.16), transparent 18rem),
+        radial-gradient(circle at 80% 90%, rgba(245, 158, 11, 0.10), transparent 18rem),
+        rgba(2, 6, 23, 0.66);
+      border: 1px solid rgba(148, 163, 184, 0.20);
+      display: grid;
+      align-content: center;
+      text-align: center;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .challenge-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      color: #dbeafe;
+      font-weight: 850;
+      margin-bottom: 16px;
+    }
+
+    .start-title {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+    }
+
+    .start-text {
+      max-width: 620px;
+      margin: 16px auto 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .stat {
+      background: rgba(15, 23, 42, 0.86);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 16px;
+      padding: 10px 11px;
+      text-align: left;
+    }
+
+    .stat strong {
+      display: block;
+      color: #e0f2fe;
+      font-size: 0.85rem;
+      margin-bottom: 3px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 850;
+    }
+
+    .question-box {
+      margin: 18px auto 22px;
+      max-width: 760px;
+      padding: clamp(18px, 4vw, 30px);
+      border-radius: 24px;
+      background: rgba(15, 23, 42, 0.82);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+    }
+
+    #question {
+      margin: 0;
+      font-size: clamp(2rem, 6vw, 4.4rem);
+      font-weight: 950;
+      letter-spacing: -0.055em;
+      line-height: 1.08;
+      color: #f8fafc;
+      text-shadow: 0 0 34px rgba(56, 189, 248, 0.16);
+    }
+
+    .equals {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 1rem;
+      font-weight: 800;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .option {
+      cursor: pointer;
+      border-radius: 17px;
+      padding: 16px 15px;
+      background: rgba(30, 41, 59, 0.72);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      color: #e5e7eb;
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      font-weight: 900;
+      transition: transform 120ms ease, background 120ms ease, border 120ms ease;
+      user-select: none;
+    }
+
+    .option:hover {
+      transform: translateY(-1px);
+      background: rgba(56, 189, 248, 0.14);
+      border-color: rgba(56, 189, 248, 0.45);
+    }
+
+    .option.selected {
+      background: rgba(56, 189, 248, 0.22);
+      border-color: rgba(56, 189, 248, 0.78);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.10);
+    }
+
+    .option.correct-review {
+      background: rgba(52, 211, 153, 0.18);
+      border-color: rgba(52, 211, 153, 0.65);
+    }
+
+    .option.wrong-review {
+      background: rgba(251, 113, 133, 0.18);
+      border-color: rgba(251, 113, 133, 0.65);
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      border-radius: 15px;
+      padding: 14px 18px;
+      font: inherit;
+      font-weight: 850;
+      color: #0f172a;
+      background: #e0f2fe;
+      transition: transform 120ms ease, background 120ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      background: #bae6fd;
+    }
+
+    button.secondary {
+      background: #334155;
+      color: #ffffff;
+      border: 1px solid var(--dark-border);
+    }
+
+    button.secondary:hover {
+      background: #475569;
+    }
+
+    button.green {
+      background: #bbf7d0;
+    }
+
+    button.green:hover {
+      background: #86efac;
+    }
+
+    .feedback {
+      min-height: 28px;
+      margin-top: 14px;
+      font-weight: 900;
+      font-size: 1.05rem;
+    }
+
+    .feedback.correct {
+      color: #86efac;
+    }
+
+    .feedback.wrong {
+      color: #fecdd3;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .result-box {
+      border-radius: 18px;
+      padding: 16px;
+      background: rgba(15, 23, 42, 0.82);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+    }
+
+    .result-box strong {
+      display: block;
+      font-size: 1.8rem;
+      color: #e0f2fe;
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+
+    .result-box span {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .side-panel {
+      display: grid;
+      gap: 14px;
+    }
+
+    .control-card,
+    .note-card,
+    .review-card {
+      padding: 18px;
+    }
+
+    .control-card h2,
+    .note-card h2,
+    .review-card h2 {
+      margin: 0 0 14px;
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+    }
+
+    .control-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+      margin-bottom: 8px;
+      color: #f8fafc;
+      font-weight: 850;
+      font-size: 0.94rem;
+    }
+
+    label span {
+      min-width: 78px;
+      text-align: right;
+      color: #bae6fd;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.88rem;
+    }
+
+    input[type="range"],
+    select {
+      width: 100%;
+      accent-color: var(--cyan);
+    }
+
+    select {
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      border-radius: 15px;
+      padding: 12px 13px;
+      background: rgba(2, 6, 23, 0.65);
+      color: #e5e7eb;
+      font-size: 0.96rem;
+      outline: none;
+    }
+
+    select:focus {
+      border-color: rgba(56, 189, 248, 0.72);
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.14);
+    }
+
+    .hint {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.4;
+    }
+
+    .mode-pill-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .mode-pill {
+      cursor: pointer;
+      border-radius: 16px;
+      padding: 12px 10px;
+      background: rgba(30, 41, 59, 0.72);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      color: #dbeafe;
+      font-weight: 900;
+      text-align: center;
+      user-select: none;
+    }
+
+    .mode-pill.active {
+      background: rgba(56, 189, 248, 0.22);
+      border-color: rgba(56, 189, 248, 0.70);
+    }
+
+    .review-list {
+      display: grid;
+      gap: 8px;
+      max-height: 330px;
+      overflow: auto;
+    }
+
+    .review-item {
+      display: grid;
+      gap: 4px;
+      padding: 11px 12px;
+      border-radius: 14px;
+      background: rgba(2, 6, 23, 0.42);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .review-item strong {
+      color: #e0f2fe;
+    }
+
+    .review-item .bad {
+      color: #fecdd3;
+      font-weight: 850;
+    }
+
+    .review-item .good {
+      color: #bbf7d0;
+      font-weight: 850;
+    }
+
+    .empty-review {
+      color: var(--muted);
+      line-height: 1.5;
+      margin: 0;
+      font-size: 0.92rem;
+    }
+
+    .note-card p,
+    .note-card li {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.94rem;
+    }
+
+    .note-card ul {
+      margin: 10px 0 0;
+      padding-left: 1.15rem;
+    }
+
+    .formula-box {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(2, 6, 23, 0.56);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      color: #dbeafe;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      line-height: 1.55;
+      font-size: 0.88rem;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 980px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .site-header,
+      main {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .hero {
+        border-radius: 22px;
+      }
+
+      .stats-bar,
+      .result-grid,
+      .options,
+      .mode-pill-row {
+        grid-template-columns: 1fr;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <a class="back-link" href="../index.html">← Back to Interactive Learning Lab</a>
+
+    <section class="hero">
+      <p class="eyebrow">Mathematics Quiz • Trigonometry • Speed Practice</p>
+      <h1>Trigonometric Angle Identities Quiz</h1>
+      <p class="subtitle">
+        Practice standard trigonometric transformations such as sin(90° ± θ),
+        cos(π ± θ), tan(π/2 − θ), and related identities. Choose degree or radian notation
+        before starting the randomized quiz.
+      </p>
+    </section>
+  </header>
+
+  <main>
+    <section class="quiz-card">
+      <div class="quiz-panel">
+        <section id="start-screen" class="screen active">
+          <div class="challenge-badge">⚡ Randomized trig identity practice</div>
+          <h2 class="start-title">Choose notation and begin</h2>
+          <p class="start-text">
+            Each session randomly selects questions and shuffles the answer choices.
+            The same identities can be shown either in degrees or radians.
+          </p>
+
+          <div class="button-row">
+            <button id="startBtn" class="green">Start Quiz</button>
+          </div>
+        </section>
+
+        <section id="quiz-screen" class="screen">
+          <div class="stats-bar">
+            <div class="stat">
+              <strong>Question</strong>
+              <span id="progress">1/20</span>
+            </div>
+            <div class="stat">
+              <strong>Time</strong>
+              <span id="timer">00:00</span>
+            </div>
+            <div class="stat">
+              <strong>Answered</strong>
+              <span id="answeredCount">0</span>
+            </div>
+            <div class="stat">
+              <strong>Mode</strong>
+              <span id="modeStatus">Degrees</span>
+            </div>
+          </div>
+
+          <div class="question-box">
+            <h2 id="question">sin(90° + θ)</h2>
+            <div class="equals">is equal to</div>
+          </div>
+
+          <div id="options" class="options"></div>
+
+          <div id="feedback" class="feedback"></div>
+
+          <div class="button-row">
+            <button id="prevBtn" class="secondary">Previous</button>
+            <button id="nextBtn" class="secondary">Next</button>
+            <button id="submitBtn">Submit Quiz</button>
+          </div>
+        </section>
+
+        <section id="result-screen" class="screen">
+          <div class="challenge-badge">Quiz complete</div>
+          <h2 class="start-title">Result</h2>
+
+          <div class="result-grid">
+            <div class="result-box">
+              <strong id="finalScore">0/20</strong>
+              <span>Score</span>
+            </div>
+            <div class="result-box">
+              <strong id="finalPercent">0%</strong>
+              <span>Accuracy</span>
+            </div>
+            <div class="result-box">
+              <strong id="finalTime">00:00</strong>
+              <span>Time taken</span>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button id="againBtn">New Random Quiz</button>
+            <button id="reviewBtn" class="secondary">Review answers</button>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <aside class="side-panel">
+      <section class="control-card">
+        <h2>Quiz settings</h2>
+
+        <div class="control-group">
+          <label>Angle notation</label>
+          <div class="mode-pill-row">
+            <div class="mode-pill active" data-mode="degrees">Degrees</div>
+            <div class="mode-pill" data-mode="radians">Radians</div>
+          </div>
+          <div class="hint">
+            Degrees show 90°, 180°, 270°, 360°. Radians show π/2, π, 3π/2, 2π.
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label for="questionCount">
+            Questions
+            <span id="questionCountValue">20</span>
+          </label>
+          <input id="questionCount" type="range" min="10" max="30" step="5" value="20" />
+        </div>
+
+        <div class="control-group">
+          <label for="answerStyle">
+            Answer style
+          </label>
+          <select id="answerStyle">
+            <option value="compact">Compact: sinθ</option>
+            <option value="spaced">Spaced: sin θ</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="review-card">
+        <h2>Review</h2>
+        <div id="reviewList" class="review-list">
+          <p class="empty-review">Submit the quiz to see correct and wrong answers here.</p>
+        </div>
+      </section>
+
+      <section class="note-card">
+        <h2>Memory hints</h2>
+
+        <div class="formula-box">
+          90° ↔ π/2 changes sin ↔ cos<br>
+          180° ↔ π changes the quadrant sign<br>
+          360° ↔ 2π returns to the same direction
+        </div>
+
+        <p>
+          These are reduction identities. First decide whether the function changes
+          to its co-function, then decide the sign using the quadrant.
+        </p>
+
+        <ul>
+          <li>90° ± θ and 270° ± θ usually change sin ↔ cos, tan ↔ cot.</li>
+          <li>180° ± θ and 360° ± θ usually keep the same function type.</li>
+          <li>Use ASTC/quadrant signs to decide plus or minus.</li>
+        </ul>
+      </section>
+    </aside>
+  </main>
+
+  <script>
+    const identities = [
+      { deg: "sin(90° + θ)", rad: "sin(π/2 + θ)", ans: "cosθ" },
+      { deg: "sin(90° - θ)", rad: "sin(π/2 - θ)", ans: "cosθ" },
+      { deg: "cos(90° + θ)", rad: "cos(π/2 + θ)", ans: "-sinθ" },
+      { deg: "cos(90° - θ)", rad: "cos(π/2 - θ)", ans: "sinθ" },
+
+      { deg: "sin(180° - θ)", rad: "sin(π - θ)", ans: "sinθ" },
+      { deg: "sin(180° + θ)", rad: "sin(π + θ)", ans: "-sinθ" },
+      { deg: "cos(180° - θ)", rad: "cos(π - θ)", ans: "-cosθ" },
+      { deg: "cos(180° + θ)", rad: "cos(π + θ)", ans: "-cosθ" },
+
+      { deg: "sin(270° - θ)", rad: "sin(3π/2 - θ)", ans: "-cosθ" },
+      { deg: "sin(270° + θ)", rad: "sin(3π/2 + θ)", ans: "-cosθ" },
+      { deg: "cos(270° - θ)", rad: "cos(3π/2 - θ)", ans: "-sinθ" },
+      { deg: "cos(270° + θ)", rad: "cos(3π/2 + θ)", ans: "sinθ" },
+
+      { deg: "tan(180° + θ)", rad: "tan(π + θ)", ans: "tanθ" },
+      { deg: "tan(180° - θ)", rad: "tan(π - θ)", ans: "-tanθ" },
+      { deg: "tan(90° - θ)", rad: "tan(π/2 - θ)", ans: "cotθ" },
+      { deg: "cot(90° - θ)", rad: "cot(π/2 - θ)", ans: "tanθ" },
+
+      { deg: "sec(180° - θ)", rad: "sec(π - θ)", ans: "-secθ" },
+      { deg: "cosec(180° - θ)", rad: "cosec(π - θ)", ans: "cosecθ" },
+      { deg: "sec(360° - θ)", rad: "sec(2π - θ)", ans: "secθ" },
+      { deg: "cos(360° - θ)", rad: "cos(2π - θ)", ans: "cosθ" },
+
+      { deg: "sin(360° - θ)", rad: "sin(2π - θ)", ans: "-sinθ" },
+      { deg: "tan(360° - θ)", rad: "tan(2π - θ)", ans: "-tanθ" },
+      { deg: "cot(180° + θ)", rad: "cot(π + θ)", ans: "cotθ" },
+      { deg: "sec(180° + θ)", rad: "sec(π + θ)", ans: "-secθ" },
+      { deg: "cosec(180° + θ)", rad: "cosec(π + θ)", ans: "-cosecθ" },
+      { deg: "cos(360° + θ)", rad: "cos(2π + θ)", ans: "cosθ" },
+      { deg: "sin(360° + θ)", rad: "sin(2π + θ)", ans: "sinθ" },
+      { deg: "tan(360° + θ)", rad: "tan(2π + θ)", ans: "tanθ" },
+      { deg: "sec(360° + θ)", rad: "sec(2π + θ)", ans: "secθ" },
+      { deg: "cosec(360° - θ)", rad: "cosec(2π - θ)", ans: "-cosecθ" }
+    ];
+
+    const answerPool = [
+      "sinθ", "-sinθ",
+      "cosθ", "-cosθ",
+      "tanθ", "-tanθ",
+      "cotθ", "-cotθ",
+      "secθ", "-secθ",
+      "cosecθ", "-cosecθ"
+    ];
+
+    let quiz = [];
+    let current = 0;
+    let answers = [];
+    let seconds = 0;
+    let timerInterval = null;
+    let angleMode = "degrees";
+
+    const startScreen = document.getElementById("start-screen");
+    const quizScreen = document.getElementById("quiz-screen");
+    const resultScreen = document.getElementById("result-screen");
+
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+    const feedbackEl = document.getElementById("feedback");
+    const reviewList = document.getElementById("reviewList");
+
+    function shuffle(array) {
+      const a = [...array];
+
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+
+      return a;
+    }
+
+    function formatAnswer(answer) {
+      if (document.getElementById("answerStyle").value === "spaced") {
+        return answer.replace("θ", " θ");
+      }
+      return answer;
+    }
+
+    function showScreen(screen) {
+      [startScreen, quizScreen, resultScreen].forEach(item => item.classList.remove("active"));
+      screen.classList.add("active");
+    }
+
+    function makeQuestionBank() {
+      const count = Number(document.getElementById("questionCount").value);
+      const selected = shuffle(identities).slice(0, count);
+
+      return selected.map(item => {
+        let options = [item.ans];
+
+        while (options.length < 4) {
+          const candidate = answerPool[Math.floor(Math.random() * answerPool.length)];
+          if (!options.includes(candidate)) {
+            options.push(candidate);
+          }
+        }
+
+        return {
+          question: angleMode === "degrees" ? item.deg : item.rad,
+          answer: item.ans,
+          options: shuffle(options)
+        };
+      });
+    }
+
+    function startQuiz() {
+      quiz = makeQuestionBank();
+      answers = new Array(quiz.length).fill(null);
+      current = 0;
+      seconds = 0;
+
+      clearInterval(timerInterval);
+      timerInterval = setInterval(updateTimer, 1000);
+      updateTimer();
+
+      document.getElementById("modeStatus").textContent = angleMode === "degrees" ? "Degrees" : "Radians";
+      feedbackEl.textContent = "";
+      reviewList.innerHTML = `<p class="empty-review">Submit the quiz to see correct and wrong answers here.</p>`;
+
+      showScreen(quizScreen);
+      showQuestion();
+    }
+
+    function updateTimer() {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+
+      document.getElementById("timer").textContent =
+        String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+
+      seconds++;
+    }
+
+    function showQuestion() {
+      const q = quiz[current];
+
+      document.getElementById("progress").textContent = `${current + 1}/${quiz.length}`;
+      document.getElementById("answeredCount").textContent = answers.filter(Boolean).length;
+      questionEl.textContent = `${q.question}`;
+
+      optionsEl.innerHTML = "";
+
+      q.options.forEach(option => {
+        const button = document.createElement("div");
+        button.className = "option";
+        if (answers[current] === option) {
+          button.classList.add("selected");
+        }
+
+        button.textContent = formatAnswer(option);
+        button.addEventListener("click", () => {
+          answers[current] = option;
+          feedbackEl.textContent = "";
+          showQuestion();
+        });
+
+        optionsEl.appendChild(button);
+      });
+    }
+
+    function nextQuestion() {
+      if (current < quiz.length - 1) {
+        current++;
+        showQuestion();
+      }
+    }
+
+    function prevQuestion() {
+      if (current > 0) {
+        current--;
+        showQuestion();
+      }
+    }
+
+    function submitQuiz() {
+      let score = 0;
+
+      for (let i = 0; i < quiz.length; i++) {
+        if (answers[i] === quiz[i].answer) {
+          score++;
+        }
+      }
+
+      clearInterval(timerInterval);
+
+      const elapsed = Math.max(0, seconds - 1);
+      const percent = Math.round((score / quiz.length) * 100);
+
+      document.getElementById("finalScore").textContent = `${score}/${quiz.length}`;
+      document.getElementById("finalPercent").textContent = `${percent}%`;
+
+      const m = Math.floor(elapsed / 60);
+      const s = elapsed % 60;
+      document.getElementById("finalTime").textContent =
+        String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+
+      buildReview();
+      showScreen(resultScreen);
+    }
+
+    function buildReview() {
+      reviewList.innerHTML = "";
+
+      quiz.forEach((q, index) => {
+        const item = document.createElement("div");
+        item.className = "review-item";
+
+        const userAnswer = answers[index] ? formatAnswer(answers[index]) : "Not answered";
+        const correctAnswer = formatAnswer(q.answer);
+
+        item.innerHTML = `
+          <strong>${index + 1}. ${q.question}</strong>
+          <span>Your answer: <span class="${answers[index] === q.answer ? "good" : "bad"}">${userAnswer}</span></span>
+          <span>Correct answer: <span class="good">${correctAnswer}</span></span>
+        `;
+
+        reviewList.appendChild(item);
+      });
+    }
+
+    document.querySelectorAll(".mode-pill").forEach(pill => {
+      pill.addEventListener("click", () => {
+        document.querySelectorAll(".mode-pill").forEach(item => item.classList.remove("active"));
+        pill.classList.add("active");
+        angleMode = pill.dataset.mode;
+      });
+    });
+
+    document.getElementById("questionCount").addEventListener("input", event => {
+      document.getElementById("questionCountValue").textContent = event.target.value;
+    });
+
+    document.getElementById("startBtn").addEventListener("click", startQuiz);
+    document.getElementById("againBtn").addEventListener("click", () => {
+      showScreen(startScreen);
+    });
+
+    document.getElementById("reviewBtn").addEventListener("click", () => {
+      document.querySelector(".review-card").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    document.getElementById("nextBtn").addEventListener("click", nextQuestion);
+    document.getElementById("prevBtn").addEventListener("click", prevQuestion);
+    document.getElementById("submitBtn").addEventListener("click", submitQuiz);
+  </script>
+</body>
+</html>

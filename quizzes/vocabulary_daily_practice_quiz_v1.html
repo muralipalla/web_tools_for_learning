@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Daily Vocabulary Practice Quiz</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --dark: #020617;
+      --dark-panel: rgba(15, 23, 42, 0.90);
+      --dark-panel-2: rgba(30, 41, 59, 0.76);
+      --dark-border: rgba(148, 163, 184, 0.25);
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --cyan: #38bdf8;
+      --amber: #f59e0b;
+      --green: #34d399;
+      --red: #fb7185;
+      --blue-soft: #bfdbfe;
+      --violet: #a78bfa;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.22), transparent 32rem),
+        radial-gradient(circle at bottom right, rgba(245, 158, 11, 0.14), transparent 30rem),
+        linear-gradient(135deg, #020617, #0f172a 55%, #111827);
+      line-height: 1.5;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .site-header {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px 18px 10px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 16px;
+      color: var(--blue-soft);
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .hero {
+      background:
+        linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.62)),
+        radial-gradient(circle at 25% 25%, rgba(56, 189, 248, 0.22), transparent 20rem);
+      border: 1px solid var(--dark-border);
+      border-radius: 28px;
+      padding: clamp(22px, 4vw, 38px);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--blue-soft);
+      font-size: 0.8rem;
+      font-weight: 900;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 4.1rem);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+    }
+
+    .subtitle {
+      max-width: 900px;
+      margin: 16px 0 0;
+      color: #cbd5e1;
+      line-height: 1.65;
+      font-size: clamp(1rem, 1.5vw, 1.13rem);
+    }
+
+    .top-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(148, 163, 184, 0.24);
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: #dbeafe;
+      font-weight: 850;
+      background: rgba(2, 6, 23, 0.45);
+      font-size: 0.92rem;
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 350px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .main-card,
+    .side-card {
+      background: var(--dark-panel);
+      border: 1px solid var(--dark-border);
+      border-radius: 24px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .main-card {
+      padding: 18px;
+    }
+
+    .app-panel {
+      min-height: 540px;
+      border-radius: 20px;
+      padding: clamp(18px, 3vw, 26px);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(56, 189, 248, 0.16), transparent 18rem),
+        radial-gradient(circle at 80% 90%, rgba(245, 158, 11, 0.10), transparent 18rem),
+        rgba(2, 6, 23, 0.66);
+      border: 1px solid rgba(148, 163, 184, 0.20);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .tab,
+    button {
+      border: 0;
+      cursor: pointer;
+      border-radius: 15px;
+      padding: 11px 14px;
+      font: inherit;
+      font-weight: 850;
+      color: #0f172a;
+      background: #e0f2fe;
+      transition: transform 120ms ease, background 120ms ease, opacity 120ms ease;
+    }
+
+    .tab {
+      color: #dbeafe;
+      background: rgba(30, 41, 59, 0.76);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+    }
+
+    .tab.active {
+      color: #0f172a;
+      background: #e0f2fe;
+      border-color: rgba(56, 189, 248, 0.7);
+    }
+
+    button:hover,
+    .tab:hover {
+      transform: translateY(-1px);
+      background: #bae6fd;
+    }
+
+    button.secondary {
+      background: #334155;
+      color: #ffffff;
+      border: 1px solid var(--dark-border);
+    }
+
+    button.secondary:hover {
+      background: #475569;
+    }
+
+    button.danger {
+      background: rgba(251, 113, 133, 0.16);
+      color: #fecdd3;
+      border: 1px solid rgba(251, 113, 133, 0.38);
+    }
+
+    button.danger:hover {
+      background: rgba(251, 113, 133, 0.25);
+    }
+
+    button.success {
+      background: #bbf7d0;
+      color: #052e16;
+    }
+
+    button.success:hover {
+      background: #86efac;
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .screen {
+      animation: fadeIn 0.25s ease;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .start-panel,
+    .result-panel {
+      text-align: center;
+      padding: clamp(18px, 4vw, 30px);
+    }
+
+    .challenge-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      color: #dbeafe;
+      font-weight: 850;
+      margin-bottom: 16px;
+    }
+
+    .start-title {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+    }
+
+    .start-text,
+    .muted {
+      color: var(--muted);
+    }
+
+    .start-text {
+      max-width: 680px;
+      margin: 16px auto 0;
+      line-height: 1.6;
+    }
+
+    .smallcard {
+      margin: 22px auto 0;
+      max-width: 720px;
+      background: rgba(15, 23, 42, 0.78);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 18px;
+      padding: 15px;
+      text-align: left;
+    }
+
+    .smallcard b {
+      color: #e0f2fe;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .start-panel .controls,
+    .result-panel .controls {
+      justify-content: center;
+    }
+
+    .question-area {
+      min-height: 450px;
+    }
+
+    .qtop {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .type-tag {
+      color: var(--cyan);
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.78rem;
+    }
+
+    .progress {
+      height: 11px;
+      background: rgba(51, 65, 85, 0.82);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 12px 0 22px;
+    }
+
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #38bdf8, #34d399);
+      transition: width 0.35s;
+    }
+
+    .word {
+      font-size: clamp(2.6rem, 7vw, 5.4rem);
+      font-weight: 950;
+      letter-spacing: -0.065em;
+      line-height: 1;
+      margin: 6px 0 8px;
+      color: #f8fafc;
+      text-shadow: 0 0 34px rgba(56, 189, 248, 0.18);
+    }
+
+    .sentence {
+      background: rgba(15, 23, 42, 0.82);
+      border-left: 5px solid rgba(56, 189, 248, 0.72);
+      padding: 15px 16px;
+      border-radius: 15px;
+      font-size: 1.05rem;
+      color: #cbd5e1;
+      margin-top: 12px;
+      line-height: 1.6;
+    }
+
+    .question-copy {
+      color: #cbd5e1;
+      font-size: 1.05rem;
+      line-height: 1.55;
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .option {
+      width: 100%;
+      text-align: left;
+      background: rgba(30, 41, 59, 0.72);
+      color: var(--text);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      padding: 14px 16px;
+      border-radius: 15px;
+      font-weight: 780;
+    }
+
+    .option:hover:not(:disabled) {
+      background: rgba(56, 189, 248, 0.14);
+      border-color: rgba(56, 189, 248, 0.45);
+    }
+
+    .option.correct {
+      background: rgba(52, 211, 153, 0.18);
+      border-color: rgba(52, 211, 153, 0.70);
+      color: #bbf7d0;
+    }
+
+    .option.wrong {
+      background: rgba(251, 113, 133, 0.18);
+      border-color: rgba(251, 113, 133, 0.70);
+      color: #fecdd3;
+    }
+
+    .feedback {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      display: none;
+      background: rgba(2, 6, 23, 0.56);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .feedback.show {
+      display: block;
+    }
+
+    .feedback.good {
+      border-color: rgba(52, 211, 153, 0.38);
+      background: rgba(52, 211, 153, 0.10);
+    }
+
+    .feedback.bad {
+      border-color: rgba(251, 113, 133, 0.38);
+      background: rgba(251, 113, 133, 0.10);
+    }
+
+    .feedback b,
+    .feedback strong {
+      color: #e0f2fe;
+    }
+
+    .statrow {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .stat {
+      border-radius: 16px;
+      padding: 12px;
+      background: rgba(15, 23, 42, 0.78);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+    }
+
+    .stat b {
+      display: block;
+      font-size: 1.6rem;
+      color: #e0f2fe;
+      letter-spacing: -0.035em;
+    }
+
+    .side-panel {
+      display: grid;
+      gap: 14px;
+    }
+
+    .side-card {
+      padding: 18px;
+    }
+
+    .side-card h2,
+    .side-card h3 {
+      margin-top: 0;
+      letter-spacing: -0.02em;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(2, 6, 23, 0.42);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.16);
+    }
+
+    th,
+    td {
+      padding: 10px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+      text-align: left;
+      vertical-align: top;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    th {
+      color: #e0f2fe;
+      background: rgba(15, 23, 42, 0.74);
+    }
+
+    .scroll {
+      overflow-x: auto;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, 0.18);
+      color: #fde68a;
+      margin: 4px;
+      font-weight: 900;
+      border: 1px solid rgba(245, 158, 11, 0.36);
+    }
+
+    .locked {
+      filter: grayscale(1);
+      opacity: 0.45;
+    }
+
+    .reviewword,
+    .masterword {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin: 4px;
+      padding: 7px 9px;
+      border-radius: 999px;
+      font-weight: 780;
+      font-size: 0.92rem;
+    }
+
+    .reviewword {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.30);
+      color: #fde68a;
+    }
+
+    .masterword {
+      background: rgba(52, 211, 153, 0.12);
+      border: 1px solid rgba(52, 211, 153, 0.30);
+      color: #bbf7d0;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 150px;
+      border: 1px solid rgba(148, 163, 184, 0.24);
+      border-radius: 15px;
+      padding: 12px;
+      background: rgba(2, 6, 23, 0.65);
+      color: #e5e7eb;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      outline: none;
+      margin-top: 14px;
+    }
+
+    textarea:focus {
+      border-color: rgba(56, 189, 248, 0.72);
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.14);
+    }
+
+    .footer {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 18px 26px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .kbd {
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      background: rgba(15, 23, 42, 0.78);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      padding: 2px 6px;
+      border-radius: 7px;
+      color: #e0f2fe;
+    }
+
+    .confetti {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 20;
+    }
+
+    .confetti span {
+      position: absolute;
+      top: -30px;
+      font-size: 24px;
+      animation: fall 1.8s linear forwards;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(110vh) rotate(500deg);
+        opacity: 0;
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 980px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .site-header,
+      main,
+      .footer {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .hero {
+        border-radius: 22px;
+      }
+
+      .statrow,
+      .qtop {
+        grid-template-columns: 1fr;
+      }
+
+      .controls button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <a class="back-link" href="../index.html">← Back to Interactive Learning Lab</a>
+
+    <section class="hero">
+      <p class="eyebrow">English Quiz • SAT Vocabulary • Daily Practice</p>
+      <h1>Daily Vocabulary Practice</h1>
+      <p class="subtitle">
+        Practice 25 context-based vocabulary questions daily. Missed words return automatically
+        until they are mastered three times. The quiz emphasizes meaning from context, synonyms,
+        and fill-in-the-blank usage.
+      </p>
+
+      <div class="top-pills">
+        <span class="pill" id="todayPill">Today</span>
+        <span class="pill"><span id="wordCount">0</span> words</span>
+        <span class="pill">Spaced repetition</span>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <section class="main-card">
+      <div class="app-panel">
+        <div class="tabs">
+          <button class="tab active" data-screen="quiz">Quiz</button>
+          <button class="tab" data-screen="log">Logbook</button>
+          <button class="tab" data-screen="words">Review Words</button>
+          <button class="tab" data-screen="tools">Export / Reset</button>
+        </div>
+
+        <section id="screen-quiz" class="screen">
+          <div id="startPanel" class="start-panel">
+            <div class="challenge-badge">📚 Daily 25-question session</div>
+            <h2 class="start-title">Vocabulary workout for today</h2>
+            <p class="start-text">
+              Priority is given to words you answered wrongly in previous sessions.
+              A word is treated as learned after <b>3 correct review answers</b>.
+            </p>
+
+            <div class="smallcard">
+              <b>Question mix</b>
+              <p class="muted">
+                Meaning in context, synonym choice, and fill-in-the-blank.
+                The goal is to train context reading, not only dictionary recall.
+              </p>
+            </div>
+
+            <div class="controls">
+              <button class="success" id="startBtn">Start today’s quiz</button>
+              <button class="secondary" id="mistakeBtn">Mistake rescue round</button>
+            </div>
+
+            <p class="muted">
+              Tip: choose the best answer from the sentence, then read the explanation before moving on.
+            </p>
+          </div>
+
+          <div id="quizPanel" class="hidden question-area">
+            <div class="qtop">
+              <div>
+                <span class="type-tag" id="qType">Question</span>
+                <span class="muted" id="qCount"></span>
+              </div>
+              <div><b id="scoreLive">0</b> correct</div>
+            </div>
+
+            <div class="progress">
+              <div class="bar" id="progBar"></div>
+            </div>
+
+            <div id="questionBox"></div>
+
+            <div class="feedback" id="feedbackBox"></div>
+
+            <div class="controls">
+              <button class="secondary" id="hintBtn">Hint</button>
+              <button id="nextBtn" disabled>Next</button>
+              <button class="secondary" id="quitBtn">Finish now</button>
+            </div>
+          </div>
+
+          <div id="resultPanel" class="hidden result-panel">
+            <div class="challenge-badge">Session complete</div>
+            <h2 id="resultTitle" class="start-title">Good work!</h2>
+            <p id="rewardMsg" class="start-text"></p>
+
+            <div class="statrow" style="margin-top:20px;">
+              <div class="stat">
+                <span class="muted">Score</span>
+                <b id="finalScore"></b>
+              </div>
+              <div class="stat">
+                <span class="muted">XP gained</span>
+                <b id="xpGained"></b>
+              </div>
+            </div>
+
+            <h3>Words to review</h3>
+            <div id="sessionWrongList"></div>
+
+            <div class="controls">
+              <button id="startAgainBtn">Start another daily-style quiz</button>
+              <button class="success" id="rescueAfterBtn">Review today’s missed words now</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="screen-log" class="screen hidden">
+          <h2>Daily score logbook</h2>
+          <p class="muted">Saved automatically in this browser. Use Export if you want a backup.</p>
+          <div class="scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Score</th>
+                  <th>XP</th>
+                  <th>Wrong words</th>
+                </tr>
+              </thead>
+              <tbody id="logBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="screen-words" class="screen hidden">
+          <h2>Review dashboard</h2>
+          <div class="statrow">
+            <div class="stat">
+              <span class="muted">Due / weak words</span>
+              <b id="dueCount">0</b>
+            </div>
+            <div class="stat">
+              <span class="muted">Mastered words</span>
+              <b id="masteredCount">0</b>
+            </div>
+          </div>
+
+          <h3>Words that will keep repeating</h3>
+          <div id="dueWords"></div>
+
+          <h3>Mastered garden</h3>
+          <div id="masterWords"></div>
+        </section>
+
+        <section id="screen-tools" class="screen hidden">
+          <h2>Backup, import, and reset</h2>
+          <p class="muted">
+            Progress is stored locally in your browser. Export it before changing browsers or clearing cache.
+          </p>
+
+          <div class="controls">
+            <button id="exportBtn">Export progress</button>
+            <button class="secondary" id="importBtn">Import from box below</button>
+            <button class="danger" id="resetBtn">Reset all progress</button>
+          </div>
+
+          <textarea id="backupBox" placeholder="Exported progress appears here. Paste backup JSON here to import."></textarea>
+        </section>
+      </div>
+    </section>
+
+    <aside class="side-panel">
+      <section class="side-card">
+        <h2>Your progress</h2>
+        <div class="statrow">
+          <div class="stat">
+            <span class="muted">Total XP</span>
+            <b id="totalXP">0</b>
+          </div>
+          <div class="stat">
+            <span class="muted">Streak</span>
+            <b id="streak">0</b>
+          </div>
+          <div class="stat">
+            <span class="muted">Best</span>
+            <b id="bestScore">0/25</b>
+          </div>
+          <div class="stat">
+            <span class="muted">Accuracy</span>
+            <b id="accuracy">0%</b>
+          </div>
+        </div>
+
+        <h3>Rewards</h3>
+        <div id="badges"></div>
+      </section>
+
+      <section class="side-card">
+        <h3>How the repeat system works</h3>
+        <p class="muted">
+          Wrong answer → word becomes due immediately. Correct review answers build mastery.
+          After mastery level 3, the word moves to the mastered garden.
+        </p>
+        <p class="muted">
+          Each 25-question quiz tries to include about 40–60% due words when available,
+          then adds new or weak words.
+        </p>
+      </section>
+    </aside>
+  </main>
+
+  <div class="footer">
+    Made as a single offline HTML file. Keyboard shortcuts:
+    <span class="kbd">1–4</span> answer options,
+    <span class="kbd">H</span> hint,
+    <span class="kbd">Enter</span> next.
+  </div>
+
+  <div class="confetti" id="confetti"></div>
+
+  <script>
+    const WORDS = [{"word": "abate", "pos": "verb", "meaning": "to become less intense or widespread", "synonyms": "lessen; subside; diminish", "sentence": "When the storm began to abate, the hikers continued along the trail."}, {"word": "aberration", "pos": "noun", "meaning": "a departure from what is normal or expected", "synonyms": "anomaly; deviation; irregularity", "sentence": "The unusually low score was an aberration in an otherwise excellent record."}, {"word": "abstain", "pos": "verb", "meaning": "to deliberately avoid doing something", "synonyms": "refrain; forgo; withhold", "sentence": "Several members chose to abstain from the vote because of a conflict of interest."}, {"word": "abstract", "pos": "adjective", "meaning": "existing as an idea rather than a concrete thing", "synonyms": "theoretical; conceptual; intangible", "sentence": "The poem explores abstract ideas such as justice, memory, and identity."}, {"word": "accessible", "pos": "adjective", "meaning": "easy to understand, reach, or use", "synonyms": "approachable; available; understandable", "sentence": "The professor made a difficult topic accessible through clear examples."}, {"word": "acclaim", "pos": "noun", "meaning": "public praise or approval", "synonyms": "praise; recognition; applause", "sentence": "The scientist received international acclaim for her discovery."}, {"word": "accommodate", "pos": "verb", "meaning": "to adjust to or provide room for", "synonyms": "adapt; fit; allow", "sentence": "The design was changed to accommodate students with limited mobility."}, {"word": "accumulate", "pos": "verb", "meaning": "to gather or build up over time", "synonyms": "collect; amass; accrue", "sentence": "Dust can accumulate quickly in a room with poor ventilation."}, {"word": "accurate", "pos": "adjective", "meaning": "correct in all details", "synonyms": "precise; exact; faithful", "sentence": "An accurate map is essential for navigation in unfamiliar terrain."}, {"word": "adamant", "pos": "adjective", "meaning": "refusing to change one’s mind", "synonyms": "unyielding; firm; insistent", "sentence": "The committee was adamant that the safety rules should not be relaxed."}, {"word": "adapt", "pos": "verb", "meaning": "to change in response to new conditions", "synonyms": "adjust; modify; acclimate", "sentence": "Plants adapt to dry climates by conserving water."}, {"word": "adequate", "pos": "adjective", "meaning": "sufficient for a particular purpose", "synonyms": "enough; satisfactory; sufficient", "sentence": "The evidence was adequate to support the researcher’s conclusion."}, {"word": "advocate", "pos": "verb", "meaning": "to publicly support or recommend", "synonyms": "support; endorse; champion", "sentence": "The editorial advocates stronger protections for local wetlands."}, {"word": "aesthetic", "pos": "adjective", "meaning": "concerned with beauty or artistic taste", "synonyms": "artistic; visual; tasteful", "sentence": "The architect balanced practical needs with aesthetic considerations."}, {"word": "affirm", "pos": "verb", "meaning": "to state as true or confirm strongly", "synonyms": "confirm; assert; validate", "sentence": "The experiment affirmed the prediction made by the theory."}, {"word": "ambiguous", "pos": "adjective", "meaning": "open to more than one interpretation", "synonyms": "unclear; vague; equivocal", "sentence": "The ambiguous instructions caused several students to answer differently."}, {"word": "ambivalent", "pos": "adjective", "meaning": "having mixed or contradictory feelings", "synonyms": "uncertain; conflicted; undecided", "sentence": "She felt ambivalent about moving abroad because the opportunity was exciting but risky."}, {"word": "ameliorate", "pos": "verb", "meaning": "to make something better or less severe", "synonyms": "improve; ease; relieve", "sentence": "The new policy aims to ameliorate overcrowding in public hospitals."}, {"word": "analogous", "pos": "adjective", "meaning": "similar in a way that makes comparison useful", "synonyms": "comparable; similar; parallel", "sentence": "The flow of electricity through a wire is often described as analogous to water through a pipe."}, {"word": "analyze", "pos": "verb", "meaning": "to examine carefully by separating into parts", "synonyms": "examine; study; investigate", "sentence": "The class was asked to analyze how the author builds suspense."}, {"word": "anomaly", "pos": "noun", "meaning": "something that differs from what is standard or expected", "synonyms": "exception; irregularity; oddity", "sentence": "The bright signal was an anomaly that prompted further investigation."}, {"word": "anticipate", "pos": "verb", "meaning": "to expect or prepare for something before it happens", "synonyms": "expect; foresee; predict", "sentence": "Engineers anticipate stress points before testing a new bridge."}, {"word": "apathy", "pos": "noun", "meaning": "lack of interest, enthusiasm, or concern", "synonyms": "indifference; unconcern; detachment", "sentence": "Voter apathy can weaken democratic participation."}, {"word": "appease", "pos": "verb", "meaning": "to calm someone by giving in to demands", "synonyms": "pacify; satisfy; placate", "sentence": "The mayor tried to appease critics by promising an independent review."}, {"word": "appraise", "pos": "verb", "meaning": "to evaluate the value or quality of something", "synonyms": "assess; evaluate; estimate", "sentence": "Experts were invited to appraise the old painting."}, {"word": "arbitrary", "pos": "adjective", "meaning": "based on personal choice rather than reason or system", "synonyms": "random; capricious; subjective", "sentence": "The boundary seemed arbitrary because it ignored the natural features of the land."}, {"word": "arduous", "pos": "adjective", "meaning": "requiring great effort; difficult", "synonyms": "difficult; strenuous; demanding", "sentence": "The expedition involved an arduous climb through deep snow."}, {"word": "articulate", "pos": "verb", "meaning": "to express an idea clearly", "synonyms": "express; explain; state", "sentence": "A strong essay should articulate its central claim early."}, {"word": "assert", "pos": "verb", "meaning": "to state confidently or forcefully", "synonyms": "claim; declare; affirm", "sentence": "The author asserts that urban gardens improve community life."}, {"word": "assess", "pos": "verb", "meaning": "to judge or estimate the nature or quality of something", "synonyms": "evaluate; appraise; gauge", "sentence": "Teachers assess not only the final answer but also the reasoning."}, {"word": "astute", "pos": "adjective", "meaning": "having sharp judgment or insight", "synonyms": "perceptive; shrewd; insightful", "sentence": "Her astute observation revealed a weakness in the argument."}, {"word": "attain", "pos": "verb", "meaning": "to achieve or reach", "synonyms": "achieve; reach; accomplish", "sentence": "The athlete hoped to attain a new personal record."}, {"word": "attribute", "pos": "verb", "meaning": "to regard something as caused by", "synonyms": "ascribe; credit; assign", "sentence": "Historians attribute the change to several economic pressures."}, {"word": "augment", "pos": "verb", "meaning": "to increase or add to", "synonyms": "increase; enhance; expand", "sentence": "The museum used audio guides to augment the visitor experience."}, {"word": "authentic", "pos": "adjective", "meaning": "genuine, real, or true", "synonyms": "genuine; real; legitimate", "sentence": "The letters were examined to determine whether they were authentic."}, {"word": "bias", "pos": "noun", "meaning": "a tendency to favor one side unfairly", "synonyms": "prejudice; partiality; inclination", "sentence": "Researchers try to reduce bias by using blind trials."}, {"word": "bolster", "pos": "verb", "meaning": "to support or strengthen", "synonyms": "strengthen; reinforce; support", "sentence": "Additional evidence helped bolster the scientist’s claim."}, {"word": "brevity", "pos": "noun", "meaning": "concise and exact use of words", "synonyms": "conciseness; terseness; shortness", "sentence": "The speech was admired for its brevity and clarity."}, {"word": "candid", "pos": "adjective", "meaning": "honest and direct", "synonyms": "frank; open; truthful", "sentence": "The report offered a candid assessment of the project’s failures."}, {"word": "capacity", "pos": "noun", "meaning": "the ability or power to do something", "synonyms": "ability; capability; potential", "sentence": "The brain has a remarkable capacity to adapt after injury."}, {"word": "capitalize", "pos": "verb", "meaning": "to take advantage of an opportunity", "synonyms": "exploit; use; benefit from", "sentence": "The company tried to capitalize on the sudden demand for bicycles."}, {"word": "catalyst", "pos": "noun", "meaning": "something that causes or accelerates change", "synonyms": "trigger; stimulus; spark", "sentence": "The discovery acted as a catalyst for further research."}, {"word": "cautious", "pos": "adjective", "meaning": "careful to avoid risk", "synonyms": "careful; wary; prudent", "sentence": "Scientists were cautious about drawing conclusions from limited data."}, {"word": "coherent", "pos": "adjective", "meaning": "logical and consistent", "synonyms": "logical; clear; organized", "sentence": "A coherent argument connects each piece of evidence to the main claim."}, {"word": "coincide", "pos": "verb", "meaning": "to occur at the same time or correspond exactly", "synonyms": "overlap; correspond; concur", "sentence": "The festival will coincide with the beginning of the harvest season."}, {"word": "collaborate", "pos": "verb", "meaning": "to work together on a shared task", "synonyms": "cooperate; partner; team up", "sentence": "Researchers from several countries collaborate on climate studies."}, {"word": "compelling", "pos": "adjective", "meaning": "forcefully convincing or interesting", "synonyms": "convincing; persuasive; gripping", "sentence": "The witness gave compelling evidence during the trial."}, {"word": "comprehensive", "pos": "adjective", "meaning": "complete and covering many details", "synonyms": "thorough; complete; extensive", "sentence": "The review provides a comprehensive account of recent discoveries."}, {"word": "concede", "pos": "verb", "meaning": "to admit that something is true after resisting it", "synonyms": "admit; acknowledge; grant", "sentence": "The critic concedes that the film has moments of real beauty."}, {"word": "concise", "pos": "adjective", "meaning": "expressing much in few words", "synonyms": "brief; compact; succinct", "sentence": "A concise summary includes only the most important points."}, {"word": "concur", "pos": "verb", "meaning": "to agree or happen at the same time", "synonyms": "agree; coincide; assent", "sentence": "Most reviewers concur that the novel is unusually ambitious."}, {"word": "confer", "pos": "verb", "meaning": "to give, grant, or discuss", "synonyms": "grant; bestow; consult", "sentence": "The award will confer national recognition on the young inventor."}, {"word": "confound", "pos": "verb", "meaning": "to confuse or surprise", "synonyms": "bewilder; puzzle; perplex", "sentence": "The unexpected results confound earlier assumptions."}, {"word": "conjecture", "pos": "noun", "meaning": "a conclusion based on incomplete evidence", "synonyms": "guess; hypothesis; speculation", "sentence": "Without additional data, the explanation remains conjecture."}, {"word": "connote", "pos": "verb", "meaning": "to suggest an additional meaning beyond the literal one", "synonyms": "imply; suggest; evoke", "sentence": "The word home can connote safety, warmth, and belonging."}, {"word": "consensus", "pos": "noun", "meaning": "general agreement", "synonyms": "agreement; accord; harmony", "sentence": "A consensus emerged after hours of discussion."}, {"word": "consequence", "pos": "noun", "meaning": "a result or effect of an action", "synonyms": "result; outcome; effect", "sentence": "The consequence of the drought was a sharp decline in crop yield."}, {"word": "conservative", "pos": "adjective", "meaning": "cautious or moderate in estimate or change", "synonyms": "cautious; restrained; traditional", "sentence": "The researchers used a conservative estimate to avoid exaggeration."}, {"word": "consistent", "pos": "adjective", "meaning": "not changing or contradicting itself", "synonyms": "steady; compatible; uniform", "sentence": "The data are consistent with the original hypothesis."}, {"word": "constrain", "pos": "verb", "meaning": "to limit or restrict", "synonyms": "restrict; limit; confine", "sentence": "Budget cuts may constrain the scope of the study."}, {"word": "contend", "pos": "verb", "meaning": "to argue or claim", "synonyms": "argue; claim; maintain", "sentence": "The author contends that public parks improve urban health."}, {"word": "context", "pos": "noun", "meaning": "the circumstances that help explain meaning", "synonyms": "setting; background; situation", "sentence": "The meaning of a word often depends on its context."}, {"word": "contradict", "pos": "verb", "meaning": "to be in conflict with", "synonyms": "oppose; refute; conflict with", "sentence": "The second witness seemed to contradict the first."}, {"word": "conventional", "pos": "adjective", "meaning": "usual, traditional, or widely accepted", "synonyms": "traditional; standard; customary", "sentence": "The artist rejected conventional techniques and used unusual materials."}, {"word": "convey", "pos": "verb", "meaning": "to communicate or make known", "synonyms": "communicate; express; transmit", "sentence": "The painting conveys a sense of loneliness."}, {"word": "corroborate", "pos": "verb", "meaning": "to confirm or support with evidence", "synonyms": "confirm; verify; substantiate", "sentence": "Several documents corroborate the historian’s account."}, {"word": "credible", "pos": "adjective", "meaning": "believable or trustworthy", "synonyms": "believable; plausible; reliable", "sentence": "A credible source explains how its evidence was obtained."}, {"word": "crucial", "pos": "adjective", "meaning": "extremely important", "synonyms": "essential; vital; critical", "sentence": "Reliable measurement is crucial in scientific experiments."}, {"word": "cultivate", "pos": "verb", "meaning": "to develop, improve, or grow", "synonyms": "develop; foster; nurture", "sentence": "The school aims to cultivate curiosity in its students."}, {"word": "cumulative", "pos": "adjective", "meaning": "increasing by successive additions", "synonyms": "accumulated; growing; collective", "sentence": "The cumulative effect of small choices can be significant."}, {"word": "deference", "pos": "noun", "meaning": "respectful submission to another’s judgment", "synonyms": "respect; regard; yielding", "sentence": "The junior scientist showed deference to the senior researcher’s expertise."}, {"word": "deficient", "pos": "adjective", "meaning": "lacking something necessary", "synonyms": "lacking; inadequate; insufficient", "sentence": "A diet deficient in iron can cause fatigue."}, {"word": "delineate", "pos": "verb", "meaning": "to describe or outline precisely", "synonyms": "outline; describe; define", "sentence": "The report delineates the responsibilities of each department."}, {"word": "demonstrate", "pos": "verb", "meaning": "to show clearly with evidence or example", "synonyms": "show; prove; illustrate", "sentence": "The experiment demonstrates how pressure affects boiling point."}, {"word": "denote", "pos": "verb", "meaning": "to indicate or mean directly", "synonyms": "mean; signify; indicate", "sentence": "In mathematics, the symbol can denote a variable."}, {"word": "derive", "pos": "verb", "meaning": "to obtain from a source", "synonyms": "obtain; extract; originate", "sentence": "The word is derived from a Latin root."}, {"word": "detrimental", "pos": "adjective", "meaning": "causing harm or damage", "synonyms": "harmful; damaging; adverse", "sentence": "Excessive noise can be detrimental to learning."}, {"word": "devise", "pos": "verb", "meaning": "to plan or invent", "synonyms": "design; create; formulate", "sentence": "Engineers devised a new method for purifying water."}, {"word": "differentiate", "pos": "verb", "meaning": "to distinguish between things", "synonyms": "distinguish; separate; discriminate", "sentence": "The study differentiates correlation from causation."}, {"word": "diligent", "pos": "adjective", "meaning": "showing careful and persistent effort", "synonyms": "hardworking; careful; persistent", "sentence": "A diligent editor checks every citation."}, {"word": "discern", "pos": "verb", "meaning": "to perceive or recognize something", "synonyms": "detect; perceive; distinguish", "sentence": "It can be difficult to discern the author’s tone in a short passage."}, {"word": "discrepancy", "pos": "noun", "meaning": "a difference between things that should agree", "synonyms": "difference; inconsistency; mismatch", "sentence": "A discrepancy in the records led to a second audit."}, {"word": "discrete", "pos": "adjective", "meaning": "separate and distinct", "synonyms": "separate; distinct; individual", "sentence": "The process involves several discrete stages."}, {"word": "disdain", "pos": "noun", "meaning": "strong disapproval or lack of respect", "synonyms": "contempt; scorn; disregard", "sentence": "The critic expressed disdain for lazy storytelling."}, {"word": "disparage", "pos": "verb", "meaning": "to speak about someone or something as unimportant", "synonyms": "belittle; criticize; devalue", "sentence": "The review does not disparage the artist but questions one technique."}, {"word": "disparate", "pos": "adjective", "meaning": "fundamentally different or unlike", "synonyms": "different; distinct; diverse", "sentence": "The essay connects disparate ideas from biology and economics."}, {"word": "dispel", "pos": "verb", "meaning": "to drive away or remove a doubt or belief", "synonyms": "dismiss; eliminate; banish", "sentence": "The demonstration helped dispel common misconceptions."}, {"word": "disseminate", "pos": "verb", "meaning": "to spread information widely", "synonyms": "spread; distribute; circulate", "sentence": "Public health agencies disseminate information during outbreaks."}, {"word": "diverge", "pos": "verb", "meaning": "to move apart or differ", "synonyms": "differ; separate; deviate", "sentence": "The two theories diverge on the question of cause."}, {"word": "diverse", "pos": "adjective", "meaning": "showing variety or difference", "synonyms": "varied; assorted; wide-ranging", "sentence": "The library contains a diverse collection of manuscripts."}, {"word": "document", "pos": "verb", "meaning": "to record or support with written evidence", "synonyms": "record; verify; report", "sentence": "The researchers document changes in rainfall over fifty years."}, {"word": "dynamic", "pos": "adjective", "meaning": "constantly changing or full of energy", "synonyms": "changing; active; energetic", "sentence": "Language is dynamic, adapting to new social conditions."}, {"word": "eclipse", "pos": "verb", "meaning": "to make less important by comparison", "synonyms": "overshadow; outshine; surpass", "sentence": "The later discovery threatened to eclipse the earlier achievement."}, {"word": "economical", "pos": "adjective", "meaning": "efficient and avoiding waste", "synonyms": "efficient; thrifty; sparing", "sentence": "The writer’s economical style uses few words to create strong effects."}, {"word": "elaborate", "pos": "verb", "meaning": "to explain in greater detail", "synonyms": "explain; expand; develop", "sentence": "The author elaborates on the claim in the second paragraph."}, {"word": "elicit", "pos": "verb", "meaning": "to draw out a response or information", "synonyms": "evoke; draw out; extract", "sentence": "The teacher’s question was designed to elicit careful reasoning."}, {"word": "elusive", "pos": "adjective", "meaning": "difficult to find, catch, or understand", "synonyms": "difficult; evasive; hard to grasp", "sentence": "A simple explanation for the phenomenon remained elusive."}, {"word": "emerge", "pos": "verb", "meaning": "to become known or come into view", "synonyms": "appear; arise; surface", "sentence": "A pattern began to emerge after the data were organized."}, {"word": "empirical", "pos": "adjective", "meaning": "based on observation or experiment", "synonyms": "observed; experimental; evidence-based", "sentence": "Science depends on empirical evidence rather than speculation alone."}, {"word": "emphasize", "pos": "verb", "meaning": "to give special importance to", "synonyms": "stress; highlight; underscore", "sentence": "The passage emphasizes the role of collaboration."}, {"word": "encompass", "pos": "verb", "meaning": "to include or surround completely", "synonyms": "include; cover; contain", "sentence": "The course will encompass topics from history, art, and literature."}, {"word": "endorse", "pos": "verb", "meaning": "to publicly approve or support", "synonyms": "support; approve; advocate", "sentence": "Several experts endorse the new guidelines."}, {"word": "enhance", "pos": "verb", "meaning": "to improve or increase quality", "synonyms": "improve; enrich; strengthen", "sentence": "Clear illustrations can enhance a scientific explanation."}, {"word": "ephemeral", "pos": "adjective", "meaning": "lasting for a very short time", "synonyms": "brief; fleeting; temporary", "sentence": "The rainbow was beautiful but ephemeral."}, {"word": "equivocal", "pos": "adjective", "meaning": "ambiguous or deliberately unclear", "synonyms": "ambiguous; vague; uncertain", "sentence": "The politician’s equivocal answer satisfied neither side."}, {"word": "erode", "pos": "verb", "meaning": "to gradually wear away or weaken", "synonyms": "wear away; undermine; diminish", "sentence": "Repeated failures can erode public trust."}, {"word": "erroneous", "pos": "adjective", "meaning": "incorrect or mistaken", "synonyms": "wrong; inaccurate; mistaken", "sentence": "The conclusion was based on erroneous assumptions."}, {"word": "establish", "pos": "verb", "meaning": "to set up, prove, or make firm", "synonyms": "found; prove; create", "sentence": "The study establishes a link between sleep and memory."}, {"word": "evoke", "pos": "verb", "meaning": "to bring a feeling, memory, or image to mind", "synonyms": "suggest; elicit; summon", "sentence": "The old photograph can evoke memories of childhood."}, {"word": "exacerbate", "pos": "verb", "meaning": "to make a problem worse", "synonyms": "worsen; aggravate; intensify", "sentence": "Poor planning can exacerbate traffic congestion."}, {"word": "exemplify", "pos": "verb", "meaning": "to serve as a typical example", "synonyms": "illustrate; represent; embody", "sentence": "The poem exemplifies the author’s mature style."}, {"word": "exhaustive", "pos": "adjective", "meaning": "complete and thorough", "synonyms": "comprehensive; complete; thorough", "sentence": "The archive offers an exhaustive record of the expedition."}, {"word": "expedite", "pos": "verb", "meaning": "to make an action happen sooner or faster", "synonyms": "hasten; accelerate; speed up", "sentence": "Digital forms can expedite the application process."}, {"word": "explicit", "pos": "adjective", "meaning": "clearly and directly stated", "synonyms": "clear; direct; stated", "sentence": "The rule was explicit, leaving little room for confusion."}, {"word": "exploit", "pos": "verb", "meaning": "to make full use of or take unfair advantage of", "synonyms": "use; utilize; abuse", "sentence": "The technique exploits differences in temperature to produce energy."}, {"word": "facilitate", "pos": "verb", "meaning": "to make an action easier", "synonyms": "ease; assist; enable", "sentence": "Diagrams can facilitate understanding of complex systems."}, {"word": "feasible", "pos": "adjective", "meaning": "possible and practical to do", "synonyms": "practical; workable; possible", "sentence": "The proposal is ambitious but feasible with enough funding."}, {"word": "fluctuate", "pos": "verb", "meaning": "to rise and fall irregularly", "synonyms": "vary; change; oscillate", "sentence": "Temperatures fluctuate sharply in desert regions."}, {"word": "formidable", "pos": "adjective", "meaning": "inspiring respect or fear because of strength or difficulty", "synonyms": "impressive; challenging; daunting", "sentence": "The mountain posed a formidable obstacle to travelers."}, {"word": "foster", "pos": "verb", "meaning": "to encourage the development of", "synonyms": "encourage; nurture; promote", "sentence": "Good schools foster independent thinking."}, {"word": "frugal", "pos": "adjective", "meaning": "careful in spending or using resources", "synonyms": "economical; thrifty; sparing", "sentence": "The frugal design used recycled materials."}, {"word": "fundamental", "pos": "adjective", "meaning": "basic and essential", "synonyms": "basic; essential; primary", "sentence": "A fundamental assumption of the model is that mass is conserved."}, {"word": "gauge", "pos": "verb", "meaning": "to estimate or measure", "synonyms": "measure; assess; judge", "sentence": "The survey was used to gauge public opinion."}, {"word": "generate", "pos": "verb", "meaning": "to produce or create", "synonyms": "produce; create; yield", "sentence": "The machine can generate electricity from wind."}, {"word": "gradual", "pos": "adjective", "meaning": "happening slowly over time", "synonyms": "slow; steady; progressive", "sentence": "The transition was gradual rather than sudden."}, {"word": "hierarchy", "pos": "noun", "meaning": "a system organized in levels of importance", "synonyms": "ranking; order; structure", "sentence": "The company’s hierarchy determines who makes final decisions."}, {"word": "highlight", "pos": "verb", "meaning": "to emphasize or make noticeable", "synonyms": "emphasize; stress; spotlight", "sentence": "The graph highlights a sharp increase after 2010."}, {"word": "hypothetical", "pos": "adjective", "meaning": "based on a suggested idea rather than reality", "synonyms": "imagined; theoretical; speculative", "sentence": "The discussion began with a hypothetical case."}, {"word": "illuminate", "pos": "verb", "meaning": "to explain or make something clearer", "synonyms": "clarify; explain; enlighten", "sentence": "The example helps illuminate the author’s central point."}, {"word": "impartial", "pos": "adjective", "meaning": "not favoring one side", "synonyms": "neutral; unbiased; fair", "sentence": "Judges are expected to remain impartial."}, {"word": "implement", "pos": "verb", "meaning": "to put a plan into effect", "synonyms": "carry out; apply; execute", "sentence": "The city will implement new recycling rules next year."}, {"word": "implicit", "pos": "adjective", "meaning": "suggested but not directly stated", "synonyms": "implied; unstated; indirect", "sentence": "The narrator’s criticism is implicit rather than openly declared."}, {"word": "inadvertent", "pos": "adjective", "meaning": "not intentional", "synonyms": "unintentional; accidental; unintended", "sentence": "The omission was inadvertent, not deliberate."}, {"word": "incentive", "pos": "noun", "meaning": "something that motivates action", "synonyms": "motivation; stimulus; inducement", "sentence": "Scholarships can provide an incentive for academic effort."}, {"word": "inclination", "pos": "noun", "meaning": "a tendency or preference", "synonyms": "tendency; leaning; preference", "sentence": "She had an inclination toward careful, methodical work."}, {"word": "incongruous", "pos": "adjective", "meaning": "not fitting with the surroundings or context", "synonyms": "out of place; inconsistent; unsuitable", "sentence": "The modern sculpture seemed incongruous in the medieval courtyard."}, {"word": "indicate", "pos": "verb", "meaning": "to point out or show", "synonyms": "show; suggest; signal", "sentence": "The results indicate that the treatment is effective."}, {"word": "indifference", "pos": "noun", "meaning": "lack of interest or concern", "synonyms": "apathy; unconcern; detachment", "sentence": "Public indifference allowed the problem to continue."}, {"word": "indispensable", "pos": "adjective", "meaning": "absolutely necessary", "synonyms": "essential; crucial; vital", "sentence": "Clean water is indispensable to public health."}, {"word": "infer", "pos": "verb", "meaning": "to conclude from evidence and reasoning", "synonyms": "deduce; conclude; surmise", "sentence": "Readers can infer the character’s fear from her silence."}, {"word": "inhibit", "pos": "verb", "meaning": "to slow down, prevent, or restrain", "synonyms": "restrain; hinder; prevent", "sentence": "Cold temperatures can inhibit plant growth."}, {"word": "innovative", "pos": "adjective", "meaning": "introducing new ideas or methods", "synonyms": "original; inventive; novel", "sentence": "The team developed an innovative approach to storing energy."}, {"word": "insight", "pos": "noun", "meaning": "deep understanding", "synonyms": "understanding; perception; discernment", "sentence": "The interview offers insight into the author’s creative process."}, {"word": "integrate", "pos": "verb", "meaning": "to combine into a whole", "synonyms": "combine; merge; incorporate", "sentence": "The program integrates art, science, and technology."}, {"word": "interpret", "pos": "verb", "meaning": "to explain the meaning of something", "synonyms": "explain; understand; construe", "sentence": "Different scholars interpret the poem in different ways."}, {"word": "intricate", "pos": "adjective", "meaning": "very detailed and complex", "synonyms": "complex; elaborate; complicated", "sentence": "The clock contains an intricate system of gears."}, {"word": "intuitive", "pos": "adjective", "meaning": "understood immediately without conscious reasoning", "synonyms": "instinctive; natural; immediate", "sentence": "The app has an intuitive design that new users learn quickly."}, {"word": "invariably", "pos": "adverb", "meaning": "always or almost always", "synonyms": "always; consistently; regularly", "sentence": "The desert nights are invariably colder than the days."}, {"word": "invoke", "pos": "verb", "meaning": "to cite, appeal to, or call upon", "synonyms": "cite; summon; appeal to", "sentence": "The lawyer invoked a precedent from an earlier case."}, {"word": "irrelevant", "pos": "adjective", "meaning": "not connected with the matter at hand", "synonyms": "unrelated; immaterial; beside the point", "sentence": "The anecdote was interesting but irrelevant to the argument."}, {"word": "juxtapose", "pos": "verb", "meaning": "to place side by side for comparison", "synonyms": "compare; contrast; place together", "sentence": "The essay juxtaposes ancient and modern views of justice."}, {"word": "justify", "pos": "verb", "meaning": "to show or prove to be right or reasonable", "synonyms": "defend; explain; support", "sentence": "The author uses statistics to justify the claim."}, {"word": "latent", "pos": "adjective", "meaning": "present but hidden or not yet developed", "synonyms": "hidden; dormant; potential", "sentence": "The seed contains latent energy that emerges during growth."}, {"word": "legitimate", "pos": "adjective", "meaning": "valid, lawful, or reasonable", "synonyms": "valid; lawful; authentic", "sentence": "The complaint raised a legitimate concern about fairness."}, {"word": "lucid", "pos": "adjective", "meaning": "clear and easy to understand", "synonyms": "clear; coherent; understandable", "sentence": "The textbook gives a lucid explanation of photosynthesis."}, {"word": "maintain", "pos": "verb", "meaning": "to continue, preserve, or assert", "synonyms": "preserve; continue; assert", "sentence": "The author maintains that the evidence is inconclusive."}, {"word": "manifest", "pos": "verb", "meaning": "to show clearly", "synonyms": "display; reveal; demonstrate", "sentence": "The symptoms may manifest only after several days."}, {"word": "marginal", "pos": "adjective", "meaning": "minor or not central", "synonyms": "minor; slight; peripheral", "sentence": "The change produced only a marginal improvement."}, {"word": "mediate", "pos": "verb", "meaning": "to intervene to resolve a dispute", "synonyms": "arbitrate; negotiate; reconcile", "sentence": "A neutral official was asked to mediate the disagreement."}, {"word": "meticulous", "pos": "adjective", "meaning": "showing great attention to detail", "synonyms": "careful; precise; thorough", "sentence": "The archivist kept meticulous records."}, {"word": "mitigate", "pos": "verb", "meaning": "to make less severe or harmful", "synonyms": "reduce; ease; alleviate", "sentence": "Trees can mitigate the heat in crowded cities."}, {"word": "mundane", "pos": "adjective", "meaning": "ordinary and not exciting", "synonyms": "ordinary; routine; everyday", "sentence": "The diary records mundane details of daily life."}, {"word": "mutual", "pos": "adjective", "meaning": "shared by two or more parties", "synonyms": "shared; reciprocal; common", "sentence": "The agreement depends on mutual trust."}, {"word": "nuance", "pos": "noun", "meaning": "a subtle difference in meaning or expression", "synonyms": "subtlety; shade; distinction", "sentence": "The translation preserves the nuance of the original phrase."}, {"word": "novel", "pos": "adjective", "meaning": "new or unusual", "synonyms": "new; original; innovative", "sentence": "The study proposes a novel explanation for the pattern."}, {"word": "objective", "pos": "adjective", "meaning": "based on facts rather than feelings", "synonyms": "impartial; factual; unbiased", "sentence": "An objective review considers both strengths and weaknesses."}, {"word": "obscure", "pos": "adjective", "meaning": "not clear or not well known", "synonyms": "unclear; hidden; unknown", "sentence": "The reference was obscure even to specialists."}, {"word": "obsolete", "pos": "adjective", "meaning": "no longer used or useful", "synonyms": "outdated; old-fashioned; superseded", "sentence": "Many older devices became obsolete after the new standard appeared."}, {"word": "obtain", "pos": "verb", "meaning": "to get or acquire", "synonyms": "get; acquire; secure", "sentence": "Researchers must obtain permission before using private records."}, {"word": "ominous", "pos": "adjective", "meaning": "suggesting that something bad may happen", "synonyms": "threatening; foreboding; alarming", "sentence": "The dark clouds gave the afternoon an ominous feeling."}, {"word": "onset", "pos": "noun", "meaning": "the beginning of something unpleasant or important", "synonyms": "beginning; start; arrival", "sentence": "The onset of winter forced the expedition to turn back."}, {"word": "opaque", "pos": "adjective", "meaning": "not transparent or difficult to understand", "synonyms": "unclear; cloudy; impenetrable", "sentence": "The legal language was opaque to most readers."}, {"word": "optimal", "pos": "adjective", "meaning": "best or most favorable", "synonyms": "best; ideal; most effective", "sentence": "The optimal temperature for the reaction is 37 degrees Celsius."}, {"word": "paradox", "pos": "noun", "meaning": "a statement that seems contradictory but may be true", "synonyms": "contradiction; puzzle; irony", "sentence": "The paradox is that saving time sometimes requires slowing down."}, {"word": "partial", "pos": "adjective", "meaning": "incomplete or favoring one side", "synonyms": "incomplete; biased; limited", "sentence": "A partial account may omit important evidence."}, {"word": "pervasive", "pos": "adjective", "meaning": "spread widely throughout an area or group", "synonyms": "widespread; common; extensive", "sentence": "Mobile technology has become pervasive in daily life."}, {"word": "plausible", "pos": "adjective", "meaning": "seeming reasonable or believable", "synonyms": "credible; believable; possible", "sentence": "The explanation is plausible, though not yet proven."}, {"word": "precede", "pos": "verb", "meaning": "to come before in time or order", "synonyms": "come before; lead; introduce", "sentence": "A brief introduction will precede the lecture."}, {"word": "precipitate", "pos": "verb", "meaning": "to cause something to happen suddenly", "synonyms": "trigger; cause; hasten", "sentence": "The scandal precipitated a political crisis."}, {"word": "precise", "pos": "adjective", "meaning": "exact and accurate", "synonyms": "exact; specific; accurate", "sentence": "Precise measurements are necessary in chemistry."}, {"word": "preclude", "pos": "verb", "meaning": "to prevent something from happening", "synonyms": "prevent; rule out; prohibit", "sentence": "Heavy rain may preclude outdoor practice."}, {"word": "predominant", "pos": "adjective", "meaning": "most common or powerful", "synonyms": "main; prevailing; dominant", "sentence": "Rice is the predominant crop in the region."}, {"word": "premise", "pos": "noun", "meaning": "a basic idea on which an argument is based", "synonyms": "assumption; basis; proposition", "sentence": "The argument rests on a questionable premise."}, {"word": "presume", "pos": "verb", "meaning": "to suppose something is true without proof", "synonyms": "assume; suppose; infer", "sentence": "We should not presume that silence means agreement."}, {"word": "prevail", "pos": "verb", "meaning": "to be widespread or win out", "synonyms": "triumph; dominate; persist", "sentence": "A sense of optimism began to prevail after the announcement."}, {"word": "proficient", "pos": "adjective", "meaning": "skilled or competent", "synonyms": "skilled; capable; competent", "sentence": "She became proficient in Spanish after years of practice."}, {"word": "profound", "pos": "adjective", "meaning": "very great or deeply meaningful", "synonyms": "deep; significant; intense", "sentence": "The discovery had a profound effect on medicine."}, {"word": "prohibit", "pos": "verb", "meaning": "to forbid by law or rule", "synonyms": "forbid; ban; prevent", "sentence": "The policy prohibits the use of phones during exams."}, {"word": "prolific", "pos": "adjective", "meaning": "producing many works, results, or offspring", "synonyms": "productive; abundant; fruitful", "sentence": "The prolific writer published three novels in two years."}, {"word": "prominent", "pos": "adjective", "meaning": "important, noticeable, or well known", "synonyms": "important; notable; visible", "sentence": "The scientist became a prominent voice in public health."}, {"word": "propagate", "pos": "verb", "meaning": "to spread or reproduce", "synonyms": "spread; reproduce; transmit", "sentence": "Seeds help plants propagate across a landscape."}, {"word": "proponent", "pos": "noun", "meaning": "a person who supports an idea or cause", "synonyms": "supporter; advocate; champion", "sentence": "She was a strong proponent of renewable energy."}, {"word": "provisional", "pos": "adjective", "meaning": "temporary and subject to change", "synonyms": "temporary; tentative; interim", "sentence": "The committee issued a provisional report."}, {"word": "qualify", "pos": "verb", "meaning": "to limit, modify, or make less absolute", "synonyms": "limit; modify; restrict", "sentence": "The author qualifies the claim by noting an important exception."}, {"word": "quantify", "pos": "verb", "meaning": "to measure or express as a number", "synonyms": "measure; calculate; count", "sentence": "The study attempts to quantify the impact of sleep on memory."}, {"word": "radical", "pos": "adjective", "meaning": "extreme or involving fundamental change", "synonyms": "extreme; fundamental; revolutionary", "sentence": "The proposal called for a radical redesign of the system."}, {"word": "reconcile", "pos": "verb", "meaning": "to make consistent or restore friendly relations", "synonyms": "harmonize; settle; resolve", "sentence": "The theory helps reconcile two conflicting observations."}, {"word": "refute", "pos": "verb", "meaning": "to prove wrong with evidence", "synonyms": "disprove; rebut; challenge", "sentence": "The new data refute the earlier claim."}, {"word": "reinforce", "pos": "verb", "meaning": "to strengthen or support", "synonyms": "strengthen; bolster; support", "sentence": "Examples reinforce the author’s main point."}, {"word": "reluctant", "pos": "adjective", "meaning": "unwilling or hesitant", "synonyms": "hesitant; unwilling; resistant", "sentence": "The board was reluctant to approve the expensive plan."}, {"word": "relevant", "pos": "adjective", "meaning": "closely connected to the matter", "synonyms": "pertinent; related; applicable", "sentence": "Only evidence relevant to the claim should be included."}, {"word": "resilient", "pos": "adjective", "meaning": "able to recover quickly", "synonyms": "tough; adaptable; strong", "sentence": "Coastal plants are resilient in salty environments."}, {"word": "resolve", "pos": "verb", "meaning": "to settle or find an answer to", "synonyms": "settle; solve; determine", "sentence": "The final experiment helped resolve the debate."}, {"word": "retain", "pos": "verb", "meaning": "to keep or continue to have", "synonyms": "keep; preserve; maintain", "sentence": "The rewritten paragraph retains the original meaning."}, {"word": "reveal", "pos": "verb", "meaning": "to make known or visible", "synonyms": "show; disclose; uncover", "sentence": "The survey revealed a shift in public opinion."}, {"word": "revere", "pos": "verb", "meaning": "to deeply respect or admire", "synonyms": "admire; honor; respect", "sentence": "Many citizens revere the reformer for her courage."}, {"word": "robust", "pos": "adjective", "meaning": "strong and able to withstand stress", "synonyms": "strong; sturdy; resilient", "sentence": "A robust argument can withstand serious criticism."}, {"word": "salient", "pos": "adjective", "meaning": "most noticeable or important", "synonyms": "prominent; important; conspicuous", "sentence": "The most salient feature of the painting is its use of light."}, {"word": "scrutinize", "pos": "verb", "meaning": "to examine closely and carefully", "synonyms": "examine; inspect; analyze", "sentence": "Scientists scrutinize data before accepting a conclusion."}, {"word": "skeptical", "pos": "adjective", "meaning": "doubtful and requiring evidence", "synonyms": "doubtful; questioning; unconvinced", "sentence": "The reviewer remained skeptical of the company’s claims."}, {"word": "sophisticated", "pos": "adjective", "meaning": "complex, refined, or advanced", "synonyms": "advanced; refined; complex", "sentence": "The model uses sophisticated methods to predict rainfall."}, {"word": "sparse", "pos": "adjective", "meaning": "thinly scattered or few in number", "synonyms": "scant; thin; limited", "sentence": "Vegetation is sparse in the dry valley."}, {"word": "speculative", "pos": "adjective", "meaning": "based on guesswork rather than firm evidence", "synonyms": "uncertain; conjectural; hypothetical", "sentence": "The explanation remains speculative until tested."}, {"word": "spontaneous", "pos": "adjective", "meaning": "happening without planning or external cause", "synonyms": "unplanned; instinctive; voluntary", "sentence": "The crowd gave a spontaneous cheer."}, {"word": "stark", "pos": "adjective", "meaning": "clear, severe, or sharply distinct", "synonyms": "sharp; severe; plain", "sentence": "The report draws a stark contrast between the two policies."}, {"word": "static", "pos": "adjective", "meaning": "not changing or moving", "synonyms": "unchanging; fixed; still", "sentence": "The population remained static for several years."}, {"word": "stimulate", "pos": "verb", "meaning": "to encourage activity or growth", "synonyms": "encourage; provoke; spur", "sentence": "The question stimulated a lively discussion."}, {"word": "subsequent", "pos": "adjective", "meaning": "coming after something in time", "synonyms": "later; following; ensuing", "sentence": "Subsequent studies confirmed the original result."}, {"word": "substantial", "pos": "adjective", "meaning": "large in amount, value, or importance", "synonyms": "significant; considerable; major", "sentence": "The project required a substantial investment."}, {"word": "subtle", "pos": "adjective", "meaning": "delicate, precise, or not obvious", "synonyms": "delicate; slight; understated", "sentence": "The author uses subtle humor to criticize the custom."}, {"word": "sufficient", "pos": "adjective", "meaning": "enough for a purpose", "synonyms": "adequate; enough; ample", "sentence": "The sample size was sufficient for a basic comparison."}, {"word": "supersede", "pos": "verb", "meaning": "to replace something older or less effective", "synonyms": "replace; displace; succeed", "sentence": "The new method may supersede the older technique."}, {"word": "suppress", "pos": "verb", "meaning": "to hold back, prevent, or stop", "synonyms": "restrain; prevent; silence", "sentence": "The drug can suppress symptoms but not cure the disease."}, {"word": "sustain", "pos": "verb", "meaning": "to support, maintain, or endure", "synonyms": "maintain; support; continue", "sentence": "The ecosystem can sustain many species."}, {"word": "symbolic", "pos": "adjective", "meaning": "representing something else", "synonyms": "representative; emblematic; figurative", "sentence": "The broken chain is symbolic of freedom."}, {"word": "synthesize", "pos": "verb", "meaning": "to combine parts into a whole", "synonyms": "combine; integrate; merge", "sentence": "A good review synthesizes findings from many studies."}, {"word": "tangible", "pos": "adjective", "meaning": "real and able to be touched or clearly perceived", "synonyms": "concrete; real; palpable", "sentence": "The program produced tangible benefits for students."}, {"word": "tentative", "pos": "adjective", "meaning": "not certain or final", "synonyms": "provisional; uncertain; cautious", "sentence": "The team offered a tentative explanation for the pattern."}, {"word": "thorough", "pos": "adjective", "meaning": "complete and careful", "synonyms": "complete; detailed; meticulous", "sentence": "A thorough investigation revealed the cause of the failure."}, {"word": "transient", "pos": "adjective", "meaning": "lasting only a short time", "synonyms": "temporary; fleeting; brief", "sentence": "The increase in sales was transient rather than permanent."}, {"word": "transparent", "pos": "adjective", "meaning": "easy to see through or understand", "synonyms": "clear; open; obvious", "sentence": "The committee wanted a transparent decision-making process."}, {"word": "undermine", "pos": "verb", "meaning": "to weaken gradually", "synonyms": "weaken; erode; sabotage", "sentence": "Contradictory evidence can undermine an argument."}, {"word": "underscore", "pos": "verb", "meaning": "to emphasize", "synonyms": "emphasize; highlight; stress", "sentence": "The results underscore the need for early preparation."}, {"word": "unprecedented", "pos": "adjective", "meaning": "never done or known before", "synonyms": "new; unmatched; unparalleled", "sentence": "The region experienced unprecedented rainfall."}, {"word": "unravel", "pos": "verb", "meaning": "to explain, solve, or come apart", "synonyms": "solve; explain; untangle", "sentence": "Researchers tried to unravel the mystery of the ancient script."}, {"word": "validate", "pos": "verb", "meaning": "to confirm the truth or value of something", "synonyms": "confirm; verify; support", "sentence": "Additional experiments validate the original findings."}, {"word": "viable", "pos": "adjective", "meaning": "capable of working successfully", "synonyms": "workable; feasible; practical", "sentence": "Solar power became a viable option as costs fell."}, {"word": "vital", "pos": "adjective", "meaning": "absolutely necessary or very important", "synonyms": "essential; crucial; indispensable", "sentence": "Sleep is vital for learning and memory."}, {"word": "warrant", "pos": "verb", "meaning": "to justify or make necessary", "synonyms": "justify; require; merit", "sentence": "The unusual result warrants closer examination."}, {"word": "yield", "pos": "verb", "meaning": "to produce or give way", "synonyms": "produce; generate; surrender", "sentence": "The experiment may yield valuable information."}, {"word": "acquiesce", "pos": "verb", "meaning": "to accept something reluctantly but without protest", "synonyms": "agree; comply; submit", "sentence": "The manager chose to acquiesce after the team presented strong evidence."}, {"word": "adversarial", "pos": "adjective", "meaning": "involving opposition or conflict", "synonyms": "opposing; hostile; antagonistic", "sentence": "The debate became adversarial when both sides stopped listening."}, {"word": "allude", "pos": "verb", "meaning": "to refer indirectly", "synonyms": "refer; hint; suggest", "sentence": "The novel alludes to several myths without naming them directly."}, {"word": "altruistic", "pos": "adjective", "meaning": "showing selfless concern for others", "synonyms": "selfless; charitable; generous", "sentence": "Her altruistic decision benefited the entire community."}, {"word": "amplify", "pos": "verb", "meaning": "to increase or make stronger", "synonyms": "increase; intensify; strengthen", "sentence": "Social media can amplify both accurate and false information."}, {"word": "anecdotal", "pos": "adjective", "meaning": "based on personal stories rather than systematic evidence", "synonyms": "personal; informal; unscientific", "sentence": "Anecdotal reports suggested improvement, but trials were needed."}, {"word": "apprehensive", "pos": "adjective", "meaning": "anxious or fearful about the future", "synonyms": "anxious; worried; uneasy", "sentence": "The students were apprehensive before the final exam."}, {"word": "ardent", "pos": "adjective", "meaning": "enthusiastic and passionate", "synonyms": "passionate; fervent; eager", "sentence": "He was an ardent supporter of environmental protection."}, {"word": "assimilate", "pos": "verb", "meaning": "to absorb and integrate information or people", "synonyms": "absorb; integrate; incorporate", "sentence": "New students gradually assimilate into campus life."}, {"word": "austere", "pos": "adjective", "meaning": "plain, severe, or without decoration", "synonyms": "plain; severe; strict", "sentence": "The building’s austere design used bare concrete and simple lines."}, {"word": "autonomous", "pos": "adjective", "meaning": "self-governing or independent", "synonyms": "independent; self-ruling; self-directed", "sentence": "The drone can make some autonomous decisions during flight."}, {"word": "benevolent", "pos": "adjective", "meaning": "kind and well meaning", "synonyms": "kind; charitable; generous", "sentence": "The benevolent donor funded scholarships for rural students."}, {"word": "circumspect", "pos": "adjective", "meaning": "careful to avoid risks or mistakes", "synonyms": "cautious; prudent; wary", "sentence": "The diplomat gave a circumspect response to the sensitive question."}, {"word": "coalesce", "pos": "verb", "meaning": "to come together to form one whole", "synonyms": "merge; unite; combine", "sentence": "Several small groups coalesced into a national movement."}, {"word": "complacent", "pos": "adjective", "meaning": "self-satisfied and unaware of possible danger", "synonyms": "self-satisfied; smug; unguarded", "sentence": "Early success made the team complacent."}, {"word": "contemplate", "pos": "verb", "meaning": "to think carefully about", "synonyms": "consider; ponder; reflect on", "sentence": "The essay asks readers to contemplate the cost of progress."}, {"word": "copious", "pos": "adjective", "meaning": "large in quantity", "synonyms": "abundant; plentiful; extensive", "sentence": "The researcher took copious notes during the interview."}, {"word": "curtail", "pos": "verb", "meaning": "to reduce or limit", "synonyms": "reduce; restrict; cut short", "sentence": "The school curtailed outdoor activities during the heat wave."}, {"word": "debacle", "pos": "noun", "meaning": "a sudden failure or disaster", "synonyms": "failure; fiasco; collapse", "sentence": "The poorly planned launch became a public debacle."}, {"word": "deft", "pos": "adjective", "meaning": "skillful and quick", "synonyms": "skillful; nimble; adept", "sentence": "The surgeon made a deft movement with the instrument."}, {"word": "diffuse", "pos": "verb", "meaning": "to spread out over a wide area", "synonyms": "spread; disperse; scatter", "sentence": "The smell of jasmine began to diffuse through the garden."}, {"word": "dubious", "pos": "adjective", "meaning": "doubtful or questionable", "synonyms": "doubtful; uncertain; suspicious", "sentence": "The evidence for the claim was dubious."}, {"word": "eclectic", "pos": "adjective", "meaning": "drawn from a wide variety of sources", "synonyms": "varied; diverse; assorted", "sentence": "Her playlist was eclectic, mixing classical, jazz, and folk music."}, {"word": "emulate", "pos": "verb", "meaning": "to imitate with the aim of equaling or surpassing", "synonyms": "imitate; copy; rival", "sentence": "Young athletes often try to emulate champions."}, {"word": "engender", "pos": "verb", "meaning": "to cause or give rise to", "synonyms": "cause; produce; generate", "sentence": "The new rule may engender resentment if applied unfairly."}, {"word": "epitome", "pos": "noun", "meaning": "a perfect example of a quality or type", "synonyms": "embodiment; model; example", "sentence": "The quiet library was the epitome of calm."}, {"word": "exacting", "pos": "adjective", "meaning": "requiring great care, effort, or precision", "synonyms": "demanding; rigorous; strict", "sentence": "Restoring ancient manuscripts is exacting work."}, {"word": "fortuitous", "pos": "adjective", "meaning": "happening by chance, often luckily", "synonyms": "accidental; lucky; chance", "sentence": "A fortuitous meeting led to a successful collaboration."}, {"word": "frivolous", "pos": "adjective", "meaning": "not serious or sensible", "synonyms": "trivial; silly; superficial", "sentence": "The judge dismissed the frivolous complaint."}, {"word": "galvanize", "pos": "verb", "meaning": "to shock or excite someone into action", "synonyms": "spur; motivate; energize", "sentence": "The crisis galvanized volunteers across the city."}, {"word": "hinder", "pos": "verb", "meaning": "to create difficulties that slow progress", "synonyms": "obstruct; impede; delay", "sentence": "Poor roads hinder trade between villages."}, {"word": "imminent", "pos": "adjective", "meaning": "about to happen very soon", "synonyms": "approaching; impending; near", "sentence": "The dark sky suggested that rain was imminent."}, {"word": "impeccable", "pos": "adjective", "meaning": "without mistakes or flaws", "synonyms": "flawless; perfect; faultless", "sentence": "Her citations were impeccable and easy to verify."}, {"word": "inconsequential", "pos": "adjective", "meaning": "not important", "synonyms": "unimportant; trivial; minor", "sentence": "The typo was inconsequential and did not affect the meaning."}, {"word": "indigenous", "pos": "adjective", "meaning": "native to a particular place", "synonyms": "native; local; original", "sentence": "The forest contains many indigenous plant species."}, {"word": "insular", "pos": "adjective", "meaning": "narrow-minded or isolated", "synonyms": "isolated; narrow; inward-looking", "sentence": "The community became insular after years of limited contact."}, {"word": "judicious", "pos": "adjective", "meaning": "showing good judgment", "synonyms": "wise; sensible; prudent", "sentence": "The editor made judicious cuts to improve the essay."}, {"word": "laudable", "pos": "adjective", "meaning": "deserving praise", "synonyms": "praiseworthy; commendable; admirable", "sentence": "The plan to reduce waste is laudable, even if difficult."}, {"word": "malleable", "pos": "adjective", "meaning": "easily shaped or influenced", "synonyms": "flexible; pliable; adaptable", "sentence": "Copper is malleable enough to be shaped into thin sheets."}, {"word": "negligible", "pos": "adjective", "meaning": "so small as to be unimportant", "synonyms": "insignificant; minor; trivial", "sentence": "The difference between the two measurements was negligible."}, {"word": "nominal", "pos": "adjective", "meaning": "existing in name only or very small", "synonyms": "minor; symbolic; named", "sentence": "The museum charges a nominal fee for students."}, {"word": "ostensible", "pos": "adjective", "meaning": "stated or appearing to be true, but not necessarily so", "synonyms": "apparent; supposed; claimed", "sentence": "The ostensible purpose of the meeting was budget review."}, {"word": "peripheral", "pos": "adjective", "meaning": "minor or on the edge of importance", "synonyms": "secondary; marginal; outer", "sentence": "The detail was interesting but peripheral to the main argument."}, {"word": "pragmatic", "pos": "adjective", "meaning": "practical rather than theoretical", "synonyms": "practical; realistic; sensible", "sentence": "The committee chose a pragmatic solution that could be implemented quickly."}, {"word": "precarious", "pos": "adjective", "meaning": "not secure and likely to fall or fail", "synonyms": "unstable; risky; insecure", "sentence": "The old bridge was in a precarious condition."}, {"word": "rescind", "pos": "verb", "meaning": "to officially cancel", "synonyms": "cancel; revoke; repeal", "sentence": "The council voted to rescind the outdated rule."}, {"word": "rigorous", "pos": "adjective", "meaning": "extremely thorough, careful, or strict", "synonyms": "strict; exacting; thorough", "sentence": "A rigorous experiment controls for many variables."}, {"word": "sanction", "pos": "verb", "meaning": "to officially approve or impose a penalty", "synonyms": "approve; authorize; penalize", "sentence": "The board refused to sanction the unsafe procedure."}, {"word": "sporadic", "pos": "adjective", "meaning": "occurring irregularly", "synonyms": "irregular; occasional; scattered", "sentence": "Sporadic rainfall made farming difficult."}, {"word": "temper", "pos": "verb", "meaning": "to moderate or soften", "synonyms": "moderate; soften; restrain", "sentence": "The author tempers optimism with caution."}, {"word": "tenuous", "pos": "adjective", "meaning": "weak, thin, or uncertain", "synonyms": "weak; fragile; slight", "sentence": "The connection between the two events is tenuous."}, {"word": "trivial", "pos": "adjective", "meaning": "of little importance", "synonyms": "minor; insignificant; unimportant", "sentence": "The error was trivial and easily corrected."}, {"word": "ubiquitous", "pos": "adjective", "meaning": "present everywhere", "synonyms": "widespread; everywhere; pervasive", "sentence": "Smartphones have become ubiquitous in many countries."}, {"word": "unambiguous", "pos": "adjective", "meaning": "clear and having only one meaning", "synonyms": "clear; definite; explicit", "sentence": "The instruction was unambiguous."}, {"word": "utilize", "pos": "verb", "meaning": "to use effectively", "synonyms": "use; employ; apply", "sentence": "The device utilizes solar energy to heat water."}, {"word": "vacillate", "pos": "verb", "meaning": "to waver between choices", "synonyms": "waver; hesitate; fluctuate", "sentence": "The committee continued to vacillate between two proposals."}, {"word": "venerable", "pos": "adjective", "meaning": "respected because of age, wisdom, or history", "synonyms": "respected; honored; esteemed", "sentence": "The venerable institution was founded two centuries ago."}, {"word": "vindicate", "pos": "verb", "meaning": "to clear from blame or prove right", "synonyms": "justify; absolve; confirm", "sentence": "The new evidence helped vindicate the researcher."}, {"word": "widespread", "pos": "adjective", "meaning": "found over a large area or among many people", "synonyms": "pervasive; extensive; common", "sentence": "There was widespread support for the reform."}];
+
+    const STORAGE_KEY = "sat_vocab_daily_quiz_v1";
+    const QUIZ_LEN = 25;
+    const MASTER_LEVEL = 3;
+
+    let state = loadState();
+    let currentQuiz = [];
+    let currentIndex = 0;
+    let score = 0;
+    let sessionWrong = [];
+    let sessionCorrect = [];
+    let currentAnswer = null;
+    let answered = false;
+    let hinted = false;
+    let rescueMode = false;
+
+    function todayStr() {
+      return new Date().toISOString().slice(0, 10);
+    }
+
+    function niceDate(s) {
+      if (!s) return "";
+      const d = new Date(s + "T00:00:00");
+      return d.toLocaleDateString(undefined, {
+        weekday: "short",
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+      });
+    }
+
+    function loadState() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+
+      if (raw) {
+        try {
+          const p = JSON.parse(raw);
+          p.progress ||= {};
+          p.logs ||= [];
+          p.totalXP ||= 0;
+          p.lastQuizDate ||= null;
+          p.streak ||= 0;
+          p.totalAnswered ||= 0;
+          p.totalCorrect ||= 0;
+          return p;
+        } catch (e) {}
+      }
+
+      return {
+        progress: {},
+        logs: [],
+        totalXP: 0,
+        lastQuizDate: null,
+        streak: 0,
+        totalAnswered: 0,
+        totalCorrect: 0
+      };
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      refreshSidebar();
+    }
+
+    function shuffle(arr) {
+      const a = arr.slice();
+
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+
+      return a;
+    }
+
+    function sample(arr, n) {
+      return shuffle(arr).slice(0, n);
+    }
+
+    function escapeHTML(str) {
+      return String(str).replace(/[&<>"']/g, m => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[m]));
+    }
+
+    function getProg(word) {
+      const key = word.toLowerCase();
+
+      if (!state.progress[key]) {
+        state.progress[key] = {
+          seen: 0,
+          correct: 0,
+          wrong: 0,
+          mastery: 0,
+          streak: 0,
+          lastSeen: null,
+          lastWrong: null,
+          due: true
+        };
+      }
+
+      return state.progress[key];
+    }
+
+    function wordObjByWord(w) {
+      return WORDS.find(x => x.word.toLowerCase() === w.toLowerCase());
+    }
+
+    function isDue(w) {
+      const p = getProg(w.word);
+      return p.wrong > 0 && p.mastery < MASTER_LEVEL;
+    }
+
+    function isMastered(w) {
+      return getProg(w.word).mastery >= MASTER_LEVEL;
+    }
+
+    function weightedPool() {
+      const due = WORDS.filter(isDue);
+      const unseen = WORDS.filter(w => getProg(w.word).seen === 0);
+      const weak = WORDS.filter(w => {
+        const p = getProg(w.word);
+        return p.seen > 0 && p.mastery < MASTER_LEVEL && !isDue(w);
+      });
+
+      let chosen = [];
+
+      chosen.push(...sample(due, Math.min(due.length, Math.ceil(QUIZ_LEN * 0.55))));
+      chosen.push(...sample(weak.filter(w => !chosen.includes(w)), Math.min(weak.length, Math.ceil(QUIZ_LEN * 0.20))));
+      chosen.push(...sample(unseen.filter(w => !chosen.includes(w)), QUIZ_LEN - chosen.length));
+
+      while (chosen.length < QUIZ_LEN) {
+        const filler = sample(WORDS.filter(w => !chosen.includes(w)), 1)[0];
+        if (!filler) break;
+        chosen.push(filler);
+      }
+
+      return shuffle(chosen).slice(0, QUIZ_LEN);
+    }
+
+    function rescuePool() {
+      const wrongWords = WORDS.filter(isDue);
+      return shuffle(wrongWords).slice(0, Math.min(QUIZ_LEN, wrongWords.length));
+    }
+
+    function makeQuestion(w) {
+      const p = getProg(w.word);
+      const due = p.wrong > 0 && p.mastery < MASTER_LEVEL;
+      const types = due ? ["meaning", "fill", "synonym", "meaning"] : ["meaning", "fill", "synonym"];
+      const type = types[Math.floor(Math.random() * types.length)];
+
+      if (type === "fill") return makeFillQuestion(w);
+      if (type === "synonym") return makeSynQuestion(w);
+      return makeMeaningQuestion(w);
+    }
+
+    function sentenceWithBlank(w) {
+      const safe = w.word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const re = new RegExp("\\b" + safe + "\\w*\\b", "i");
+
+      if (re.test(w.sentence)) return w.sentence.replace(re, "______");
+
+      return "The best word to complete the sentence is ______: " + w.sentence;
+    }
+
+    function makeMeaningQuestion(w) {
+      const pool = WORDS.filter(x => x.word !== w.word && x.pos === w.pos);
+      const distractors = sample(pool, 3).map(x => x.meaning);
+
+      return {
+        type: "Meaning in context",
+        promptHTML: `
+          <div class="word">${escapeHTML(w.word)}</div>
+          <div class="muted">${escapeHTML(w.pos)}</div>
+          <p class="question-copy">In the sentence below, what does <b>${escapeHTML(w.word)}</b> most nearly mean?</p>
+          <div class="sentence">${escapeHTML(w.sentence)}</div>
+        `,
+        options: shuffle([w.meaning, ...distractors]),
+        answer: w.meaning,
+        word: w.word,
+        explanation: `<b>${escapeHTML(w.word)}</b> means ${escapeHTML(w.meaning)}. Useful synonyms: ${escapeHTML(w.synonyms)}.`
+      };
+    }
+
+    function makeSynQuestion(w) {
+      const answer = (w.synonyms.split(";").map(s => s.trim()).filter(Boolean)[0] || w.meaning);
+      const pool = WORDS.filter(x => x.word !== w.word && x.pos === w.pos);
+      const distractors = sample(pool, 3).map(x => x.synonyms.split(";")[0].trim());
+
+      return {
+        type: "Synonym choice",
+        promptHTML: `
+          <div class="word">${escapeHTML(w.word)}</div>
+          <div class="muted">${escapeHTML(w.pos)}</div>
+          <p class="question-copy">Which word is closest in meaning to <b>${escapeHTML(w.word)}</b> as used here?</p>
+          <div class="sentence">${escapeHTML(w.sentence)}</div>
+        `,
+        options: shuffle([answer, ...distractors]),
+        answer,
+        word: w.word,
+        explanation: `<b>${escapeHTML(w.word)}</b> means ${escapeHTML(w.meaning)}.`
+      };
+    }
+
+    function makeFillQuestion(w) {
+      const pool = WORDS.filter(x => x.word !== w.word && x.pos === w.pos);
+      const distractors = sample(pool, 3).map(x => x.word);
+
+      return {
+        type: "Fill in the blank",
+        promptHTML: `
+          <p class="question-copy">Choose the word that best completes the sentence.</p>
+          <div class="sentence">${escapeHTML(sentenceWithBlank(w))}</div>
+        `,
+        options: shuffle([w.word, ...distractors]),
+        answer: w.word,
+        word: w.word,
+        explanation: `<b>${escapeHTML(w.word)}</b> fits because it means ${escapeHTML(w.meaning)}.`
+      };
+    }
+
+    function startQuiz(mode = "daily") {
+      rescueMode = mode === "rescue";
+      const pool = rescueMode ? rescuePool() : weightedPool();
+
+      if (pool.length === 0) {
+        alert("No due mistake words right now. Start the daily quiz instead.");
+        return;
+      }
+
+      currentQuiz = pool.map(makeQuestion);
+      currentIndex = 0;
+      score = 0;
+      sessionWrong = [];
+      sessionCorrect = [];
+
+      document.getElementById("startPanel").classList.add("hidden");
+      document.getElementById("resultPanel").classList.add("hidden");
+      document.getElementById("quizPanel").classList.remove("hidden");
+
+      showQuestion();
+    }
+
+    function showQuestion() {
+      answered = false;
+      hinted = false;
+      currentAnswer = null;
+
+      const q = currentQuiz[currentIndex];
+
+      document.getElementById("qType").textContent = q.type;
+      document.getElementById("qCount").textContent = `Question ${currentIndex + 1} of ${currentQuiz.length}`;
+      document.getElementById("scoreLive").textContent = score;
+      document.getElementById("progBar").style.width = `${(currentIndex / currentQuiz.length) * 100}%`;
+
+      const opts = q.options.map((o, i) => `
+        <button class="option" data-opt="${escapeHTML(o)}">
+          <span class="muted">${i + 1}.</span> ${escapeHTML(o)}
+        </button>
+      `).join("");
+
+      document.getElementById("questionBox").innerHTML = q.promptHTML + `<div class="options">${opts}</div>`;
+      document.getElementById("feedbackBox").className = "feedback";
+      document.getElementById("feedbackBox").innerHTML = "";
+      document.getElementById("nextBtn").disabled = true;
+
+      document.querySelectorAll(".option").forEach(btn => {
+        btn.addEventListener("click", () => chooseAnswer(btn));
+      });
+    }
+
+    function chooseAnswer(btn) {
+      if (answered) return;
+
+      answered = true;
+
+      const q = currentQuiz[currentIndex];
+      const chosen = btn.getAttribute("data-opt");
+      const ok = chosen === q.answer;
+      currentAnswer = chosen;
+
+      document.querySelectorAll(".option").forEach(b => {
+        const v = b.getAttribute("data-opt");
+        if (v === q.answer) b.classList.add("correct");
+        if (b === btn && !ok) b.classList.add("wrong");
+        b.disabled = true;
+      });
+
+      const p = getProg(q.word);
+      p.seen += 1;
+      p.lastSeen = todayStr();
+      state.totalAnswered += 1;
+
+      if (ok) {
+        score += 1;
+        state.totalCorrect += 1;
+        p.correct += 1;
+        p.streak += 1;
+
+        if (p.wrong > 0 || p.mastery > 0) {
+          p.mastery = Math.min(MASTER_LEVEL, p.mastery + 1);
+        }
+
+        if (p.mastery >= MASTER_LEVEL) {
+          p.due = false;
+        }
+
+        sessionCorrect.push(q.word);
+      } else {
+        p.wrong += 1;
+        p.lastWrong = todayStr();
+        p.streak = 0;
+        p.mastery = 0;
+        p.due = true;
+
+        sessionWrong.push({
+          word: q.word,
+          chosen,
+          answer: q.answer,
+          type: q.type
+        });
+      }
+
+      const fb = document.getElementById("feedbackBox");
+      fb.className = "feedback show " + (ok ? "good" : "bad");
+      fb.innerHTML =
+        (ok ? "✅ <b>Correct.</b> " : "🔁 <b>Not yet.</b> This word will return in later quizzes. ") +
+        q.explanation +
+        (hinted ? `<br><span class="muted">Hint used: reward XP for this item is reduced slightly.</span>` : "");
+
+      document.getElementById("nextBtn").disabled = false;
+      document.getElementById("scoreLive").textContent = score;
+
+      saveState();
+    }
+
+    function nextQuestion() {
+      if (!answered) return;
+
+      currentIndex += 1;
+
+      if (currentIndex >= currentQuiz.length) {
+        finishQuiz();
+      } else {
+        showQuestion();
+      }
+    }
+
+    function finishQuiz() {
+      document.getElementById("progBar").style.width = "100%";
+      document.getElementById("quizPanel").classList.add("hidden");
+      document.getElementById("resultPanel").classList.remove("hidden");
+
+      const total = currentQuiz.length;
+      const xp = score * 10 + Math.max(0, total - sessionWrong.length) * 2 + (sessionWrong.length === 0 ? 50 : 0);
+
+      state.totalXP += xp;
+
+      const t = todayStr();
+      if (!rescueMode) updateStreak(t);
+
+      state.logs.unshift({
+        date: t,
+        mode: rescueMode ? "Rescue" : "Daily",
+        score,
+        total,
+        xp,
+        wrong: sessionWrong,
+        correct: sessionCorrect
+      });
+
+      state.logs = state.logs.slice(0, 120);
+      saveState();
+
+      document.getElementById("finalScore").textContent = `${score}/${total}`;
+      document.getElementById("xpGained").textContent = `+${xp}`;
+
+      const pct = Math.round(score / total * 100);
+      let msg = "";
+
+      if (pct === 100) msg = "🏆 Perfect session! You earned a Golden Word badge for today.";
+      else if (pct >= 84) msg = "🌟 Excellent work. Most words are moving toward long-term memory.";
+      else if (pct >= 68) msg = "💪 Good effort. The missed words are now scheduled for focused revision.";
+      else msg = "🌱 This is useful practice: today’s misses are tomorrow’s easy points.";
+
+      document.getElementById("rewardMsg").textContent = msg;
+
+      const wrongDiv = document.getElementById("sessionWrongList");
+
+      if (sessionWrong.length === 0) {
+        wrongDiv.innerHTML = `<p class="masterword">No wrong words today. Excellent!</p>`;
+        confetti();
+      } else {
+        wrongDiv.innerHTML = sessionWrong.map(x =>
+          `<span class="reviewword">${escapeHTML(x.word)} → correct: ${escapeHTML(x.answer)}</span>`
+        ).join("");
+      }
+
+      refreshLog();
+      refreshReviewWords();
+    }
+
+    function updateStreak(t) {
+      const last = state.lastQuizDate;
+
+      if (!last) {
+        state.streak = 1;
+      } else {
+        const d1 = new Date(last + "T00:00:00");
+        const d2 = new Date(t + "T00:00:00");
+        const diff = Math.round((d2 - d1) / (1000 * 60 * 60 * 24));
+
+        if (diff === 0) state.streak = Math.max(1, state.streak);
+        else if (diff === 1) state.streak += 1;
+        else state.streak = 1;
+      }
+
+      state.lastQuizDate = t;
+    }
+
+    function giveHint() {
+      if (answered) return;
+
+      hinted = true;
+
+      const q = currentQuiz[currentIndex];
+      const w = wordObjByWord(q.word);
+      const fb = document.getElementById("feedbackBox");
+
+      fb.className = "feedback show";
+      fb.innerHTML = `
+        💡 <b>Hint:</b> Part of speech: ${escapeHTML(w.pos)}.
+        First letter: <b>${escapeHTML(w.word[0].toUpperCase())}</b>.
+        Synonym clue: ${escapeHTML(w.synonyms.split(";")[0])}.
+      `;
+    }
+
+    function quitQuiz() {
+      if (currentIndex === 0 && !answered) {
+        document.getElementById("quizPanel").classList.add("hidden");
+        document.getElementById("startPanel").classList.remove("hidden");
+        return;
+      }
+
+      finishQuiz();
+    }
+
+    function refreshSidebar() {
+      document.getElementById("todayPill").textContent = niceDate(todayStr());
+      document.getElementById("wordCount").textContent = WORDS.length;
+      document.getElementById("totalXP").textContent = state.totalXP || 0;
+      document.getElementById("streak").textContent = (state.streak || 0) + " days";
+
+      const dailyLogs = state.logs.filter(x => x.mode !== "Rescue");
+      const best = dailyLogs.reduce((m, x) => Math.max(m, x.score || 0), 0);
+
+      document.getElementById("bestScore").textContent = best + "/25";
+
+      const acc = state.totalAnswered ? Math.round(state.totalCorrect / state.totalAnswered * 100) : 0;
+      document.getElementById("accuracy").textContent = acc + "%";
+
+      renderBadges();
+    }
+
+    function renderBadges() {
+      const mastered = WORDS.filter(isMastered).length;
+      const due = WORDS.filter(isDue).length;
+
+      const badges = [
+        ["First Step", state.logs.length >= 1, "👟"],
+        ["3-Day Streak", state.streak >= 3, "🔥"],
+        ["7-Day Streak", state.streak >= 7, "🌈"],
+        ["1000 XP", state.totalXP >= 1000, "⚡"],
+        ["25 Mastered", mastered >= 25, "🌿"],
+        ["75 Mastered", mastered >= 75, "🌳"],
+        ["No Weak Words", due === 0 && state.logs.length > 0, "🦉"],
+        ["Perfect Day", state.logs.some(x => x.score === x.total && x.total > 0), "🏆"]
+      ];
+
+      document.getElementById("badges").innerHTML = badges.map(b =>
+        `<span class="badge ${b[1] ? "" : "locked"}" title="${b[1] ? "Unlocked" : "Locked"}">${b[2]} ${b[0]}</span>`
+      ).join("");
+    }
+
+    function refreshLog() {
+      const body = document.getElementById("logBody");
+
+      if (!state.logs.length) {
+        body.innerHTML = `<tr><td colspan="4" class="muted">No sessions yet. Start a quiz to create your first log.</td></tr>`;
+        return;
+      }
+
+      body.innerHTML = state.logs.map(log => {
+        const wrong = (log.wrong || []).length
+          ? log.wrong.map(x => `<span class="reviewword">${escapeHTML(x.word)}</span>`).join("")
+          : `<span class="masterword">None</span>`;
+
+        return `
+          <tr>
+            <td>${niceDate(log.date)}<br><span class="muted">${escapeHTML(log.mode || "Daily")}</span></td>
+            <td><b>${log.score}/${log.total}</b></td>
+            <td>${log.xp || 0}</td>
+            <td>${wrong}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function refreshReviewWords() {
+      const due = WORDS.filter(isDue).sort((a, b) => getProg(b.word).wrong - getProg(a.word).wrong);
+      const mastered = WORDS.filter(isMastered).sort((a, b) => a.word.localeCompare(b.word));
+
+      document.getElementById("dueCount").textContent = due.length;
+      document.getElementById("masteredCount").textContent = mastered.length;
+
+      document.getElementById("dueWords").innerHTML = due.length
+        ? due.map(w => {
+            const p = getProg(w.word);
+            return `<span class="reviewword" title="${escapeHTML(w.meaning)}">${escapeHTML(w.word)} · mastery ${p.mastery}/${MASTER_LEVEL} · wrong ${p.wrong}</span>`;
+          }).join("")
+        : `<p class="masterword">No due words. Start a daily quiz to learn new ones.</p>`;
+
+      document.getElementById("masterWords").innerHTML = mastered.length
+        ? mastered.map(w => `<span class="masterword" title="${escapeHTML(w.meaning)}">🌼 ${escapeHTML(w.word)}</span>`).join("")
+        : `<p class="muted">Mastered words will appear here after repeated correct answers.</p>`;
+    }
+
+    function exportProgress() {
+      document.getElementById("backupBox").value = JSON.stringify(state, null, 2);
+    }
+
+    function importProgress() {
+      const text = document.getElementById("backupBox").value.trim();
+
+      if (!text) {
+        alert("Paste exported JSON into the box first.");
+        return;
+      }
+
+      try {
+        const imported = JSON.parse(text);
+
+        if (!imported.progress || !Array.isArray(imported.logs)) {
+          throw new Error("Invalid backup format");
+        }
+
+        state = imported;
+        saveState();
+        refreshAll();
+        alert("Progress imported successfully.");
+      } catch (e) {
+        alert("Could not import. Please check that the pasted text is valid exported JSON.");
+      }
+    }
+
+    function resetAll() {
+      if (!confirm("Reset all scores, logs, and word mastery in this browser?")) return;
+
+      localStorage.removeItem(STORAGE_KEY);
+      state = loadState();
+      refreshAll();
+    }
+
+    function switchScreen(name) {
+      document.querySelectorAll(".tab").forEach(t => {
+        t.classList.toggle("active", t.dataset.screen === name);
+      });
+
+      document.querySelectorAll(".screen").forEach(s => s.classList.add("hidden"));
+      document.getElementById("screen-" + name).classList.remove("hidden");
+
+      if (name === "log") refreshLog();
+      if (name === "words") refreshReviewWords();
+    }
+
+    function confetti() {
+      const c = document.getElementById("confetti");
+      c.innerHTML = "";
+
+      const items = ["🎉", "⭐", "🏆", "🌟", "📚", "✨"];
+
+      for (let i = 0; i < 42; i++) {
+        const s = document.createElement("span");
+        s.textContent = items[Math.floor(Math.random() * items.length)];
+        s.style.left = Math.random() * 100 + "vw";
+        s.style.animationDelay = (Math.random() * 0.8) + "s";
+        c.appendChild(s);
+      }
+
+      setTimeout(() => c.innerHTML = "", 2600);
+    }
+
+    function refreshAll() {
+      refreshSidebar();
+      refreshLog();
+      refreshReviewWords();
+    }
+
+    document.querySelectorAll(".tab").forEach(t => {
+      t.addEventListener("click", () => switchScreen(t.dataset.screen));
+    });
+
+    document.getElementById("startBtn").addEventListener("click", () => startQuiz("daily"));
+    document.getElementById("mistakeBtn").addEventListener("click", () => startQuiz("rescue"));
+    document.getElementById("nextBtn").addEventListener("click", nextQuestion);
+    document.getElementById("hintBtn").addEventListener("click", giveHint);
+    document.getElementById("quitBtn").addEventListener("click", quitQuiz);
+
+    document.getElementById("startAgainBtn").addEventListener("click", () => {
+      document.getElementById("resultPanel").classList.add("hidden");
+      startQuiz("daily");
+    });
+
+    document.getElementById("rescueAfterBtn").addEventListener("click", () => {
+      document.getElementById("resultPanel").classList.add("hidden");
+      startQuiz("rescue");
+    });
+
+    document.getElementById("exportBtn").addEventListener("click", exportProgress);
+    document.getElementById("importBtn").addEventListener("click", importProgress);
+    document.getElementById("resetBtn").addEventListener("click", resetAll);
+
+    document.addEventListener("keydown", e => {
+      if (!document.getElementById("quizPanel").classList.contains("hidden")) {
+        if (/^[1-4]$/.test(e.key) && !answered) {
+          const btn = document.querySelectorAll(".option")[Number(e.key) - 1];
+          if (btn) chooseAnswer(btn);
+        }
+
+        if ((e.key === "h" || e.key === "H") && !answered) giveHint();
+        if (e.key === "Enter" && answered) nextQuestion();
+      }
+    });
+
+    refreshAll();
+  </script>
+</body>
+</html>

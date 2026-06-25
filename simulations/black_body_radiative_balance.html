@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Black Body Radiation and Radiative Balance</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      --bg:#030712; --panel:rgba(15,23,42,.9); --panel2:rgba(30,41,59,.78);
+      --text:#e5e7eb; --muted:#94a3b8; --border:rgba(148,163,184,.25);
+      --accent:#38bdf8; --yellow:#facc15;
+    }
+    body {
+      margin:0; min-height:100vh; color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(14,165,233,.22), transparent 30rem),
+        radial-gradient(circle at bottom right, rgba(250,204,21,.12), transparent 28rem),
+        var(--bg);
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+    }
+    header { max-width:1180px; margin:0 auto; padding:24px 18px 10px; }
+    .back-link { display:inline-block; margin-bottom:14px; color:#bfdbfe; text-decoration:none; font-weight:700; }
+    .back-link:hover { text-decoration:underline; }
+    h1 { margin:0; font-size:clamp(1.8rem,4vw,3.2rem); letter-spacing:-.04em; line-height:1; }
+    .subtitle { max-width:900px; color:var(--muted); line-height:1.6; margin:12px 0 0; }
+    main {
+      max-width:1180px; margin:0 auto; padding:14px 18px 28px;
+      display:grid; grid-template-columns:minmax(0,1fr) 330px; gap:18px; align-items:start;
+    }
+    .canvas-card,.control-card,.note-card {
+      background:var(--panel); border:1px solid var(--border); border-radius:22px;
+      box-shadow:0 24px 80px rgba(0,0,0,.35); overflow:hidden; backdrop-filter:blur(10px);
+    }
+    .canvas-wrap { position:relative; min-height:640px; }
+    canvas { display:block; width:100%; height:640px; background:#020617; }
+    .hud {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      padding: 14px;
+      background: rgba(2, 6, 23, 0.95);
+      border-top: 1px solid rgba(148, 163, 184, 0.24);
+    }
+
+    .hud-item {
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid rgba(148, 163, 184, 0.24);
+      border-radius: 16px;
+      padding: 12px 13px;
+    }
+    .hud-item strong { display:block; font-size:.88rem; color:#e0f2fe; }
+    .hud-item span { color:var(--muted); font-size:.84rem; }
+    .side-panel { display:grid; gap:14px; }
+    .control-card,.note-card { padding:18px; }
+    .control-card h2,.note-card h2 { margin:0 0 14px; font-size:1.2rem; }
+    .control-group { margin-bottom:17px; }
+    label { display:flex; justify-content:space-between; gap:12px; align-items:baseline; font-weight:800; margin-bottom:8px; }
+    label span { color:#bae6fd; font-size:.92rem; font-weight:800; }
+    input[type="range"] { width:100%; accent-color:var(--accent); }
+    .switch-row {
+      display:flex; align-items:center; justify-content:space-between; gap:12px; padding:13px 14px;
+      border-radius:16px; background:var(--panel2); border:1px solid var(--border); margin-bottom:14px;
+    }
+    .switch-row strong { display:block; }
+    .switch-row small { display:block; color:var(--muted); margin-top:3px; line-height:1.3; }
+    .switch { position:relative; width:58px; height:32px; flex:0 0 auto; }
+    .switch input { opacity:0; width:0; height:0; }
+    .slider-switch { position:absolute; cursor:pointer; inset:0; background:#334155; border:1px solid rgba(148,163,184,.3); border-radius:999px; transition:160ms ease; }
+    .slider-switch::before { content:""; position:absolute; height:24px; width:24px; left:3px; top:3px; background:white; border-radius:50%; transition:160ms ease; }
+    .switch input:checked + .slider-switch { background:#eab308; }
+    .switch input:checked + .slider-switch::before { transform:translateX(26px); }
+    .button-row { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
+    button { border:0; border-radius:13px; padding:11px 14px; font:inherit; font-weight:850; cursor:pointer; color:#0f172a; background:#e0f2fe; }
+    button:hover { background:#bae6fd; }
+    button.secondary { background:#334155; color:white; border:1px solid var(--border); }
+    button.secondary:hover { background:#475569; }
+    .note-card p,.note-card li { color:var(--muted); line-height:1.55; font-size:.94rem; }
+    .note-card ul { padding-left:1.15rem; margin:10px 0 0; }
+    .legend { display:grid; gap:8px; margin-top:12px; }
+    .legend-item { display:flex; gap:9px; align-items:center; color:var(--muted); font-size:.92rem; }
+    .dot { width:13px; height:13px; border-radius:50%; display:inline-block; }
+    .dot.atom { background:#7dd3fc; box-shadow:0 0 12px #38bdf8; }
+    .dot.wave { background:#fef08a; box-shadow:0 0 12px #facc15; }
+    .dot.sun { background:#f97316; box-shadow:0 0 12px #fb923c; }
+    @media (max-width:940px) {
+      main { grid-template-columns:1fr; }
+      .canvas-wrap { min-height:560px; } canvas { height:560px; }
+      .hud { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    }
+    @media (max-width:540px) {
+      header { padding-top:18px; } main { padding-left:12px; padding-right:12px; }
+      .canvas-wrap { min-height:520px; } canvas { height:520px; }
+      .hud { grid-template-columns:1fr; padding:10px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="back-link" href="../index.html">← Back to Interactive Learning Lab</a>
+    <h1>Black Body Radiation and Radiative Balance</h1>
+    <p class="subtitle">
+      A pedagogical animation: atoms vibrate thermally, energetic atoms emit expanding wavefronts,
+      emission cools them, and incoming solar plane waves supply energy. The aim is to visualize
+      radiative balance, not to calculate an exact Planck spectrum.
+    </p>
+  </header>
+
+  <main>
+    <section class="canvas-card">
+      <div class="canvas-wrap">
+        <canvas id="scene"></canvas>
+      </div>
+
+      <div class="hud">
+          <div class="hud-item"><strong id="hudTemp">Temperature: 300 K</strong><span>Higher temperature → stronger vibration</span></div>
+          <div class="hud-item"><strong id="hudEmission">Emissions: 0</strong><span>Atoms emit after crossing threshold</span></div>
+          <div class="hud-item"><strong id="hudBalance">Radiative state</strong><span id="balanceText">Cooling and heating are self-adjusting</span></div>
+          <div class="hud-item"><strong id="hudSun">Sun: off</strong><span>Plane wavefronts can heat atoms</span></div>
+        </div>
+
+    </section>
+
+    <aside class="side-panel">
+      <section class="control-card">
+        <h2>Controls</h2>
+        <div class="control-group">
+          <label for="temperature">Temperature <span id="temperatureValue">300 K</span></label>
+          <input id="temperature" type="range" min="100" max="1200" value="300" step="10">
+        </div>
+        <div class="control-group">
+          <label for="threshold">Emission threshold <span id="thresholdValue">4.2</span></label>
+          <input id="threshold" type="range" min="1.5" max="8.0" value="4.2" step="0.1">
+        </div>
+        <div class="switch-row">
+          <div><strong>Incoming sunlight</strong><small>Show plane wavefronts coming from the left.</small></div>
+          <label class="switch" aria-label="Toggle sunlight">
+            <input id="sunToggle" type="checkbox">
+            <span class="slider-switch"></span>
+          </label>
+        </div>
+        <div class="control-group">
+          <label for="solarStrength">Solar strength <span id="solarStrengthValue">50%</span></label>
+          <input id="solarStrength" type="range" min="0" max="100" value="50" step="1">
+        </div>
+        <div class="button-row">
+          <button id="pauseBtn">Pause</button>
+          <button id="resetBtn" class="secondary">Reset atoms</button>
+        </div>
+      </section>
+
+      <section class="note-card">
+        <h2>What this demonstrates</h2>
+        <p>
+          A warm body does not store energy indefinitely. As atoms vibrate more strongly,
+          the body emits radiation. Emission removes energy. If sunlight supplies energy
+          at about the same rate as radiation removes it, the average temperature remains
+          approximately steady.
+        </p>
+        <div class="legend">
+          <div class="legend-item"><span class="dot atom"></span> Vibrating atoms in a triangular lattice</div>
+          <div class="legend-item"><span class="dot wave"></span> Emitted circular wavefronts</div>
+          <div class="legend-item"><span class="dot sun"></span> Incoming solar plane wavefronts</div>
+        </div>
+        <ul>
+          <li>The hexagonal cluster is a 2D symbolic “Earth”.</li>
+          <li>Wavefronts are drawn in 2D, but represent radiation spreading outward.</li>
+          <li>Higher temperature increases vibration amplitude and frequency.</li>
+          <li>Emission cools atoms; solar input drives them again.</li>
+        </ul>
+      </section>
+    </aside>
+  </main>
+
+  <script>
+    const canvas = document.getElementById("scene");
+    const ctx = canvas.getContext("2d");
+
+    const temperatureSlider = document.getElementById("temperature");
+    const thresholdSlider = document.getElementById("threshold");
+    const sunToggle = document.getElementById("sunToggle");
+    const solarStrengthSlider = document.getElementById("solarStrength");
+
+    const temperatureValue = document.getElementById("temperatureValue");
+    const thresholdValue = document.getElementById("thresholdValue");
+    const solarStrengthValue = document.getElementById("solarStrengthValue");
+
+    const pauseBtn = document.getElementById("pauseBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    const hudTemp = document.getElementById("hudTemp");
+    const hudEmission = document.getElementById("hudEmission");
+    const hudBalance = document.getElementById("hudBalance");
+    const balanceText = document.getElementById("balanceText");
+    const hudSun = document.getElementById("hudSun");
+
+    const LAYERS = 10;
+    const atoms = [];
+    const waves = [];
+    const stars = [];
+
+    let width = 1000;
+    let height = 640;
+    let dpr = 1;
+    let spacing = 24;
+    let centerX = 0;
+    let centerY = 0;
+    let hexRadius = 200;
+    let time = 0;
+    let lastTime = 0;
+    let paused = false;
+    let totalEmissions = 0;
+    let recentEmissionMeter = 0;
+    let recentSolarMeter = 0;
+
+    function rand(min, max) {
+      return min + Math.random() * (max - min);
+    }
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function positiveModulo(a, n) {
+      return ((a % n) + n) % n;
+    }
+
+    function makeStars() {
+      stars.length = 0;
+      const count = Math.floor((width * height) / 9000);
+      for (let i = 0; i < count; i++) {
+        stars.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          r: rand(0.4, 1.5),
+          a: rand(0.25, 0.9)
+        });
+      }
+    }
+
+    function generateAtoms() {
+      atoms.length = 0;
+
+      let id = 0;
+      for (let q = -LAYERS; q <= LAYERS; q++) {
+        for (let r = -LAYERS; r <= LAYERS; r++) {
+          const s = -q - r;
+          if (Math.max(Math.abs(q), Math.abs(r), Math.abs(s)) <= LAYERS) {
+            const theta = rand(0, Math.PI * 2);
+
+            atoms.push({
+              id,
+              q,
+              r,
+              s,
+              x0: 0,
+              y0: 0,
+              x: 0,
+              y: 0,
+              dx: Math.cos(theta),
+              dy: Math.sin(theta),
+              phase: rand(0, Math.PI * 2),
+              freqFactor: rand(0.75, 1.35),
+              ampFactor: rand(0.55, 1.35),
+              energy: rand(0.65, 1.15),
+              cooldown: rand(0, 0.75),
+              currentAmplitude: 0
+            });
+
+            id++;
+          }
+        }
+      }
+    }
+
+    function updateAtomRestPositions() {
+      spacing = Math.min(width, height) / 27;
+      centerX = width * 0.52;
+      centerY = height * 0.50;
+      hexRadius = spacing * LAYERS * 1.05;
+
+      for (const atom of atoms) {
+        atom.x0 = centerX + spacing * (atom.q + atom.r / 2);
+        atom.y0 = centerY + spacing * (Math.sqrt(3) / 2) * atom.r;
+      }
+    }
+
+    function resizeCanvas() {
+      dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      const rect = canvas.getBoundingClientRect();
+      width = Math.max(320, rect.width);
+      height = Math.max(420, rect.height);
+
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      updateAtomRestPositions();
+      makeStars();
+    }
+
+    function temperatureNorm() {
+      const t = Number(temperatureSlider.value);
+      return (t - 100) / 1100;
+    }
+
+    function blackBodyColor(norm, alpha = 1) {
+      /*
+        Simple pedagogical color shift:
+        cool = red/orange, medium = yellow-white, hot = pale blue-white.
+        This is visual symbolism, not exact Planck-law colorimetry.
+      */
+      const n = clamp(norm, 0, 1);
+      let r, g, b;
+
+      if (n < 0.45) {
+        const k = n / 0.45;
+        r = 255;
+        g = 90 + 130 * k;
+        b = 35 + 20 * k;
+      } else if (n < 0.75) {
+        const k = (n - 0.45) / 0.30;
+        r = 255;
+        g = 220 + 35 * k;
+        b = 55 + 160 * k;
+      } else {
+        const k = (n - 0.75) / 0.25;
+        r = 255 - 50 * k;
+        g = 255 - 15 * k;
+        b = 215 + 40 * k;
+      }
+
+      return `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${alpha})`;
+    }
+
+    function drawBackground() {
+      const bg = ctx.createRadialGradient(width * 0.5, height * 0.42, 20, width * 0.5, height * 0.5, Math.max(width, height));
+      bg.addColorStop(0, "#0f172a");
+      bg.addColorStop(0.45, "#020617");
+      bg.addColorStop(1, "#000000");
+
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, width, height);
+
+      for (const star of stars) {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(226, 232, 240, ${star.a})`;
+        ctx.fill();
+      }
+    }
+
+    function hexPoints(radius) {
+      const points = [];
+      for (let i = 0; i < 6; i++) {
+        const angle = Math.PI / 6 + i * Math.PI / 3;
+        points.push({
+          x: centerX + radius * Math.cos(angle),
+          y: centerY + radius * Math.sin(angle)
+        });
+      }
+      return points;
+    }
+
+    function drawEarthBoundary() {
+      const points = hexPoints(hexRadius + spacing * 0.95);
+
+      ctx.save();
+      ctx.beginPath();
+      points.forEach((p, i) => {
+        if (i === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
+      });
+      ctx.closePath();
+
+      const fill = ctx.createRadialGradient(centerX - hexRadius * 0.35, centerY - hexRadius * 0.45, 10, centerX, centerY, hexRadius * 1.2);
+      fill.addColorStop(0, "rgba(34, 211, 238, 0.22)");
+      fill.addColorStop(0.55, "rgba(14, 116, 144, 0.13)");
+      fill.addColorStop(1, "rgba(2, 6, 23, 0.70)");
+
+      ctx.fillStyle = fill;
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "rgba(125, 211, 252, 0.55)";
+      ctx.stroke();
+
+      ctx.shadowBlur = 30;
+      ctx.shadowColor = "rgba(56, 189, 248, 0.22)";
+      ctx.strokeStyle = "rgba(56, 189, 248, 0.22)";
+      ctx.lineWidth = 8;
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    function drawBonds() {
+      const lookup = new Map();
+      for (const atom of atoms) lookup.set(`${atom.q},${atom.r}`, atom);
+
+      const neighborSteps = [[1, 0], [0, 1], [1, -1]];
+
+      ctx.save();
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = "rgba(125, 211, 252, 0.13)";
+
+      for (const atom of atoms) {
+        for (const [dq, dr] of neighborSteps) {
+          const other = lookup.get(`${atom.q + dq},${atom.r + dr}`);
+          if (!other) continue;
+
+          ctx.beginPath();
+          ctx.moveTo(atom.x, atom.y);
+          ctx.lineTo(other.x, other.y);
+          ctx.stroke();
+        }
+      }
+
+      ctx.restore();
+    }
+
+    function drawAtoms(norm) {
+      for (const atom of atoms) {
+        const intensity = clamp(atom.currentAmplitude / 8, 0, 1);
+        const radius = 2.9 + intensity * 2.5;
+        const alpha = 0.72 + 0.28 * intensity;
+
+        ctx.beginPath();
+        ctx.arc(atom.x, atom.y, radius, 0, Math.PI * 2);
+
+        const atomGradient = ctx.createRadialGradient(atom.x - radius * 0.35, atom.y - radius * 0.35, 0.5, atom.x, atom.y, radius * 2.2);
+        atomGradient.addColorStop(0, "rgba(255, 255, 255, 0.95)");
+        atomGradient.addColorStop(0.35, blackBodyColor(norm, alpha));
+        atomGradient.addColorStop(1, "rgba(56, 189, 248, 0.16)");
+
+        ctx.fillStyle = atomGradient;
+        ctx.fill();
+
+        if (intensity > 0.62) {
+          ctx.beginPath();
+          ctx.arc(atom.x, atom.y, radius * 2.1, 0, Math.PI * 2);
+          ctx.fillStyle = blackBodyColor(norm, 0.10 * intensity);
+          ctx.fill();
+        }
+      }
+    }
+
+    function drawEmittedWaves() {
+      ctx.save();
+
+      for (const wave of waves) {
+        const life = wave.r / wave.maxR;
+        const alpha = clamp((1 - life) * wave.alpha, 0, 1);
+
+        ctx.beginPath();
+        ctx.arc(wave.x, wave.y, wave.r, 0, Math.PI * 2);
+        ctx.lineWidth = 1.8;
+        ctx.strokeStyle = wave.color(alpha);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(wave.x, wave.y, wave.r * 0.58, 0, Math.PI * 2);
+        ctx.lineWidth = 0.9;
+        ctx.strokeStyle = wave.color(alpha * 0.35);
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+
+    function drawSunAndPlaneWaves() {
+      if (!sunToggle.checked) return;
+
+      const wavelength = 58;
+      const speed = 120;
+      const offset = positiveModulo(time * speed, wavelength);
+
+      ctx.save();
+
+      const sunX = -40;
+      const sunY = height * 0.5;
+
+      const sunGlow = ctx.createRadialGradient(sunX, sunY, 10, sunX, sunY, 180);
+      sunGlow.addColorStop(0, "rgba(251, 191, 36, 0.75)");
+      sunGlow.addColorStop(0.35, "rgba(249, 115, 22, 0.25)");
+      sunGlow.addColorStop(1, "rgba(249, 115, 22, 0)");
+      ctx.fillStyle = sunGlow;
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.lineWidth = 2;
+      for (let x = -wavelength * 2 + offset; x < width + wavelength; x += wavelength) {
+        const alpha = x < centerX - hexRadius - 30 ? 0.62 : 0.24;
+        ctx.strokeStyle = `rgba(250, 204, 21, ${alpha})`;
+
+        ctx.beginPath();
+        ctx.moveTo(x, 30);
+        ctx.lineTo(x + height * 0.18, height - 30);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(x - 9, 30);
+        ctx.lineTo(x - 9 + height * 0.18, height - 30);
+        ctx.lineWidth = 0.8;
+        ctx.strokeStyle = `rgba(253, 230, 138, ${alpha * 0.55})`;
+        ctx.stroke();
+        ctx.lineWidth = 2;
+      }
+
+      ctx.strokeStyle = "rgba(253, 224, 71, 0.75)";
+      ctx.fillStyle = "rgba(253, 224, 71, 0.88)";
+      ctx.lineWidth = 3;
+      const arrowY = 48;
+      ctx.beginPath();
+      ctx.moveTo(28, arrowY);
+      ctx.lineTo(120, arrowY);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(120, arrowY);
+      ctx.lineTo(108, arrowY - 7);
+      ctx.lineTo(108, arrowY + 7);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.fillStyle = "rgba(254, 240, 138, 0.95)";
+      ctx.font = "700 13px system-ui, Arial";
+      ctx.fillText("incoming solar radiation", 30, 30);
+
+      ctx.restore();
+    }
+
+    function maybeEmitWave(atom, norm, threshold) {
+      if (atom.cooldown > 0) return;
+
+      if (atom.currentAmplitude > threshold) {
+        const probability = 0.28 + norm * 0.58;
+
+        if (Math.random() < probability) {
+          const localNorm = clamp(norm + atom.energy * 0.12, 0, 1);
+
+          waves.push({
+            x: atom.x,
+            y: atom.y,
+            r: 4,
+            speed: 90 + norm * 230 + rand(-20, 35),
+            maxR: 90 + norm * 170 + rand(0, 80),
+            alpha: 0.52 + norm * 0.28,
+            color: (alpha) => blackBodyColor(localNorm, alpha)
+          });
+
+          // Emission removes vibrational energy. This is the cooling-off step.
+          atom.energy *= 0.52;
+          atom.cooldown = rand(0.45, 1.3);
+          totalEmissions++;
+          recentEmissionMeter += 1.0;
+        }
+      }
+    }
+
+    function solarKickForAtom(atom, dt) {
+      if (!sunToggle.checked) return 0;
+
+      const strength = Number(solarStrengthSlider.value) / 100;
+      if (strength <= 0) return 0;
+
+      const wavelength = 58;
+      const speed = 120;
+      const offset = positiveModulo(time * speed, wavelength);
+
+      /*
+        Plane wavefronts are approximately vertical but slightly slanted.
+        The crest coordinate below matches the slanted lines drawn on canvas.
+      */
+      const crestCoordinate = atom.x - atom.y * 0.18;
+      const distanceToCrest = Math.min(
+        positiveModulo(crestCoordinate - offset, wavelength),
+        positiveModulo(offset - crestCoordinate, wavelength)
+      );
+
+      const nearCrest = Math.exp(-(distanceToCrest * distanceToCrest) / 95);
+
+      if (nearCrest > 0.12) {
+        const kick = strength * nearCrest * dt * 3.2;
+        atom.energy += kick;
+        recentSolarMeter += kick * 0.04;
+        return kick;
+      }
+
+      return 0;
+    }
+
+    function updateAtoms(dt) {
+      const norm = temperatureNorm();
+      const threshold = Number(thresholdSlider.value);
+
+      const thermalTarget = 0.62 + norm * 1.55;
+      const frequency = 1.4 + norm * 8.5;
+      const baseAmplitude = 1.0 + norm * 7.2;
+
+      for (const atom of atoms) {
+        atom.cooldown = Math.max(0, atom.cooldown - dt);
+
+        // Atoms relax toward the temperature set by the slider.
+        atom.energy += (thermalTarget - atom.energy) * dt * 0.85;
+
+        // Incoming solar plane waves give energy kicks near crests.
+        solarKickForAtom(atom, dt);
+
+        // Prevent runaway values in this pedagogical model.
+        atom.energy = clamp(atom.energy, 0.18, 3.2);
+
+        const oscillation = Math.sin(time * frequency * atom.freqFactor + atom.phase);
+        const amplitude = baseAmplitude * atom.ampFactor * atom.energy;
+
+        atom.currentAmplitude = Math.abs(amplitude * oscillation);
+        atom.x = atom.x0 + atom.dx * amplitude * oscillation;
+        atom.y = atom.y0 + atom.dy * amplitude * oscillation;
+
+        maybeEmitWave(atom, norm, threshold);
+      }
+    }
+
+    function updateWaves(dt) {
+      for (const wave of waves) wave.r += wave.speed * dt;
+
+      for (let i = waves.length - 1; i >= 0; i--) {
+        if (waves[i].r > waves[i].maxR) waves.splice(i, 1);
+      }
+    }
+
+    function updateMeters(dt) {
+      recentEmissionMeter *= Math.exp(-dt * 1.8);
+      recentSolarMeter *= Math.exp(-dt * 1.2);
+
+      const temp = Number(temperatureSlider.value);
+      const solarOn = sunToggle.checked;
+      const solarStrength = Number(solarStrengthSlider.value);
+
+      temperatureValue.textContent = `${temp} K`;
+      thresholdValue.textContent = Number(thresholdSlider.value).toFixed(1);
+      solarStrengthValue.textContent = `${solarStrength}%`;
+
+      hudTemp.textContent = `Temperature: ${temp} K`;
+      hudEmission.textContent = `Emissions: ${totalEmissions}`;
+      hudSun.textContent = solarOn ? `Sun: on (${solarStrength}%)` : "Sun: off";
+
+      if (solarOn) {
+        const balance = recentSolarMeter - recentEmissionMeter * 0.04;
+
+        if (Math.abs(balance) < 0.20) {
+          hudBalance.textContent = "Near balance";
+          balanceText.textContent = "Solar input and radiative cooling are comparable";
+        } else if (balance > 0) {
+          hudBalance.textContent = "Net heating tendency";
+          balanceText.textContent = "More solar input: atoms vibrate more strongly";
+        } else {
+          hudBalance.textContent = "Net cooling tendency";
+          balanceText.textContent = "More emission: radiation removes energy";
+        }
+      } else {
+        hudBalance.textContent = "Thermal emission";
+        balanceText.textContent = "Atoms radiate when vibrations exceed threshold";
+      }
+    }
+
+    function drawLabels() {
+      ctx.save();
+
+      ctx.fillStyle = "rgba(226, 232, 240, 0.90)";
+      ctx.font = "800 16px system-ui, Arial";
+      ctx.fillText("Hexagonal 2D lattice body", centerX - 92, centerY + hexRadius + 52);
+
+      ctx.fillStyle = "rgba(148, 163, 184, 0.95)";
+      ctx.font = "13px system-ui, Arial";
+      ctx.fillText("emission cools energetic atoms", centerX - 85, centerY + hexRadius + 72);
+
+      ctx.restore();
+    }
+
+    function draw() {
+      const norm = temperatureNorm();
+
+      drawBackground();
+      drawSunAndPlaneWaves();
+      drawEarthBoundary();
+      drawBonds();
+      drawAtoms(norm);
+      drawEmittedWaves();
+      drawLabels();
+    }
+
+    function loop(timestamp) {
+      if (!lastTime) lastTime = timestamp;
+      const rawDt = (timestamp - lastTime) / 1000;
+      lastTime = timestamp;
+      const dt = Math.min(rawDt, 0.04);
+
+      if (!paused) {
+        time += dt;
+        updateAtoms(dt);
+        updateWaves(dt);
+        updateMeters(dt);
+      }
+
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    pauseBtn.addEventListener("click", () => {
+      paused = !paused;
+      pauseBtn.textContent = paused ? "Resume" : "Pause";
+    });
+
+    resetBtn.addEventListener("click", () => {
+      totalEmissions = 0;
+      recentEmissionMeter = 0;
+      recentSolarMeter = 0;
+      waves.length = 0;
+
+      for (const atom of atoms) {
+        atom.energy = rand(0.65, 1.15);
+        atom.cooldown = rand(0, 0.75);
+      }
+    });
+
+    window.addEventListener("resize", resizeCanvas);
+
+    generateAtoms();
+    resizeCanvas();
+    requestAnimationFrame(loop);
+  </script>
+</body>
+</html>

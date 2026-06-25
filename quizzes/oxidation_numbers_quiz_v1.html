@@ -1,0 +1,2401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Oxidation Numbers Quiz</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --dark: #020617;
+      --dark-panel: rgba(15, 23, 42, 0.90);
+      --dark-panel-2: rgba(30, 41, 59, 0.76);
+      --dark-border: rgba(148, 163, 184, 0.25);
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --cyan: #38bdf8;
+      --amber: #f59e0b;
+      --green: #34d399;
+      --red: #fb7185;
+      --blue-soft: #bfdbfe;
+      --violet: #a78bfa;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.22), transparent 32rem),
+        radial-gradient(circle at bottom right, rgba(245, 158, 11, 0.14), transparent 30rem),
+        linear-gradient(135deg, #020617, #0f172a 55%, #111827);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .site-header {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px 18px 10px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 16px;
+      color: var(--blue-soft);
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .hero {
+      background:
+        linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.62)),
+        radial-gradient(circle at 25% 25%, rgba(56, 189, 248, 0.22), transparent 20rem);
+      border: 1px solid var(--dark-border);
+      border-radius: 28px;
+      padding: clamp(22px, 4vw, 38px);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--blue-soft);
+      font-size: 0.8rem;
+      font-weight: 900;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 4.1rem);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+    }
+
+    .subtitle {
+      max-width: 920px;
+      margin: 16px 0 0;
+      color: #cbd5e1;
+      line-height: 1.65;
+      font-size: clamp(1rem, 1.5vw, 1.13rem);
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 350px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .quiz-card,
+    .control-card,
+    .note-card,
+    .history-card {
+      background: var(--dark-panel);
+      border: 1px solid var(--dark-border);
+      border-radius: 24px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .quiz-card {
+      padding: 18px;
+    }
+
+    .quiz-panel {
+      min-height: 500px;
+      border-radius: 20px;
+      padding: clamp(20px, 4vw, 34px);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(56, 189, 248, 0.16), transparent 18rem),
+        radial-gradient(circle at 80% 90%, rgba(245, 158, 11, 0.10), transparent 18rem),
+        rgba(2, 6, 23, 0.66);
+      border: 1px solid rgba(148, 163, 184, 0.20);
+      display: grid;
+      align-content: center;
+      text-align: center;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .challenge-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      color: #dbeafe;
+      font-weight: 850;
+      margin-bottom: 16px;
+    }
+
+    .start-title {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+    }
+
+    .start-text {
+      max-width: 680px;
+      margin: 16px auto 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .rules-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin: 22px auto 0;
+      max-width: 820px;
+    }
+
+    .rule {
+      background: rgba(15, 23, 42, 0.78);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 16px;
+      padding: 12px;
+      text-align: left;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .rule strong {
+      display: block;
+      color: #e0f2fe;
+      margin-bottom: 4px;
+    }
+
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .stat {
+      background: rgba(15, 23, 42, 0.86);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 16px;
+      padding: 10px 11px;
+      text-align: left;
+    }
+
+    .stat strong {
+      display: block;
+      color: #e0f2fe;
+      font-size: 0.85rem;
+      margin-bottom: 3px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 850;
+    }
+
+    .progress-wrap {
+      height: 11px;
+      width: 100%;
+      background: rgba(51, 65, 85, 0.82);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 0 0 24px;
+    }
+
+    .progress {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #38bdf8, #34d399);
+      transition: width 250ms ease;
+    }
+
+    .question-card {
+      margin: 0 auto 20px;
+      max-width: 790px;
+      padding: clamp(18px, 4vw, 30px);
+      border-radius: 24px;
+      background: rgba(15, 23, 42, 0.82);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+    }
+
+    .formula {
+      font-size: clamp(2.7rem, 8vw, 5.6rem);
+      font-weight: 950;
+      letter-spacing: -0.06em;
+      line-height: 1.05;
+      color: #f8fafc;
+      text-shadow: 0 0 34px rgba(56, 189, 248, 0.18);
+      margin: 2px 0 12px;
+    }
+
+    .question {
+      font-size: clamp(1.15rem, 2.2vw, 1.55rem);
+      color: #cbd5e1;
+      font-weight: 760;
+      line-height: 1.45;
+    }
+
+    .question strong {
+      color: #e0f2fe;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .option {
+      cursor: pointer;
+      border-radius: 17px;
+      padding: 16px 15px;
+      background: rgba(30, 41, 59, 0.72);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      color: #e5e7eb;
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      font-weight: 900;
+      transition: transform 120ms ease, background 120ms ease, border 120ms ease;
+      user-select: none;
+      min-height: 68px;
+    }
+
+    .option:hover:not(:disabled) {
+      transform: translateY(-1px);
+      background: rgba(56, 189, 248, 0.14);
+      border-color: rgba(56, 189, 248, 0.45);
+    }
+
+    .option.correct {
+      background: rgba(52, 211, 153, 0.18);
+      border-color: rgba(52, 211, 153, 0.70);
+      color: #bbf7d0;
+    }
+
+    .option.wrong {
+      background: rgba(251, 113, 133, 0.18);
+      border-color: rgba(251, 113, 133, 0.70);
+      color: #fecdd3;
+    }
+
+    .option:disabled {
+      cursor: default;
+    }
+
+    .feedback {
+      display: none;
+      margin: 18px auto 0;
+      max-width: 760px;
+      padding: 15px 16px;
+      border-radius: 16px;
+      background: rgba(2, 6, 23, 0.56);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      color: var(--muted);
+      text-align: left;
+      line-height: 1.55;
+    }
+
+    .feedback.show {
+      display: block;
+    }
+
+    .feedback strong {
+      color: #e0f2fe;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      border-radius: 15px;
+      padding: 14px 18px;
+      font: inherit;
+      font-weight: 850;
+      color: #0f172a;
+      background: #e0f2fe;
+      transition: transform 120ms ease, background 120ms ease;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      background: #bae6fd;
+    }
+
+    button.secondary {
+      background: #334155;
+      color: #ffffff;
+      border: 1px solid var(--dark-border);
+    }
+
+    button.secondary:hover:not(:disabled) {
+      background: #475569;
+    }
+
+    button.green {
+      background: #bbf7d0;
+    }
+
+    button.green:hover:not(:disabled) {
+      background: #86efac;
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .result-box {
+      border-radius: 18px;
+      padding: 16px;
+      background: rgba(15, 23, 42, 0.82);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+    }
+
+    .result-box strong {
+      display: block;
+      font-size: 1.8rem;
+      color: #e0f2fe;
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+
+    .result-box span {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .side-panel {
+      display: grid;
+      gap: 14px;
+    }
+
+    .control-card,
+    .note-card,
+    .history-card {
+      padding: 18px;
+    }
+
+    .control-card h2,
+    .note-card h2,
+    .history-card h2 {
+      margin: 0 0 14px;
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+    }
+
+    .control-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+      margin-bottom: 8px;
+      color: #f8fafc;
+      font-weight: 850;
+      font-size: 0.94rem;
+    }
+
+    label span {
+      min-width: 78px;
+      text-align: right;
+      color: #bae6fd;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.88rem;
+    }
+
+    input[type="range"],
+    select {
+      width: 100%;
+      accent-color: var(--cyan);
+    }
+
+    select {
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      border-radius: 15px;
+      padding: 12px 13px;
+      background: rgba(2, 6, 23, 0.65);
+      color: #e5e7eb;
+      font-size: 0.96rem;
+      outline: none;
+    }
+
+    select:focus {
+      border-color: rgba(56, 189, 248, 0.72);
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.14);
+    }
+
+    .hint {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.4;
+    }
+
+    .review-list {
+      display: grid;
+      gap: 9px;
+      max-height: 430px;
+      overflow: auto;
+      margin-top: 14px;
+      text-align: left;
+    }
+
+    .review-item {
+      display: grid;
+      gap: 5px;
+      padding: 12px;
+      border-radius: 15px;
+      background: rgba(2, 6, 23, 0.42);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.45;
+    }
+
+    .review-item.ok {
+      border-left: 6px solid rgba(52, 211, 153, 0.9);
+    }
+
+    .review-item.bad {
+      border-left: 6px solid rgba(251, 113, 133, 0.9);
+    }
+
+    .review-item strong {
+      color: #e0f2fe;
+    }
+
+    .bad-text {
+      color: #fecdd3;
+      font-weight: 850;
+    }
+
+    .good-text {
+      color: #bbf7d0;
+      font-weight: 850;
+    }
+
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 16px;
+      background: rgba(2, 6, 23, 0.42);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+    }
+
+    .history-table th,
+    .history-table td {
+      padding: 10px 9px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+      text-align: left;
+      font-size: 0.88rem;
+    }
+
+    .history-table th {
+      color: #e0f2fe;
+      background: rgba(15, 23, 42, 0.74);
+    }
+
+    .history-table td {
+      color: var(--muted);
+    }
+
+    .empty-history {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .note-card p,
+    .note-card li {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.94rem;
+    }
+
+    .note-card ul {
+      margin: 10px 0 0;
+      padding-left: 1.15rem;
+    }
+
+    .formula-box {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(2, 6, 23, 0.56);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      color: #dbeafe;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      line-height: 1.55;
+      font-size: 0.88rem;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 980px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .site-header,
+      main {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .hero {
+        border-radius: 22px;
+      }
+
+      .rules-grid,
+      .stats-bar,
+      .result-grid,
+      .options {
+        grid-template-columns: 1fr;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <a class="back-link" href="../index.html">← Back to Interactive Learning Lab</a>
+
+    <section class="hero">
+      <p class="eyebrow">Chemistry Quiz • Oxidation Numbers • JEE Practice</p>
+      <h1>Oxidation Numbers Quiz</h1>
+      <p class="subtitle">
+        Practice oxidation numbers in elements, compounds, oxyanions, peroxides,
+        superoxides, organic compounds, mixed-valence compounds, and coordination complexes.
+        Each attempt uses a randomized question set.
+      </p>
+    </section>
+  </header>
+
+  <main>
+    <section class="quiz-card">
+      <div class="quiz-panel">
+        <section id="start-screen" class="screen active">
+          <div class="challenge-badge">🧪 Bank: <span id="bankCount">100</span> questions</div>
+          <h2 class="start-title">Ready for oxidation-number practice?</h2>
+          <p class="start-text">
+            Choose the number of questions and difficulty filter. After each answer,
+            the correct answer and explanation will appear immediately.
+          </p>
+
+          <div class="rules-grid">
+            <div class="rule"><strong>Free element</strong> Oxidation number is 0.</div>
+            <div class="rule"><strong>Group 1 metals</strong> Usually +1.</div>
+            <div class="rule"><strong>Oxygen</strong> Usually −2; peroxide −1; superoxide −1/2.</div>
+            <div class="rule"><strong>Fluorine</strong> Always −1 in compounds.</div>
+          </div>
+
+          <div class="actions">
+            <button id="startBtn" class="green">Start Quiz</button>
+          </div>
+        </section>
+
+        <section id="quiz-screen" class="screen">
+          <div class="stats-bar">
+            <div class="stat">
+              <strong>Question</strong>
+              <span id="progressText">1/20</span>
+            </div>
+            <div class="stat">
+              <strong>Level</strong>
+              <span id="levelText">Easy</span>
+            </div>
+            <div class="stat">
+              <strong>Score</strong>
+              <span id="scoreText">0/0</span>
+            </div>
+            <div class="stat">
+              <strong>Correct rate</strong>
+              <span id="rateText">0%</span>
+            </div>
+          </div>
+
+          <div class="progress-wrap" aria-label="Quiz progress">
+            <div class="progress" id="progressBar"></div>
+          </div>
+
+          <div class="question-card">
+            <div class="formula" id="formula"></div>
+            <div class="question" id="questionText"></div>
+          </div>
+
+          <div class="options" id="options"></div>
+
+          <div class="feedback" id="feedback"></div>
+
+          <div class="actions">
+            <button id="restartBtn" class="secondary">Restart with new set</button>
+            <button id="nextBtn" disabled>Next</button>
+          </div>
+        </section>
+
+        <section id="result-screen" class="screen">
+          <div class="challenge-badge">Quiz complete</div>
+          <h2 class="start-title">Result</h2>
+
+          <div class="result-grid">
+            <div class="result-box">
+              <strong id="finalScore">0/20</strong>
+              <span>Score</span>
+            </div>
+            <div class="result-box">
+              <strong id="finalPercent">0%</strong>
+              <span>Accuracy</span>
+            </div>
+            <div class="result-box">
+              <strong id="finalLevel">Mixed</strong>
+              <span>Difficulty filter</span>
+            </div>
+          </div>
+
+          <p class="start-text" id="finalMessage"></p>
+
+          <div class="actions">
+            <button id="tryAgainBtn">Try another set</button>
+            <button id="showReviewBtn" class="secondary">Show review</button>
+          </div>
+
+          <div id="reviewList" class="review-list" style="display:none;"></div>
+        </section>
+      </div>
+    </section>
+
+    <aside class="side-panel">
+      <section class="control-card">
+        <h2>Quiz settings</h2>
+
+        <div class="control-group">
+          <label for="questionCount">
+            Questions
+            <span id="questionCountValue">20</span>
+          </label>
+          <input id="questionCount" type="range" min="10" max="50" step="5" value="20" />
+        </div>
+
+        <div class="control-group">
+          <label for="difficultyFilter">
+            Difficulty
+          </label>
+          <select id="difficultyFilter">
+            <option value="All">All levels</option>
+            <option value="Easy">Easy only</option>
+            <option value="Medium">Medium only</option>
+            <option value="Difficult">Difficult only</option>
+            <option value="Medium+Difficult">Medium + Difficult</option>
+          </select>
+          <div class="hint">
+            If a filter has fewer questions than requested, the app uses all available questions from that level.
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label for="showExplanationMode">
+            Explanation mode
+          </label>
+          <select id="showExplanationMode">
+            <option value="immediate">Show immediately after answering</option>
+            <option value="review">Show only in final review</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="history-card">
+        <h2>Local progress</h2>
+        <div id="historyBox"></div>
+        <div class="actions" style="justify-content:flex-start;">
+          <button id="clearHistoryBtn" class="secondary">Clear history</button>
+        </div>
+      </section>
+
+      <section class="note-card">
+        <h2>Quick rules</h2>
+
+        <div class="formula-box">
+          Sum of oxidation numbers = charge<br>
+          Neutral compound: sum = 0<br>
+          Ion: sum = ionic charge
+        </div>
+
+        <p>
+          Special cases are important: oxygen is not always −2, hydrogen is −1 in
+          metal hydrides, and average oxidation numbers can be fractional in mixed-valence
+          or polyatomic species.
+        </p>
+
+        <ul>
+          <li>Peroxide: O = −1.</li>
+          <li>Superoxide: O = −1/2.</li>
+          <li>Free element: oxidation number = 0.</li>
+          <li>Complexes: include ligand charges and counterions.</li>
+        </ul>
+      </section>
+    </aside>
+  </main>
+
+  <script>
+    const QUESTION_BANK = [
+  {
+    "id": 1,
+    "level": "Easy",
+    "formula": "NaCl",
+    "ask": "Na",
+    "answer": "+1",
+    "explanation": "In NaCl, chlorine is normally −1. The compound is neutral, so sodium must be +1.",
+    "distractors": [
+      "-1",
+      "0",
+      "+2"
+    ]
+  },
+  {
+    "id": 2,
+    "level": "Easy",
+    "formula": "NaCl",
+    "ask": "Cl",
+    "answer": "-1",
+    "explanation": "Sodium is an alkali metal and is +1. Therefore chlorine is −1.",
+    "distractors": [
+      "0",
+      "+1",
+      "-2"
+    ]
+  },
+  {
+    "id": 3,
+    "level": "Easy",
+    "formula": "MgO",
+    "ask": "Mg",
+    "answer": "+2",
+    "explanation": "Oxygen is normally −2. Hence magnesium must be +2.",
+    "distractors": [
+      "+1",
+      "0",
+      "+3"
+    ]
+  },
+  {
+    "id": 4,
+    "level": "Easy",
+    "formula": "MgO",
+    "ask": "O",
+    "answer": "-2",
+    "explanation": "In ordinary oxides, oxygen has oxidation number −2.",
+    "distractors": [
+      "-1",
+      "0",
+      "+2"
+    ]
+  },
+  {
+    "id": 5,
+    "level": "Easy",
+    "formula": "Al<sub>2</sub>O<sub>3</sub>",
+    "ask": "Al",
+    "answer": "+3",
+    "explanation": "Let Al be x. Then 2x + 3(−2) = 0, so 2x = 6 and x = +3.",
+    "distractors": [
+      "+2",
+      "+4",
+      "-3"
+    ]
+  },
+  {
+    "id": 6,
+    "level": "Easy",
+    "formula": "H<sub>2</sub>S",
+    "ask": "S",
+    "answer": "-2",
+    "explanation": "Hydrogen bonded to a non-metal is +1. Thus 2(+1) + x = 0, so x = −2.",
+    "distractors": [
+      "-1",
+      "0",
+      "+2"
+    ]
+  },
+  {
+    "id": 7,
+    "level": "Easy",
+    "formula": "H<sub>2</sub>O",
+    "ask": "O",
+    "answer": "-2",
+    "explanation": "Hydrogen is +1 in water. Therefore oxygen is −2.",
+    "distractors": [
+      "-1",
+      "0",
+      "+2"
+    ]
+  },
+  {
+    "id": 8,
+    "level": "Easy",
+    "formula": "H<sub>2</sub>O",
+    "ask": "H",
+    "answer": "+1",
+    "explanation": "Hydrogen is +1 when bonded to a non-metal such as oxygen.",
+    "distractors": [
+      "-1",
+      "0",
+      "+2"
+    ]
+  },
+  {
+    "id": 9,
+    "level": "Easy",
+    "formula": "HF",
+    "ask": "F",
+    "answer": "-1",
+    "explanation": "Fluorine is always −1 in its compounds.",
+    "distractors": [
+      "0",
+      "+1",
+      "-2"
+    ]
+  },
+  {
+    "id": 10,
+    "level": "Easy",
+    "formula": "HCl",
+    "ask": "Cl",
+    "answer": "-1",
+    "explanation": "Hydrogen is +1 in HCl; therefore chlorine is −1.",
+    "distractors": [
+      "0",
+      "+1",
+      "-2"
+    ]
+  },
+  {
+    "id": 11,
+    "level": "Easy",
+    "formula": "CO<sub>2</sub>",
+    "ask": "O",
+    "answer": "-2",
+    "explanation": "In carbon dioxide, oxygen is in its usual oxidation state −2.",
+    "distractors": [
+      "-1",
+      "0",
+      "+2"
+    ]
+  },
+  {
+    "id": 12,
+    "level": "Easy",
+    "formula": "CO<sub>2</sub>",
+    "ask": "C",
+    "answer": "+4",
+    "explanation": "Let carbon be x. Then x + 2(−2) = 0, so x = +4.",
+    "distractors": [
+      "+2",
+      "+3",
+      "+6"
+    ]
+  },
+  {
+    "id": 13,
+    "level": "Easy",
+    "formula": "CO",
+    "ask": "C",
+    "answer": "+2",
+    "explanation": "Oxygen is −2. For neutral CO, carbon must be +2.",
+    "distractors": [
+      "+1",
+      "0",
+      "+3"
+    ]
+  },
+  {
+    "id": 14,
+    "level": "Easy",
+    "formula": "NH<sub>3</sub>",
+    "ask": "N",
+    "answer": "-3",
+    "explanation": "Hydrogen is +1. Thus x + 3(+1) = 0, so nitrogen is −3.",
+    "distractors": [
+      "-2",
+      "-1",
+      "+3"
+    ]
+  },
+  {
+    "id": 15,
+    "level": "Easy",
+    "formula": "NaH",
+    "ask": "H",
+    "answer": "-1",
+    "explanation": "In metal hydrides, hydrogen has oxidation number −1.",
+    "distractors": [
+      "0",
+      "+1",
+      "-2"
+    ]
+  },
+  {
+    "id": 16,
+    "level": "Easy",
+    "formula": "H<sub>2</sub>O<sub>2</sub>",
+    "ask": "O",
+    "answer": "-1",
+    "explanation": "Hydrogen peroxide is a peroxide; oxygen is −1 in peroxides.",
+    "distractors": [
+      "0",
+      "+1",
+      "-2"
+    ]
+  },
+  {
+    "id": 17,
+    "level": "Medium",
+    "formula": "KO<sub>2</sub>",
+    "ask": "O",
+    "answer": "-1/2",
+    "explanation": "KO₂ is a superoxide. Potassium is +1, so the O₂ group is −1 overall; each oxygen has average oxidation number −1/2.",
+    "distractors": [
+      "-1",
+      "0",
+      "+1/2"
+    ]
+  },
+  {
+    "id": 18,
+    "level": "Medium",
+    "formula": "OF<sub>2</sub>",
+    "ask": "O",
+    "answer": "+2",
+    "explanation": "Fluorine is always −1. Thus x + 2(−1) = 0, so oxygen is +2.",
+    "distractors": [
+      "+1",
+      "0",
+      "+3"
+    ]
+  },
+  {
+    "id": 19,
+    "level": "Easy",
+    "formula": "O<sub>2</sub>",
+    "ask": "O",
+    "answer": "0",
+    "explanation": "An element in its free elemental form has oxidation number 0.",
+    "distractors": [
+      "+1",
+      "-1",
+      "+2"
+    ]
+  },
+  {
+    "id": 20,
+    "level": "Easy",
+    "formula": "SO<sub>2</sub>",
+    "ask": "S",
+    "answer": "+4",
+    "explanation": "Let S be x. Then x + 2(−2) = 0, so x = +4.",
+    "distractors": [
+      "+2",
+      "+3",
+      "+6"
+    ]
+  },
+  {
+    "id": 21,
+    "level": "Easy",
+    "formula": "SO<sub>3</sub>",
+    "ask": "S",
+    "answer": "+6",
+    "explanation": "Let S be x. Then x + 3(−2) = 0, so x = +6.",
+    "distractors": [
+      "+4",
+      "+5",
+      "+7"
+    ]
+  },
+  {
+    "id": 22,
+    "level": "Easy",
+    "formula": "NO<sub>2</sub>",
+    "ask": "N",
+    "answer": "+4",
+    "explanation": "Let N be x. Then x + 2(−2) = 0, so x = +4.",
+    "distractors": [
+      "+2",
+      "+3",
+      "+6"
+    ]
+  },
+  {
+    "id": 23,
+    "level": "Easy",
+    "formula": "NO",
+    "ask": "N",
+    "answer": "+2",
+    "explanation": "Oxygen is −2. For neutral NO, nitrogen is +2.",
+    "distractors": [
+      "+1",
+      "0",
+      "+3"
+    ]
+  },
+  {
+    "id": 24,
+    "level": "Medium",
+    "formula": "N<sub>2</sub>O",
+    "ask": "N (average)",
+    "answer": "+1",
+    "explanation": "Let the average oxidation number of N be x. Then 2x + (−2) = 0, so x = +1.",
+    "distractors": [
+      "-1",
+      "0",
+      "+2"
+    ]
+  },
+  {
+    "id": 25,
+    "level": "Easy",
+    "formula": "HNO<sub>3</sub>",
+    "ask": "N",
+    "answer": "+5",
+    "explanation": "Let N be x. Then (+1) + x + 3(−2) = 0, so x = +5.",
+    "distractors": [
+      "+3",
+      "+4",
+      "+6"
+    ]
+  },
+  {
+    "id": 26,
+    "level": "Easy",
+    "formula": "HNO<sub>2</sub>",
+    "ask": "N",
+    "answer": "+3",
+    "explanation": "Let N be x. Then (+1) + x + 2(−2) = 0, so x = +3.",
+    "distractors": [
+      "+2",
+      "+4",
+      "-3"
+    ]
+  },
+  {
+    "id": 27,
+    "level": "Easy",
+    "formula": "NH<sub>4</sub><sup>+</sup>",
+    "ask": "N",
+    "answer": "-3",
+    "explanation": "Let N be x. The ion charge is +1, so x + 4(+1) = +1. Hence x = −3.",
+    "distractors": [
+      "-2",
+      "-1",
+      "+3"
+    ]
+  },
+  {
+    "id": 28,
+    "level": "Easy",
+    "formula": "NO<sub>3</sub><sup>−</sup>",
+    "ask": "N",
+    "answer": "+5",
+    "explanation": "Let N be x. Then x + 3(−2) = −1, so x = +5.",
+    "distractors": [
+      "+3",
+      "+4",
+      "+6"
+    ]
+  },
+  {
+    "id": 29,
+    "level": "Easy",
+    "formula": "NO<sub>2</sub><sup>−</sup>",
+    "ask": "N",
+    "answer": "+3",
+    "explanation": "Let N be x. Then x + 2(−2) = −1, so x = +3.",
+    "distractors": [
+      "+2",
+      "+4",
+      "-3"
+    ]
+  },
+  {
+    "id": 30,
+    "level": "Easy",
+    "formula": "H<sub>2</sub>SO<sub>4</sub>",
+    "ask": "S",
+    "answer": "+6",
+    "explanation": "2(+1) + x + 4(−2) = 0, so x = +6.",
+    "distractors": [
+      "+4",
+      "+5",
+      "+7"
+    ]
+  },
+  {
+    "id": 31,
+    "level": "Easy",
+    "formula": "H<sub>2</sub>SO<sub>3</sub>",
+    "ask": "S",
+    "answer": "+4",
+    "explanation": "2(+1) + x + 3(−2) = 0, so x = +4.",
+    "distractors": [
+      "+2",
+      "+3",
+      "+6"
+    ]
+  },
+  {
+    "id": 32,
+    "level": "Easy",
+    "formula": "SO<sub>4</sub><sup>2−</sup>",
+    "ask": "S",
+    "answer": "+6",
+    "explanation": "x + 4(−2) = −2, so x = +6.",
+    "distractors": [
+      "+4",
+      "+5",
+      "+7"
+    ]
+  },
+  {
+    "id": 33,
+    "level": "Easy",
+    "formula": "SO<sub>3</sub><sup>2−</sup>",
+    "ask": "S",
+    "answer": "+4",
+    "explanation": "x + 3(−2) = −2, so x = +4.",
+    "distractors": [
+      "+2",
+      "+3",
+      "+6"
+    ]
+  },
+  {
+    "id": 34,
+    "level": "Difficult",
+    "formula": "S<sub>2</sub>O<sub>3</sub><sup>2−</sup>",
+    "ask": "S (average)",
+    "answer": "+2",
+    "explanation": "Let the average oxidation number of sulfur be x. Then 2x + 3(−2) = −2, giving x = +2. Individual S atoms are not equivalent, but the average is +2.",
+    "distractors": [
+      "+1",
+      "0",
+      "+3"
+    ]
+  },
+  {
+    "id": 35,
+    "level": "Medium",
+    "formula": "Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup>",
+    "ask": "Cr",
+    "answer": "+6",
+    "explanation": "2x + 7(−2) = −2, so 2x − 14 = −2 and x = +6.",
+    "distractors": [
+      "+4",
+      "+5",
+      "+7"
+    ]
+  },
+  {
+    "id": 36,
+    "level": "Medium",
+    "formula": "CrO<sub>4</sub><sup>2−</sup>",
+    "ask": "Cr",
+    "answer": "+6",
+    "explanation": "x + 4(−2) = −2, so x = +6.",
+    "distractors": [
+      "+4",
+      "+5",
+      "+7"
+    ]
+  },
+  {
+    "id": 37,
+    "level": "Medium",
+    "formula": "KMnO<sub>4</sub>",
+    "ask": "Mn",
+    "answer": "+7",
+    "explanation": "K is +1 and O is −2. Hence +1 + x + 4(−2) = 0, so x = +7.",
+    "distractors": [
+      "+5",
+      "+6",
+      "+8"
+    ]
+  },
+  {
+    "id": 38,
+    "level": "Medium",
+    "formula": "K<sub>2</sub>MnO<sub>4</sub>",
+    "ask": "Mn",
+    "answer": "+6",
+    "explanation": "2(+1) + x + 4(−2) = 0, so x = +6.",
+    "distractors": [
+      "+4",
+      "+5",
+      "+7"
+    ]
+  },
+  {
+    "id": 39,
+    "level": "Easy",
+    "formula": "MnO<sub>2</sub>",
+    "ask": "Mn",
+    "answer": "+4",
+    "explanation": "x + 2(−2) = 0, so x = +4.",
+    "distractors": [
+      "+2",
+      "+3",
+      "+6"
+    ]
+  },
+  {
+    "id": 40,
+    "level": "Easy",
+    "formula": "FeO",
+    "ask": "Fe",
+    "answer": "+2",
+    "explanation": "Oxygen is −2, so iron is +2.",
+    "distractors": [
+      "+1",
+      "0",
+      "+3"
+    ]
+  },
+  {
+    "id": 41,
+    "level": "Easy",
+    "formula": "Fe<sub>2</sub>O<sub>3</sub>",
+    "ask": "Fe",
+    "answer": "+3",
+    "explanation": "2x + 3(−2) = 0, so x = +3.",
+    "distractors": [
+      "+2",
+      "+4",
+      "-3"
+    ]
+  },
+  {
+    "id": 42,
+    "level": "Difficult",
+    "formula": "Fe<sub>3</sub>O<sub>4</sub>",
+    "ask": "Fe (average)",
+    "answer": "+8/3",
+    "explanation": "Let the average oxidation number of Fe be x. Then 3x + 4(−2) = 0, so x = +8/3. Magnetite contains both Fe²⁺ and Fe³⁺ ions.",
+    "distractors": [
+      "+2",
+      "+3",
+      "+4"
+    ]
+  },
+  {
+    "id": 43,
+    "level": "Easy",
+    "formula": "Cu<sub>2</sub>O",
+    "ask": "Cu",
+    "answer": "+1",
+    "explanation": "2x + (−2) = 0, so each Cu is +1.",
+    "distractors": [
+      "-1",
+      "0",
+      "+2"
+    ]
+  },
+  {
+    "id": 44,
+    "level": "Easy",
+    "formula": "CuO",
+    "ask": "Cu",
+    "answer": "+2",
+    "explanation": "Oxygen is −2, so copper is +2.",
+    "distractors": [
+      "+1",
+      "0",
+      "+3"
+    ]
+  },
+  {
+    "id": 45,
+    "level": "Easy",
+    "formula": "SnCl<sub>2</sub>",
+    "ask": "Sn",
+    "answer": "+2",
+    "explanation": "Chlorine is −1. Thus x + 2(−1) = 0, so tin is +2.",
+    "distractors": [
+      "+1",
+      "0",
+      "+3"
+    ]
+  },
+  {
+    "id": 46,
+    "level": "Easy",
+    "formula": "SnCl<sub>4</sub>",
+    "ask": "Sn",
+    "answer": "+4",
+    "explanation": "Chlorine is −1. Thus x + 4(−1) = 0, so tin is +4.",
+    "distractors": [
+      "+2",
+      "+3",
+      "+6"
+    ]
+  },
+  {
+    "id": 47,
+    "level": "Easy",
+    "formula": "PbO<sub>2</sub>",
+    "ask": "Pb",
+    "answer": "+4",
+    "explanation": "x + 2(−2) = 0, so lead is +4.",
+    "distractors": [
+      "+2",
+      "+3",
+      "+6"
+    ]
+  },
+  {
+    "id": 48,
+    "level": "Medium",
+    "formula": "PbSO<sub>4</sub>",
+    "ask": "Pb",
+    "answer": "+2",
+    "explanation": "The sulfate ion is SO₄²⁻. In neutral PbSO₄, lead must be +2.",
+    "distractors": [
+      "+1",
+      "0",
+      "+3"
+    ]
+  },
+  {
+    "id": 49,
+    "level": "Medium",
+    "formula": "Cl<sub>2</sub>O",
+    "ask": "Cl",
+    "answer": "+1",
+    "explanation": "Oxygen is −2. Thus 2x + (−2) = 0, so chlorine is +1.",
+    "distractors": [
+      "-1",
+      "0",
+      "+2"
+    ]
+  },
+  {
+    "id": 50,
+    "level": "Medium",
+    "formula": "ClO<sup>−</sup>",
+    "ask": "Cl",
+    "answer": "+1",
+    "explanation": "x + (−2) = −1, so x = +1.",
+    "distractors": [
+      "-1",
+      "0",
+      "+2"
+    ]
+  },
+  {
+    "id": 51,
+    "level": "Medium",
+    "formula": "ClO<sub>2</sub><sup>−</sup>",
+    "ask": "Cl",
+    "answer": "+3",
+    "explanation": "x + 2(−2) = −1, so x = +3.",
+    "distractors": [
+      "+2",
+      "+4",
+      "-3"
+    ]
+  },
+  {
+    "id": 52,
+    "level": "Medium",
+    "formula": "ClO<sub>3</sub><sup>−</sup>",
+    "ask": "Cl",
+    "answer": "+5",
+    "explanation": "x + 3(−2) = −1, so x = +5.",
+    "distractors": [
+      "+3",
+      "+4",
+      "+6"
+    ]
+  },
+  {
+    "id": 53,
+    "level": "Medium",
+    "formula": "ClO<sub>4</sub><sup>−</sup>",
+    "ask": "Cl",
+    "answer": "+7",
+    "explanation": "x + 4(−2) = −1, so x = +7.",
+    "distractors": [
+      "+5",
+      "+6",
+      "+8"
+    ]
+  },
+  {
+    "id": 54,
+    "level": "Medium",
+    "formula": "BrO<sub>3</sub><sup>−</sup>",
+    "ask": "Br",
+    "answer": "+5",
+    "explanation": "x + 3(−2) = −1, so bromine is +5.",
+    "distractors": [
+      "+3",
+      "+4",
+      "+6"
+    ]
+  },
+  {
+    "id": 55,
+    "level": "Medium",
+    "formula": "IO<sub>4</sub><sup>−</sup>",
+    "ask": "I",
+    "answer": "+7",
+    "explanation": "x + 4(−2) = −1, so iodine is +7.",
+    "distractors": [
+      "+5",
+      "+6",
+      "+8"
+    ]
+  },
+  {
+    "id": 56,
+    "level": "Easy",
+    "formula": "PH<sub>3</sub>",
+    "ask": "P",
+    "answer": "-3",
+    "explanation": "Hydrogen is +1. Therefore x + 3(+1) = 0, so phosphorus is −3.",
+    "distractors": [
+      "-2",
+      "-1",
+      "+3"
+    ]
+  },
+  {
+    "id": 57,
+    "level": "Medium",
+    "formula": "H<sub>3</sub>PO<sub>4</sub>",
+    "ask": "P",
+    "answer": "+5",
+    "explanation": "3(+1) + x + 4(−2) = 0, so x = +5.",
+    "distractors": [
+      "+3",
+      "+4",
+      "+6"
+    ]
+  },
+  {
+    "id": 58,
+    "level": "Medium",
+    "formula": "H<sub>3</sub>PO<sub>3</sub>",
+    "ask": "P",
+    "answer": "+3",
+    "explanation": "3(+1) + x + 3(−2) = 0, so x = +3.",
+    "distractors": [
+      "+2",
+      "+4",
+      "-3"
+    ]
+  },
+  {
+    "id": 59,
+    "level": "Medium",
+    "formula": "H<sub>3</sub>PO<sub>2</sub>",
+    "ask": "P",
+    "answer": "+1",
+    "explanation": "3(+1) + x + 2(−2) = 0, so x = +1.",
+    "distractors": [
+      "-1",
+      "0",
+      "+2"
+    ]
+  },
+  {
+    "id": 60,
+    "level": "Easy",
+    "formula": "PO<sub>4</sub><sup>3−</sup>",
+    "ask": "P",
+    "answer": "+5",
+    "explanation": "x + 4(−2) = −3, so x = +5.",
+    "distractors": [
+      "+3",
+      "+4",
+      "+6"
+    ]
+  },
+  {
+    "id": 61,
+    "level": "Easy",
+    "formula": "CH<sub>4</sub>",
+    "ask": "C",
+    "answer": "-4",
+    "explanation": "Hydrogen is +1. Thus x + 4(+1) = 0, so carbon is −4.",
+    "distractors": [
+      "-3",
+      "-2",
+      "+4"
+    ]
+  },
+  {
+    "id": 62,
+    "level": "Medium",
+    "formula": "C<sub>2</sub>H<sub>6</sub>",
+    "ask": "C (average)",
+    "answer": "-3",
+    "explanation": "Let the average oxidation number of carbon be x. Then 2x + 6(+1) = 0, so x = −3.",
+    "distractors": [
+      "-2",
+      "-1",
+      "+3"
+    ]
+  },
+  {
+    "id": 63,
+    "level": "Medium",
+    "formula": "C<sub>2</sub>H<sub>4</sub>",
+    "ask": "C (average)",
+    "answer": "-2",
+    "explanation": "2x + 4(+1) = 0, so the average oxidation number of carbon is −2.",
+    "distractors": [
+      "-1",
+      "0",
+      "+2"
+    ]
+  },
+  {
+    "id": 64,
+    "level": "Medium",
+    "formula": "C<sub>2</sub>H<sub>2</sub>",
+    "ask": "C (average)",
+    "answer": "-1",
+    "explanation": "2x + 2(+1) = 0, so the average oxidation number of carbon is −1.",
+    "distractors": [
+      "0",
+      "+1",
+      "-2"
+    ]
+  },
+  {
+    "id": 65,
+    "level": "Medium",
+    "formula": "CH<sub>3</sub>OH",
+    "ask": "C",
+    "answer": "-2",
+    "explanation": "There are four H atoms at +1 and one O at −2. Thus x + 4(+1) − 2 = 0, so x = −2.",
+    "distractors": [
+      "-1",
+      "0",
+      "+2"
+    ]
+  },
+  {
+    "id": 66,
+    "level": "Medium",
+    "formula": "HCHO / CH<sub>2</sub>O",
+    "ask": "C",
+    "answer": "0",
+    "explanation": "For CH₂O: x + 2(+1) + (−2) = 0, so carbon is 0.",
+    "distractors": [
+      "+1",
+      "-1",
+      "+2"
+    ]
+  },
+  {
+    "id": 67,
+    "level": "Medium",
+    "formula": "HCOOH / CH<sub>2</sub>O<sub>2</sub>",
+    "ask": "C",
+    "answer": "+2",
+    "explanation": "For CH₂O₂: x + 2(+1) + 2(−2) = 0, so x = +2.",
+    "distractors": [
+      "+1",
+      "0",
+      "+3"
+    ]
+  },
+  {
+    "id": 68,
+    "level": "Easy",
+    "formula": "CO<sub>3</sub><sup>2−</sup>",
+    "ask": "C",
+    "answer": "+4",
+    "explanation": "x + 3(−2) = −2, so x = +4.",
+    "distractors": [
+      "+2",
+      "+3",
+      "+6"
+    ]
+  },
+  {
+    "id": 69,
+    "level": "Difficult",
+    "formula": "C<sub>2</sub>O<sub>4</sub><sup>2−</sup>",
+    "ask": "C (average)",
+    "answer": "+3",
+    "explanation": "Let the average oxidation number of carbon be x. Then 2x + 4(−2) = −2, so x = +3.",
+    "distractors": [
+      "+2",
+      "+4",
+      "-3"
+    ]
+  },
+  {
+    "id": 70,
+    "level": "Medium",
+    "formula": "HCO<sub>3</sub><sup>−</sup>",
+    "ask": "C",
+    "answer": "+4",
+    "explanation": "(+1) + x + 3(−2) = −1, so x = +4.",
+    "distractors": [
+      "+2",
+      "+3",
+      "+6"
+    ]
+  },
+  {
+    "id": 71,
+    "level": "Medium",
+    "formula": "N<sub>2</sub>H<sub>4</sub>",
+    "ask": "N (average)",
+    "answer": "-2",
+    "explanation": "2x + 4(+1) = 0, so x = −2.",
+    "distractors": [
+      "-1",
+      "0",
+      "+2"
+    ]
+  },
+  {
+    "id": 72,
+    "level": "Medium",
+    "formula": "N<sub>2</sub>O<sub>4</sub>",
+    "ask": "N (average)",
+    "answer": "+4",
+    "explanation": "2x + 4(−2) = 0, so x = +4.",
+    "distractors": [
+      "+2",
+      "+3",
+      "+6"
+    ]
+  },
+  {
+    "id": 73,
+    "level": "Medium",
+    "formula": "N<sub>2</sub>O<sub>5</sub>",
+    "ask": "N (average)",
+    "answer": "+5",
+    "explanation": "2x + 5(−2) = 0, so x = +5.",
+    "distractors": [
+      "+3",
+      "+4",
+      "+6"
+    ]
+  },
+  {
+    "id": 74,
+    "level": "Easy",
+    "formula": "S<sub>8</sub>",
+    "ask": "S",
+    "answer": "0",
+    "explanation": "S₈ is elemental sulfur. Elements in their free form have oxidation number 0.",
+    "distractors": [
+      "+1",
+      "-1",
+      "+2"
+    ]
+  },
+  {
+    "id": 75,
+    "level": "Easy",
+    "formula": "Cl<sub>2</sub>",
+    "ask": "Cl",
+    "answer": "0",
+    "explanation": "Cl₂ is elemental chlorine, so chlorine has oxidation number 0.",
+    "distractors": [
+      "+1",
+      "-1",
+      "+2"
+    ]
+  },
+  {
+    "id": 76,
+    "level": "Difficult",
+    "formula": "Na<sub>2</sub>S<sub>2</sub>O<sub>3</sub>",
+    "ask": "S (average)",
+    "answer": "+2",
+    "explanation": "The compound contains 2 Na⁺ ions, so S₂O₃ has charge −2. Then 2x + 3(−2) = −2, giving average S = +2.",
+    "distractors": [
+      "+1",
+      "0",
+      "+3"
+    ]
+  },
+  {
+    "id": 77,
+    "level": "Difficult",
+    "formula": "I<sub>3</sub><sup>−</sup>",
+    "ask": "I (average)",
+    "answer": "-1/3",
+    "explanation": "Let the average oxidation number of iodine be x. Then 3x = −1, so x = −1/3.",
+    "distractors": [
+      "-1",
+      "0",
+      "+1/3"
+    ]
+  },
+  {
+    "id": 78,
+    "level": "Difficult",
+    "formula": "S<sub>4</sub>O<sub>6</sub><sup>2−</sup>",
+    "ask": "S (average)",
+    "answer": "+5/2",
+    "explanation": "Let average S be x. Then 4x + 6(−2) = −2, so 4x = 10 and x = +5/2.",
+    "distractors": [
+      "+2",
+      "+3",
+      "+5"
+    ]
+  },
+  {
+    "id": 79,
+    "level": "Difficult",
+    "formula": "K<sub>4</sub>[Fe(CN)<sub>6</sub>]",
+    "ask": "Fe",
+    "answer": "+2",
+    "explanation": "Four K⁺ ions mean the complex ion is [Fe(CN)₆]⁴⁻. Each CN⁻ is −1, so x + 6(−1) = −4. Hence Fe is +2.",
+    "distractors": [
+      "+1",
+      "0",
+      "+3"
+    ]
+  },
+  {
+    "id": 80,
+    "level": "Difficult",
+    "formula": "K<sub>3</sub>[Fe(CN)<sub>6</sub>]",
+    "ask": "Fe",
+    "answer": "+3",
+    "explanation": "Three K⁺ ions mean the complex ion is [Fe(CN)₆]³⁻. With six CN⁻ ligands, x − 6 = −3, so Fe is +3.",
+    "distractors": [
+      "+2",
+      "+4",
+      "-3"
+    ]
+  },
+  {
+    "id": 81,
+    "level": "Difficult",
+    "formula": "[Co(NH<sub>3</sub>)<sub>6</sub>]Cl<sub>3</sub>",
+    "ask": "Co",
+    "answer": "+3",
+    "explanation": "The complex ion is +3 because there are three Cl⁻ counterions. NH₃ is neutral, so Co is +3.",
+    "distractors": [
+      "+2",
+      "+4",
+      "-3"
+    ]
+  },
+  {
+    "id": 82,
+    "level": "Difficult",
+    "formula": "[Ni(CO)<sub>4</sub>]",
+    "ask": "Ni",
+    "answer": "0",
+    "explanation": "CO is a neutral ligand and the complex is neutral. Therefore Ni is 0.",
+    "distractors": [
+      "+1",
+      "-1",
+      "+2"
+    ]
+  },
+  {
+    "id": 83,
+    "level": "Difficult",
+    "formula": "[PtCl<sub>6</sub>]<sup>2−</sup>",
+    "ask": "Pt",
+    "answer": "+4",
+    "explanation": "Each Cl is −1. Thus x + 6(−1) = −2, so Pt is +4.",
+    "distractors": [
+      "+2",
+      "+3",
+      "+6"
+    ]
+  },
+  {
+    "id": 84,
+    "level": "Medium",
+    "formula": "[Ag(NH<sub>3</sub>)<sub>2</sub>]<sup>+</sup>",
+    "ask": "Ag",
+    "answer": "+1",
+    "explanation": "NH₃ is neutral. Since the complex ion has charge +1, Ag is +1.",
+    "distractors": [
+      "-1",
+      "0",
+      "+2"
+    ]
+  },
+  {
+    "id": 85,
+    "level": "Difficult",
+    "formula": "[Cu(NH<sub>3</sub>)<sub>4</sub>]SO<sub>4</sub>",
+    "ask": "Cu",
+    "answer": "+2",
+    "explanation": "Sulfate is SO₄²⁻, so the complex ion must be +2. NH₃ is neutral; therefore Cu is +2.",
+    "distractors": [
+      "+1",
+      "0",
+      "+3"
+    ]
+  },
+  {
+    "id": 86,
+    "level": "Medium",
+    "formula": "[Cr(H<sub>2</sub>O)<sub>6</sub>]Cl<sub>3</sub>",
+    "ask": "Cr",
+    "answer": "+3",
+    "explanation": "Water is neutral and there are three Cl⁻ counterions. Therefore Cr is +3.",
+    "distractors": [
+      "+2",
+      "+4",
+      "-3"
+    ]
+  },
+  {
+    "id": 87,
+    "level": "Difficult",
+    "formula": "[CoCl<sub>4</sub>]<sup>2−</sup>",
+    "ask": "Co",
+    "answer": "+2",
+    "explanation": "x + 4(−1) = −2, so x = +2.",
+    "distractors": [
+      "+1",
+      "0",
+      "+3"
+    ]
+  },
+  {
+    "id": 88,
+    "level": "Medium",
+    "formula": "MnO<sub>4</sub><sup>2−</sup>",
+    "ask": "Mn",
+    "answer": "+6",
+    "explanation": "x + 4(−2) = −2, so x = +6.",
+    "distractors": [
+      "+4",
+      "+5",
+      "+7"
+    ]
+  },
+  {
+    "id": 89,
+    "level": "Difficult",
+    "formula": "VO<sub>2</sub><sup>+</sup>",
+    "ask": "V",
+    "answer": "+5",
+    "explanation": "Let V be x. Then x + 2(−2) = +1, so x = +5.",
+    "distractors": [
+      "+3",
+      "+4",
+      "+6"
+    ]
+  },
+  {
+    "id": 90,
+    "level": "Difficult",
+    "formula": "VO<sup>2+</sup>",
+    "ask": "V",
+    "answer": "+4",
+    "explanation": "Let V be x. Then x + (−2) = +2, so x = +4.",
+    "distractors": [
+      "+2",
+      "+3",
+      "+6"
+    ]
+  },
+  {
+    "id": 91,
+    "level": "Easy",
+    "formula": "TiCl<sub>4</sub>",
+    "ask": "Ti",
+    "answer": "+4",
+    "explanation": "Chlorine is −1. Thus x + 4(−1) = 0, so Ti is +4.",
+    "distractors": [
+      "+2",
+      "+3",
+      "+6"
+    ]
+  },
+  {
+    "id": 92,
+    "level": "Easy",
+    "formula": "BF<sub>3</sub>",
+    "ask": "B",
+    "answer": "+3",
+    "explanation": "Fluorine is always −1. Hence x + 3(−1) = 0, so B is +3.",
+    "distractors": [
+      "+2",
+      "+4",
+      "-3"
+    ]
+  },
+  {
+    "id": 93,
+    "level": "Easy",
+    "formula": "SiO<sub>2</sub>",
+    "ask": "Si",
+    "answer": "+4",
+    "explanation": "x + 2(−2) = 0, so silicon is +4.",
+    "distractors": [
+      "+2",
+      "+3",
+      "+6"
+    ]
+  },
+  {
+    "id": 94,
+    "level": "Medium",
+    "formula": "SF<sub>6</sub>",
+    "ask": "S",
+    "answer": "+6",
+    "explanation": "Fluorine is −1. Therefore x + 6(−1) = 0, so sulfur is +6.",
+    "distractors": [
+      "+4",
+      "+5",
+      "+7"
+    ]
+  },
+  {
+    "id": 95,
+    "level": "Medium",
+    "formula": "XeF<sub>2</sub>",
+    "ask": "Xe",
+    "answer": "+2",
+    "explanation": "Fluorine is −1. Thus x + 2(−1) = 0, so xenon is +2.",
+    "distractors": [
+      "+1",
+      "0",
+      "+3"
+    ]
+  },
+  {
+    "id": 96,
+    "level": "Medium",
+    "formula": "XeF<sub>4</sub>",
+    "ask": "Xe",
+    "answer": "+4",
+    "explanation": "Fluorine is −1. Thus x + 4(−1) = 0, so xenon is +4.",
+    "distractors": [
+      "+2",
+      "+3",
+      "+6"
+    ]
+  },
+  {
+    "id": 97,
+    "level": "Medium",
+    "formula": "XeO<sub>4</sub>",
+    "ask": "Xe",
+    "answer": "+8",
+    "explanation": "Oxygen is −2. Thus x + 4(−2) = 0, so xenon is +8.",
+    "distractors": [
+      "+6",
+      "+7",
+      "+4"
+    ]
+  },
+  {
+    "id": 98,
+    "level": "Medium",
+    "formula": "OsO<sub>4</sub>",
+    "ask": "Os",
+    "answer": "+8",
+    "explanation": "Oxygen is −2. Thus x + 4(−2) = 0, so osmium is +8.",
+    "distractors": [
+      "+6",
+      "+7",
+      "+4"
+    ]
+  },
+  {
+    "id": 99,
+    "level": "Easy",
+    "formula": "BaO<sub>2</sub>",
+    "ask": "O",
+    "answer": "-1",
+    "explanation": "BaO₂ is a peroxide. Oxygen has oxidation number −1 in peroxides.",
+    "distractors": [
+      "0",
+      "+1",
+      "-2"
+    ]
+  },
+  {
+    "id": 100,
+    "level": "Easy",
+    "formula": "CaH<sub>2</sub>",
+    "ask": "H",
+    "answer": "-1",
+    "explanation": "CaH₂ is a metal hydride. Hydrogen has oxidation number −1 in metal hydrides.",
+    "distractors": [
+      "0",
+      "+1",
+      "-2"
+    ]
+  }
+];
+
+    let currentSet = [];
+    let currentIndex = 0;
+    let score = 0;
+    let locked = false;
+    let attemptLog = [];
+
+    const startScreen = document.getElementById("start-screen");
+    const quizScreen = document.getElementById("quiz-screen");
+    const resultScreen = document.getElementById("result-screen");
+
+    const startBtn = document.getElementById("startBtn");
+    const restartBtn = document.getElementById("restartBtn");
+    const tryAgainBtn = document.getElementById("tryAgainBtn");
+    const showReviewBtn = document.getElementById("showReviewBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    const progressText = document.getElementById("progressText");
+    const levelText = document.getElementById("levelText");
+    const scoreText = document.getElementById("scoreText");
+    const rateText = document.getElementById("rateText");
+    const progressBar = document.getElementById("progressBar");
+    const formula = document.getElementById("formula");
+    const questionText = document.getElementById("questionText");
+    const options = document.getElementById("options");
+    const feedback = document.getElementById("feedback");
+
+    const questionCountSlider = document.getElementById("questionCount");
+    const questionCountValue = document.getElementById("questionCountValue");
+    const difficultyFilter = document.getElementById("difficultyFilter");
+    const showExplanationMode = document.getElementById("showExplanationMode");
+
+    const finalScore = document.getElementById("finalScore");
+    const finalPercent = document.getElementById("finalPercent");
+    const finalLevel = document.getElementById("finalLevel");
+    const finalMessage = document.getElementById("finalMessage");
+    const reviewList = document.getElementById("reviewList");
+
+    document.getElementById("bankCount").textContent = QUESTION_BANK.length;
+
+    function shuffle(array) {
+      const a = [...array];
+
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+
+      return a;
+    }
+
+    function showScreen(screen) {
+      [startScreen, quizScreen, resultScreen].forEach(item => item.classList.remove("active"));
+      screen.classList.add("active");
+    }
+
+    function getFilteredBank() {
+      const filter = difficultyFilter.value;
+
+      if (filter === "All") return QUESTION_BANK;
+      if (filter === "Medium+Difficult") {
+        return QUESTION_BANK.filter(q => q.level === "Medium" || q.level === "Difficult");
+      }
+
+      return QUESTION_BANK.filter(q => q.level === filter);
+    }
+
+    function getQuestionCount(bank) {
+      return Math.min(Number(questionCountSlider.value), bank.length);
+    }
+
+    function startQuiz() {
+      const filteredBank = getFilteredBank();
+      const count = getQuestionCount(filteredBank);
+
+      currentSet = shuffle(filteredBank).slice(0, count);
+      currentIndex = 0;
+      score = 0;
+      locked = false;
+      attemptLog = [];
+      reviewList.style.display = "none";
+      showReviewBtn.textContent = "Show review";
+
+      showScreen(quizScreen);
+      showQuestion();
+    }
+
+    function showQuestion() {
+      locked = false;
+      nextBtn.disabled = true;
+      feedback.className = "feedback";
+      feedback.innerHTML = "";
+      feedback.style.display = "";
+
+      const q = currentSet[currentIndex];
+      const answered = currentIndex;
+      const rate = answered === 0 ? 0 : Math.round((score / answered) * 100);
+
+      progressBar.style.width = `${(currentIndex / currentSet.length) * 100}%`;
+      progressText.textContent = `${currentIndex + 1}/${currentSet.length}`;
+      levelText.textContent = q.level;
+      scoreText.textContent = `${score}/${answered}`;
+      rateText.textContent = `${rate}%`;
+
+      formula.innerHTML = q.formula;
+      questionText.innerHTML = `What is the oxidation number of <strong>${q.ask}</strong> in <strong>${q.formula}</strong>?`;
+
+      options.innerHTML = "";
+
+      const choices = shuffle([q.answer, ...q.distractors]);
+
+      choices.forEach(choice => {
+        const button = document.createElement("button");
+        button.className = "option";
+        button.type = "button";
+        button.textContent = choice;
+        button.addEventListener("click", () => chooseAnswer(choice, button));
+        options.appendChild(button);
+      });
+
+      nextBtn.textContent = currentIndex === currentSet.length - 1 ? "Finish" : "Next";
+    }
+
+    function chooseAnswer(choice, clickedButton) {
+      if (locked) return;
+
+      locked = true;
+
+      const q = currentSet[currentIndex];
+      const isCorrect = choice === q.answer;
+
+      if (isCorrect) score += 1;
+
+      document.querySelectorAll(".option").forEach(button => {
+        button.disabled = true;
+        if (button.textContent === q.answer) button.classList.add("correct");
+      });
+
+      if (!isCorrect) clickedButton.classList.add("wrong");
+
+      if (showExplanationMode.value === "immediate") {
+        feedback.classList.add("show");
+        feedback.innerHTML = `
+          <strong>${isCorrect ? "Correct." : "Not correct."}</strong>
+          Correct answer: <strong>${q.answer}</strong><br>
+          ${q.explanation}
+        `;
+      }
+
+      scoreText.textContent = `${score}/${currentIndex + 1}`;
+      rateText.textContent = `${Math.round((score / (currentIndex + 1)) * 100)}%`;
+
+      attemptLog.push({
+        ...q,
+        chosen: choice,
+        correct: isCorrect
+      });
+
+      nextBtn.disabled = false;
+      nextBtn.focus();
+    }
+
+    function nextQuestion() {
+      if (!locked) return;
+
+      currentIndex += 1;
+
+      if (currentIndex >= currentSet.length) {
+        finishQuiz();
+      } else {
+        showQuestion();
+      }
+    }
+
+    function finishQuiz() {
+      showScreen(resultScreen);
+
+      progressBar.style.width = "100%";
+
+      const pct = Math.round((score / currentSet.length) * 100);
+
+      finalScore.textContent = `${score}/${currentSet.length}`;
+      finalPercent.textContent = `${pct}%`;
+      finalLevel.textContent = difficultyFilter.value === "All" ? "Mixed" : difficultyFilter.value;
+
+      let msg = "Good practice. Review the explanations and try another random set.";
+      if (pct >= 90) msg = "Excellent. You are very comfortable with oxidation-number rules.";
+      else if (pct >= 75) msg = "Very good. A few special cases still need attention.";
+      else if (pct >= 50) msg = "Fair attempt. Focus on oxyanions, peroxides, hydrides, and average oxidation numbers.";
+
+      finalMessage.textContent = msg;
+
+      buildReview();
+      saveResult(pct, score, currentSet.length, difficultyFilter.value);
+      updateHistoryTable();
+    }
+
+    function buildReview() {
+      reviewList.innerHTML = "";
+
+      attemptLog.forEach((item, index) => {
+        const div = document.createElement("div");
+        div.className = `review-item ${item.correct ? "ok" : "bad"}`;
+
+        div.innerHTML = `
+          <strong>${index + 1}. ${item.formula}</strong>
+          <span>Asked: oxidation number of <strong>${item.ask}</strong> | Level: ${item.level}</span>
+          <span>Your answer: <span class="${item.correct ? "good-text" : "bad-text"}">${item.chosen}</span></span>
+          <span>Correct answer: <span class="good-text">${item.answer}</span></span>
+          <span>${item.explanation}</span>
+        `;
+
+        reviewList.appendChild(div);
+      });
+    }
+
+    function saveResult(percent, scoreValue, total, filter) {
+      const history = JSON.parse(localStorage.getItem("oxidation_numbers_quiz_history_v1") || "[]");
+
+      history.unshift({
+        date: new Date().toLocaleDateString(),
+        percent,
+        score: scoreValue,
+        total,
+        filter
+      });
+
+      localStorage.setItem("oxidation_numbers_quiz_history_v1", JSON.stringify(history.slice(0, 8)));
+    }
+
+    function updateHistoryTable() {
+      const history = JSON.parse(localStorage.getItem("oxidation_numbers_quiz_history_v1") || "[]");
+      const historyBox = document.getElementById("historyBox");
+
+      if (history.length === 0) {
+        historyBox.innerHTML = `<p class="empty-history">No attempts yet. Complete a quiz to see your local progress here.</p>`;
+        return;
+      }
+
+      historyBox.innerHTML = `
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Score</th>
+              <th>Level</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${history.map(h => `
+              <tr>
+                <td>${h.date}</td>
+                <td>${h.score}/${h.total} (${h.percent}%)</td>
+                <td>${h.filter === "All" ? "Mixed" : h.filter}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    startBtn.addEventListener("click", startQuiz);
+    restartBtn.addEventListener("click", startQuiz);
+    tryAgainBtn.addEventListener("click", startQuiz);
+    nextBtn.addEventListener("click", nextQuestion);
+
+    showReviewBtn.addEventListener("click", () => {
+      const isVisible = reviewList.style.display === "grid";
+      reviewList.style.display = isVisible ? "none" : "grid";
+      showReviewBtn.textContent = isVisible ? "Show review" : "Hide review";
+    });
+
+    questionCountSlider.addEventListener("input", () => {
+      questionCountValue.textContent = questionCountSlider.value;
+    });
+
+    document.getElementById("clearHistoryBtn").addEventListener("click", () => {
+      localStorage.removeItem("oxidation_numbers_quiz_history_v1");
+      updateHistoryTable();
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Enter" && !nextBtn.disabled && quizScreen.classList.contains("active")) {
+        nextQuestion();
+      }
+    });
+
+    updateHistoryTable();
+  </script>
+</body>
+</html>

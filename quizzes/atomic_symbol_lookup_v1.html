@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atomic Symbol Lookup</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --dark: #020617;
+      --dark-panel: rgba(15, 23, 42, 0.90);
+      --dark-panel-2: rgba(30, 41, 59, 0.76);
+      --dark-border: rgba(148, 163, 184, 0.25);
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --cyan: #38bdf8;
+      --amber: #f59e0b;
+      --green: #34d399;
+      --red: #fb7185;
+      --blue-soft: #bfdbfe;
+      --violet: #a78bfa;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.22), transparent 32rem),
+        radial-gradient(circle at bottom right, rgba(245, 158, 11, 0.14), transparent 30rem),
+        linear-gradient(135deg, #020617, #0f172a 55%, #111827);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .site-header {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 22px 18px 10px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 16px;
+      color: var(--blue-soft);
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .hero {
+      background:
+        linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.62)),
+        radial-gradient(circle at 25% 25%, rgba(56, 189, 248, 0.22), transparent 20rem);
+      border: 1px solid var(--dark-border);
+      border-radius: 28px;
+      padding: clamp(22px, 4vw, 38px);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--blue-soft);
+      font-size: 0.8rem;
+      font-weight: 900;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 4.1rem);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+    }
+
+    .subtitle {
+      max-width: 850px;
+      margin: 16px 0 0;
+      color: #cbd5e1;
+      line-height: 1.65;
+      font-size: clamp(1rem, 1.5vw, 1.13rem);
+    }
+
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .lookup-card,
+    .note-card,
+    .result-card {
+      background: var(--dark-panel);
+      border: 1px solid var(--dark-border);
+      border-radius: 24px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .lookup-card {
+      padding: 18px;
+    }
+
+    .search-panel {
+      background:
+        radial-gradient(circle at 20% 0%, rgba(56, 189, 248, 0.14), transparent 18rem),
+        rgba(2, 6, 23, 0.66);
+      border: 1px solid rgba(148, 163, 184, 0.20);
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    .search-panel h2,
+    .note-card h2 {
+      margin: 0 0 14px;
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+    }
+
+    .search-box {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      border-radius: 15px;
+      padding: 15px 16px;
+      background: rgba(2, 6, 23, 0.65);
+      color: #e5e7eb;
+      font-size: 1.08rem;
+      outline: none;
+    }
+
+    input::placeholder {
+      color: rgba(203, 213, 225, 0.55);
+    }
+
+    input:focus {
+      border-color: rgba(56, 189, 248, 0.72);
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.14);
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      border-radius: 15px;
+      padding: 15px 18px;
+      font: inherit;
+      font-weight: 850;
+      color: #0f172a;
+      background: #e0f2fe;
+      transition: transform 120ms ease, background 120ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      background: #bae6fd;
+    }
+
+    button.secondary {
+      background: #334155;
+      color: #ffffff;
+      border: 1px solid var(--dark-border);
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+    }
+
+    button.secondary:hover {
+      background: #475569;
+    }
+
+    .hint {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .examples {
+      margin-top: 13px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      background: rgba(30, 41, 59, 0.72);
+      color: #dbeafe;
+      padding: 8px 11px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 800;
+      transition: transform 120ms ease, background 120ms ease;
+    }
+
+    .chip:hover {
+      transform: translateY(-1px);
+      background: rgba(56, 189, 248, 0.18);
+      border-color: rgba(56, 189, 248, 0.45);
+    }
+
+    .result-card {
+      display: none;
+      margin-top: 18px;
+      padding: 18px;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .symbol-card {
+      display: grid;
+      grid-template-columns: 150px minmax(0, 1fr);
+      gap: 22px;
+      align-items: center;
+    }
+
+    .big-symbol {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.32), transparent 3.5rem),
+        linear-gradient(135deg, #0284c7, #2563eb 52%, #7c3aed);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow:
+        0 18px 42px rgba(37, 99, 235, 0.35),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+    }
+
+    .atomic-number-small {
+      position: absolute;
+      top: 13px;
+      left: 15px;
+      font-size: 1.05rem;
+      font-weight: 900;
+      opacity: 0.95;
+    }
+
+    .symbol-text {
+      font-size: 4rem;
+      font-weight: 950;
+      line-height: 1;
+      letter-spacing: -0.06em;
+    }
+
+    .atomic-weight-small {
+      position: absolute;
+      right: 13px;
+      bottom: 12px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      opacity: 0.88;
+    }
+
+    .element-name {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 950;
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+      margin-bottom: 14px;
+      color: #f8fafc;
+    }
+
+    .facts {
+      display: grid;
+      gap: 10px;
+      font-size: 1rem;
+    }
+
+    .fact {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 13px;
+      background: rgba(2, 6, 23, 0.54);
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+    }
+
+    .label {
+      color: var(--muted);
+      font-weight: 750;
+    }
+
+    .value {
+      color: #e0f2fe;
+      font-weight: 900;
+      text-align: right;
+    }
+
+    .status-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .status-item {
+      background: rgba(2, 6, 23, 0.52);
+      border: 1px solid rgba(148, 163, 184, 0.20);
+      border-radius: 16px;
+      padding: 12px 13px;
+    }
+
+    .status-item strong {
+      display: block;
+      color: #e0f2fe;
+      font-size: 0.9rem;
+      margin-bottom: 3px;
+    }
+
+    .status-item span {
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.35;
+    }
+
+    .error {
+      display: none;
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(251, 113, 133, 0.12);
+      color: #fecdd3;
+      border: 1px solid rgba(251, 113, 133, 0.35);
+      font-weight: 750;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .side-panel {
+      display: grid;
+      gap: 14px;
+    }
+
+    .note-card {
+      padding: 18px;
+    }
+
+    .note-card p,
+    .note-card li {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.94rem;
+    }
+
+    .note-card ul {
+      margin: 10px 0 0;
+      padding-left: 1.15rem;
+    }
+
+    .formula-box {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(2, 6, 23, 0.56);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      color: #dbeafe;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      line-height: 1.55;
+      font-size: 0.88rem;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .mini-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 11px;
+      border-radius: 13px;
+      background: rgba(2, 6, 23, 0.42);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .mini-row b {
+      color: #e0f2fe;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 920px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      .status-strip {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 620px) {
+      .site-header,
+      main {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .hero {
+        border-radius: 22px;
+      }
+
+      .search-box {
+        grid-template-columns: 1fr;
+      }
+
+      .symbol-card {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+      }
+
+      .status-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .fact {
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .value {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <a class="back-link" href="../index.html">← Back to Interactive Learning Lab</a>
+
+    <section class="hero">
+      <p class="eyebrow">Chemistry Tool • Periodic Table • Atomic Data</p>
+      <h1>Atomic Symbol Lookup</h1>
+      <p class="subtitle">
+        Type an atomic symbol, element name, or atomic number to get the element name,
+        atomic number, and atomic weight. Useful for quick chemistry practice and revision.
+      </p>
+    </section>
+  </header>
+
+  <main>
+    <section class="lookup-card">
+      <div class="search-panel">
+        <h2>Search element</h2>
+
+        <div class="search-box">
+          <input id="symbolInput" type="text" placeholder="Example: H, oxygen, 26, Fe, Au" maxlength="24" autocomplete="off" />
+          <button id="searchBtn">Search</button>
+        </div>
+
+        <p class="hint">
+          You can type symbols in any case: <b>fe</b>, <b>FE</b>, or <b>Fe</b>.
+          You can also search by name or atomic number.
+        </p>
+
+        <div class="examples">
+          <span class="chip" onclick="fillExample('H')">H</span>
+          <span class="chip" onclick="fillExample('C')">C</span>
+          <span class="chip" onclick="fillExample('O')">O</span>
+          <span class="chip" onclick="fillExample('Na')">Na</span>
+          <span class="chip" onclick="fillExample('Fe')">Fe</span>
+          <span class="chip" onclick="fillExample('Cu')">Cu</span>
+          <span class="chip" onclick="fillExample('Ag')">Ag</span>
+          <span class="chip" onclick="fillExample('Au')">Au</span>
+          <span class="chip" onclick="fillRandom()">Random</span>
+        </div>
+      </div>
+
+      <section id="result" class="result-card">
+        <div class="symbol-card">
+          <div class="big-symbol">
+            <div id="atomicNumberSmall" class="atomic-number-small"></div>
+            <div id="symbolText" class="symbol-text"></div>
+            <div id="atomicWeightSmall" class="atomic-weight-small"></div>
+          </div>
+
+          <div>
+            <div id="elementName" class="element-name"></div>
+
+            <div class="facts">
+              <div class="fact">
+                <span class="label">Atomic number</span>
+                <span id="atomicNumber" class="value"></span>
+              </div>
+              <div class="fact">
+                <span class="label">Atomic weight</span>
+                <span id="atomicWeight" class="value"></span>
+              </div>
+              <div class="fact">
+                <span class="label">Symbol</span>
+                <span id="symbolFact" class="value"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="status-strip">
+          <div class="status-item">
+            <strong id="rangeStatus">Element range</strong>
+            <span id="rangeText">Periodic table element</span>
+          </div>
+
+          <div class="status-item">
+            <strong id="weightStatus">Atomic weight</strong>
+            <span>Values in square brackets are mass numbers for unstable elements.</span>
+          </div>
+
+          <div class="status-item">
+            <strong id="practiceStatus">Practice tip</strong>
+            <span>Try recalling the atomic number before searching.</span>
+          </div>
+        </div>
+      </section>
+
+      <div id="error" class="error">
+        Element not found. Try symbols like H, C, O, Na, Fe, Cu, Ag, Au; names like oxygen; or numbers like 26.
+      </div>
+    </section>
+
+    <aside class="side-panel">
+      <section class="note-card">
+        <h2>How to use</h2>
+        <p>
+          This lookup tool is designed for quick JEE-style chemistry revision.
+          Enter a symbol, name, or atomic number and press Search. The result appears as
+          a periodic-table-style tile.
+        </p>
+
+        <div class="formula-box">
+          Symbol → Atomic number + atomic weight<br>
+          Example: Fe → Z = 26, atomic weight = 55.845 u
+        </div>
+
+        <ul>
+          <li><b>Atomic number</b> is the number of protons.</li>
+          <li><b>Atomic weight</b> is the average atomic mass in atomic mass units.</li>
+          <li>Bracketed values such as [222] usually indicate no stable standard atomic weight.</li>
+        </ul>
+      </section>
+
+      <section class="note-card">
+        <h2>Quick examples</h2>
+
+        <div class="mini-list">
+          <div class="mini-row"><span>Hydrogen</span><b>H · 1</b></div>
+          <div class="mini-row"><span>Carbon</span><b>C · 6</b></div>
+          <div class="mini-row"><span>Oxygen</span><b>O · 8</b></div>
+          <div class="mini-row"><span>Sodium</span><b>Na · 11</b></div>
+          <div class="mini-row"><span>Iron</span><b>Fe · 26</b></div>
+          <div class="mini-row"><span>Gold</span><b>Au · 79</b></div>
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <script>
+    const elements = {
+      H:  { name: "Hydrogen", atomicNumber: 1, atomicWeight: "1.008" },
+      He: { name: "Helium", atomicNumber: 2, atomicWeight: "4.0026" },
+      Li: { name: "Lithium", atomicNumber: 3, atomicWeight: "6.94" },
+      Be: { name: "Beryllium", atomicNumber: 4, atomicWeight: "9.0122" },
+      B:  { name: "Boron", atomicNumber: 5, atomicWeight: "10.81" },
+      C:  { name: "Carbon", atomicNumber: 6, atomicWeight: "12.011" },
+      N:  { name: "Nitrogen", atomicNumber: 7, atomicWeight: "14.007" },
+      O:  { name: "Oxygen", atomicNumber: 8, atomicWeight: "15.999" },
+      F:  { name: "Fluorine", atomicNumber: 9, atomicWeight: "18.998" },
+      Ne: { name: "Neon", atomicNumber: 10, atomicWeight: "20.180" },
+      Na: { name: "Sodium", atomicNumber: 11, atomicWeight: "22.990" },
+      Mg: { name: "Magnesium", atomicNumber: 12, atomicWeight: "24.305" },
+      Al: { name: "Aluminium", atomicNumber: 13, atomicWeight: "26.982" },
+      Si: { name: "Silicon", atomicNumber: 14, atomicWeight: "28.085" },
+      P:  { name: "Phosphorus", atomicNumber: 15, atomicWeight: "30.974" },
+      S:  { name: "Sulfur", atomicNumber: 16, atomicWeight: "32.06" },
+      Cl: { name: "Chlorine", atomicNumber: 17, atomicWeight: "35.45" },
+      Ar: { name: "Argon", atomicNumber: 18, atomicWeight: "39.948" },
+      K:  { name: "Potassium", atomicNumber: 19, atomicWeight: "39.098" },
+      Ca: { name: "Calcium", atomicNumber: 20, atomicWeight: "40.078" },
+      Sc: { name: "Scandium", atomicNumber: 21, atomicWeight: "44.956" },
+      Ti: { name: "Titanium", atomicNumber: 22, atomicWeight: "47.867" },
+      V:  { name: "Vanadium", atomicNumber: 23, atomicWeight: "50.942" },
+      Cr: { name: "Chromium", atomicNumber: 24, atomicWeight: "51.996" },
+      Mn: { name: "Manganese", atomicNumber: 25, atomicWeight: "54.938" },
+      Fe: { name: "Iron", atomicNumber: 26, atomicWeight: "55.845" },
+      Co: { name: "Cobalt", atomicNumber: 27, atomicWeight: "58.933" },
+      Ni: { name: "Nickel", atomicNumber: 28, atomicWeight: "58.693" },
+      Cu: { name: "Copper", atomicNumber: 29, atomicWeight: "63.546" },
+      Zn: { name: "Zinc", atomicNumber: 30, atomicWeight: "65.38" },
+      Ga: { name: "Gallium", atomicNumber: 31, atomicWeight: "69.723" },
+      Ge: { name: "Germanium", atomicNumber: 32, atomicWeight: "72.630" },
+      As: { name: "Arsenic", atomicNumber: 33, atomicWeight: "74.922" },
+      Se: { name: "Selenium", atomicNumber: 34, atomicWeight: "78.971" },
+      Br: { name: "Bromine", atomicNumber: 35, atomicWeight: "79.904" },
+      Kr: { name: "Krypton", atomicNumber: 36, atomicWeight: "83.798" },
+      Rb: { name: "Rubidium", atomicNumber: 37, atomicWeight: "85.468" },
+      Sr: { name: "Strontium", atomicNumber: 38, atomicWeight: "87.62" },
+      Y:  { name: "Yttrium", atomicNumber: 39, atomicWeight: "88.906" },
+      Zr: { name: "Zirconium", atomicNumber: 40, atomicWeight: "91.224" },
+      Nb: { name: "Niobium", atomicNumber: 41, atomicWeight: "92.906" },
+      Mo: { name: "Molybdenum", atomicNumber: 42, atomicWeight: "95.95" },
+      Tc: { name: "Technetium", atomicNumber: 43, atomicWeight: "[98]" },
+      Ru: { name: "Ruthenium", atomicNumber: 44, atomicWeight: "101.07" },
+      Rh: { name: "Rhodium", atomicNumber: 45, atomicWeight: "102.91" },
+      Pd: { name: "Palladium", atomicNumber: 46, atomicWeight: "106.42" },
+      Ag: { name: "Silver", atomicNumber: 47, atomicWeight: "107.87" },
+      Cd: { name: "Cadmium", atomicNumber: 48, atomicWeight: "112.41" },
+      In: { name: "Indium", atomicNumber: 49, atomicWeight: "114.82" },
+      Sn: { name: "Tin", atomicNumber: 50, atomicWeight: "118.71" },
+      Sb: { name: "Antimony", atomicNumber: 51, atomicWeight: "121.76" },
+      Te: { name: "Tellurium", atomicNumber: 52, atomicWeight: "127.60" },
+      I:  { name: "Iodine", atomicNumber: 53, atomicWeight: "126.90" },
+      Xe: { name: "Xenon", atomicNumber: 54, atomicWeight: "131.29" },
+      Cs: { name: "Caesium", atomicNumber: 55, atomicWeight: "132.91" },
+      Ba: { name: "Barium", atomicNumber: 56, atomicWeight: "137.33" },
+      La: { name: "Lanthanum", atomicNumber: 57, atomicWeight: "138.91" },
+      Ce: { name: "Cerium", atomicNumber: 58, atomicWeight: "140.12" },
+      Pr: { name: "Praseodymium", atomicNumber: 59, atomicWeight: "140.91" },
+      Nd: { name: "Neodymium", atomicNumber: 60, atomicWeight: "144.24" },
+      Pm: { name: "Promethium", atomicNumber: 61, atomicWeight: "[145]" },
+      Sm: { name: "Samarium", atomicNumber: 62, atomicWeight: "150.36" },
+      Eu: { name: "Europium", atomicNumber: 63, atomicWeight: "151.96" },
+      Gd: { name: "Gadolinium", atomicNumber: 64, atomicWeight: "157.25" },
+      Tb: { name: "Terbium", atomicNumber: 65, atomicWeight: "158.93" },
+      Dy: { name: "Dysprosium", atomicNumber: 66, atomicWeight: "162.50" },
+      Ho: { name: "Holmium", atomicNumber: 67, atomicWeight: "164.93" },
+      Er: { name: "Erbium", atomicNumber: 68, atomicWeight: "167.26" },
+      Tm: { name: "Thulium", atomicNumber: 69, atomicWeight: "168.93" },
+      Yb: { name: "Ytterbium", atomicNumber: 70, atomicWeight: "173.05" },
+      Lu: { name: "Lutetium", atomicNumber: 71, atomicWeight: "174.97" },
+      Hf: { name: "Hafnium", atomicNumber: 72, atomicWeight: "178.49" },
+      Ta: { name: "Tantalum", atomicNumber: 73, atomicWeight: "180.95" },
+      W:  { name: "Tungsten", atomicNumber: 74, atomicWeight: "183.84" },
+      Re: { name: "Rhenium", atomicNumber: 75, atomicWeight: "186.21" },
+      Os: { name: "Osmium", atomicNumber: 76, atomicWeight: "190.23" },
+      Ir: { name: "Iridium", atomicNumber: 77, atomicWeight: "192.22" },
+      Pt: { name: "Platinum", atomicNumber: 78, atomicWeight: "195.08" },
+      Au: { name: "Gold", atomicNumber: 79, atomicWeight: "196.97" },
+      Hg: { name: "Mercury", atomicNumber: 80, atomicWeight: "200.59" },
+      Tl: { name: "Thallium", atomicNumber: 81, atomicWeight: "204.38" },
+      Pb: { name: "Lead", atomicNumber: 82, atomicWeight: "207.2" },
+      Bi: { name: "Bismuth", atomicNumber: 83, atomicWeight: "208.98" },
+      Po: { name: "Polonium", atomicNumber: 84, atomicWeight: "[209]" },
+      At: { name: "Astatine", atomicNumber: 85, atomicWeight: "[210]" },
+      Rn: { name: "Radon", atomicNumber: 86, atomicWeight: "[222]" },
+      Fr: { name: "Francium", atomicNumber: 87, atomicWeight: "[223]" },
+      Ra: { name: "Radium", atomicNumber: 88, atomicWeight: "[226]" },
+      Ac: { name: "Actinium", atomicNumber: 89, atomicWeight: "[227]" },
+      Th: { name: "Thorium", atomicNumber: 90, atomicWeight: "232.04" },
+      Pa: { name: "Protactinium", atomicNumber: 91, atomicWeight: "231.04" },
+      U:  { name: "Uranium", atomicNumber: 92, atomicWeight: "238.03" },
+      Np: { name: "Neptunium", atomicNumber: 93, atomicWeight: "[237]" },
+      Pu: { name: "Plutonium", atomicNumber: 94, atomicWeight: "[244]" },
+      Am: { name: "Americium", atomicNumber: 95, atomicWeight: "[243]" },
+      Cm: { name: "Curium", atomicNumber: 96, atomicWeight: "[247]" },
+      Bk: { name: "Berkelium", atomicNumber: 97, atomicWeight: "[247]" },
+      Cf: { name: "Californium", atomicNumber: 98, atomicWeight: "[251]" },
+      Es: { name: "Einsteinium", atomicNumber: 99, atomicWeight: "[252]" },
+      Fm: { name: "Fermium", atomicNumber: 100, atomicWeight: "[257]" },
+      Md: { name: "Mendelevium", atomicNumber: 101, atomicWeight: "[258]" },
+      No: { name: "Nobelium", atomicNumber: 102, atomicWeight: "[259]" },
+      Lr: { name: "Lawrencium", atomicNumber: 103, atomicWeight: "[266]" },
+      Rf: { name: "Rutherfordium", atomicNumber: 104, atomicWeight: "[267]" },
+      Db: { name: "Dubnium", atomicNumber: 105, atomicWeight: "[268]" },
+      Sg: { name: "Seaborgium", atomicNumber: 106, atomicWeight: "[269]" },
+      Bh: { name: "Bohrium", atomicNumber: 107, atomicWeight: "[270]" },
+      Hs: { name: "Hassium", atomicNumber: 108, atomicWeight: "[269]" },
+      Mt: { name: "Meitnerium", atomicNumber: 109, atomicWeight: "[278]" },
+      Ds: { name: "Darmstadtium", atomicNumber: 110, atomicWeight: "[281]" },
+      Rg: { name: "Roentgenium", atomicNumber: 111, atomicWeight: "[282]" },
+      Cn: { name: "Copernicium", atomicNumber: 112, atomicWeight: "[285]" },
+      Nh: { name: "Nihonium", atomicNumber: 113, atomicWeight: "[286]" },
+      Fl: { name: "Flerovium", atomicNumber: 114, atomicWeight: "[289]" },
+      Mc: { name: "Moscovium", atomicNumber: 115, atomicWeight: "[290]" },
+      Lv: { name: "Livermorium", atomicNumber: 116, atomicWeight: "[293]" },
+      Ts: { name: "Tennessine", atomicNumber: 117, atomicWeight: "[294]" },
+      Og: { name: "Oganesson", atomicNumber: 118, atomicWeight: "[294]" }
+    };
+
+    const symbolInput = document.getElementById("symbolInput");
+    const resultBox = document.getElementById("result");
+    const errorBox = document.getElementById("error");
+
+    function normalizeSymbol(text) {
+      const trimmed = text.trim();
+      if (trimmed.length === 0) return "";
+      return trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase();
+    }
+
+    function findElement(query) {
+      const raw = query.trim();
+      if (!raw) return null;
+
+      if (/^\d+$/.test(raw)) {
+        const z = Number(raw);
+        const symbol = Object.keys(elements).find(key => elements[key].atomicNumber === z);
+        return symbol ? { symbol, element: elements[symbol] } : null;
+      }
+
+      const normalizedSymbol = normalizeSymbol(raw);
+      if (elements[normalizedSymbol]) {
+        return { symbol: normalizedSymbol, element: elements[normalizedSymbol] };
+      }
+
+      const lower = raw.toLowerCase();
+      const symbolByName = Object.keys(elements).find(key => elements[key].name.toLowerCase() === lower);
+      if (symbolByName) {
+        return { symbol: symbolByName, element: elements[symbolByName] };
+      }
+
+      const partialByName = Object.keys(elements).find(key => elements[key].name.toLowerCase().startsWith(lower));
+      if (partialByName) {
+        return { symbol: partialByName, element: elements[partialByName] };
+      }
+
+      return null;
+    }
+
+    function updateRangeStatus(atomicNumber) {
+      const rangeText = document.getElementById("rangeText");
+
+      if (atomicNumber <= 20) {
+        rangeText.textContent = "Light element: often common in school chemistry.";
+      } else if (atomicNumber <= 30) {
+        rangeText.textContent = "Includes several important transition elements.";
+      } else if (atomicNumber <= 57) {
+        rangeText.textContent = "Middle part of the periodic table.";
+      } else if (atomicNumber <= 71) {
+        rangeText.textContent = "Lanthanide region.";
+      } else if (atomicNumber <= 89) {
+        rangeText.textContent = "Heavy-element region.";
+      } else {
+        rangeText.textContent = "Actinide or superheavy-element region.";
+      }
+    }
+
+    function searchElement() {
+      const found = findElement(symbolInput.value);
+
+      if (!found) {
+        resultBox.style.display = "none";
+        errorBox.style.display = "block";
+        return;
+      }
+
+      const { symbol, element } = found;
+
+      document.getElementById("atomicNumberSmall").textContent = element.atomicNumber;
+      document.getElementById("symbolText").textContent = symbol;
+      document.getElementById("atomicWeightSmall").textContent = element.atomicWeight + " u";
+      document.getElementById("elementName").textContent = element.name;
+      document.getElementById("atomicNumber").textContent = element.atomicNumber;
+      document.getElementById("atomicWeight").textContent = element.atomicWeight + " u";
+      document.getElementById("symbolFact").textContent = symbol;
+
+      updateRangeStatus(element.atomicNumber);
+
+      errorBox.style.display = "none";
+      resultBox.style.display = "block";
+    }
+
+    function fillExample(symbol) {
+      symbolInput.value = symbol;
+      searchElement();
+    }
+
+    function fillRandom() {
+      const symbols = Object.keys(elements);
+      const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+      symbolInput.value = randomSymbol;
+      searchElement();
+    }
+
+    document.getElementById("searchBtn").addEventListener("click", searchElement);
+
+    symbolInput.addEventListener("keyup", function(event) {
+      if (event.key === "Enter") {
+        searchElement();
+        return;
+      }
+
+      if (symbolInput.value.trim().length > 0) {
+        searchElement();
+      } else {
+        resultBox.style.display = "none";
+        errorBox.style.display = "none";
+      }
+    });
+
+    fillExample("Fe");
+  </script>
+</body>
+</html>

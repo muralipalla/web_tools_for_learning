@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Atomic Lattice Vibration Explorer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --dark: #020617;
+      --dark-panel: rgba(15, 23, 42, 0.90);
+      --dark-panel-2: rgba(30, 41, 59, 0.76);
+      --dark-border: rgba(148, 163, 184, 0.25);
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --cyan: #38bdf8;
+      --amber: #f59e0b;
+      --green: #34d399;
+      --red: #fb7185;
+      --blue-soft: #bfdbfe;
+      --violet: #a78bfa;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.22), transparent 32rem),
+        radial-gradient(circle at bottom right, rgba(52, 211, 153, 0.12), transparent 30rem),
+        linear-gradient(135deg, #020617, #0f172a 55%, #111827);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .site-header {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 22px 18px 10px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 16px;
+      color: var(--blue-soft);
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .hero {
+      background:
+        linear-gradient(135deg, rgba(15, 23, 42, 0.90), rgba(30, 41, 59, 0.62)),
+        radial-gradient(circle at 25% 25%, rgba(56, 189, 248, 0.22), transparent 20rem);
+      border: 1px solid var(--dark-border);
+      border-radius: 28px;
+      padding: clamp(22px, 4vw, 38px);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--blue-soft);
+      font-size: 0.8rem;
+      font-weight: 900;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 4.2rem);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+    }
+
+    .subtitle {
+      max-width: 940px;
+      margin: 16px 0 0;
+      color: #cbd5e1;
+      line-height: 1.65;
+      font-size: clamp(1rem, 1.5vw, 1.13rem);
+    }
+
+    main {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 350px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .simulation-card,
+    .control-card,
+    .note-card {
+      background: var(--dark-panel);
+      border: 1px solid var(--dark-border);
+      border-radius: 24px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .canvas-wrap {
+      padding: 14px;
+      background: rgba(2, 6, 23, 0.78);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: min(70vh, 690px);
+      min-height: 560px;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 32% 36%, rgba(14, 165, 233, 0.10), transparent 18rem),
+        radial-gradient(circle at 70% 74%, rgba(167, 139, 250, 0.08), transparent 18rem),
+        #020617;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+    }
+
+    .status-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      padding: 14px;
+      background: rgba(2, 6, 23, 0.92);
+      border-top: 1px solid var(--dark-border);
+    }
+
+    .status-item {
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid rgba(148, 163, 184, 0.24);
+      border-radius: 16px;
+      padding: 12px 13px;
+    }
+
+    .status-item strong {
+      display: block;
+      color: #e0f2fe;
+      font-size: 0.9rem;
+      margin-bottom: 3px;
+    }
+
+    .status-item span {
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.35;
+    }
+
+    .side-panel {
+      display: grid;
+      gap: 14px;
+    }
+
+    .control-card,
+    .note-card {
+      padding: 18px;
+    }
+
+    .control-card h2,
+    .note-card h2 {
+      margin: 0 0 14px;
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+    }
+
+    .control-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+      margin-bottom: 8px;
+      color: #f8fafc;
+      font-weight: 850;
+      font-size: 0.94rem;
+    }
+
+    label span {
+      min-width: 86px;
+      text-align: right;
+      color: #bae6fd;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.88rem;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--cyan);
+    }
+
+    .switch-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 13px;
+      margin-bottom: 10px;
+      border-radius: 16px;
+      background: rgba(30, 41, 59, 0.72);
+      border: 1px solid rgba(148, 163, 184, 0.20);
+    }
+
+    .switch-row strong {
+      display: block;
+      font-size: 0.93rem;
+    }
+
+    .switch-row small {
+      display: block;
+      color: var(--muted);
+      margin-top: 3px;
+      line-height: 1.3;
+    }
+
+    .switch {
+      position: relative;
+      width: 58px;
+      height: 32px;
+      flex: 0 0 auto;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider-switch {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: #334155;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      border-radius: 999px;
+      transition: 160ms ease;
+    }
+
+    .slider-switch::before {
+      content: "";
+      position: absolute;
+      height: 24px;
+      width: 24px;
+      left: 3px;
+      top: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: 160ms ease;
+    }
+
+    .switch input:checked + .slider-switch {
+      background: #0ea5e9;
+    }
+
+    .switch input:checked + .slider-switch::before {
+      transform: translateX(26px);
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      border-radius: 13px;
+      padding: 11px 14px;
+      font: inherit;
+      font-weight: 850;
+      color: #0f172a;
+      background: #e0f2fe;
+      transition: transform 120ms ease, background 120ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      background: #bae6fd;
+    }
+
+    button.secondary {
+      background: #334155;
+      color: #ffffff;
+      border: 1px solid var(--dark-border);
+    }
+
+    button.secondary:hover {
+      background: #475569;
+    }
+
+    .legend {
+      display: grid;
+      gap: 8px;
+      margin: 10px 0 0;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--muted);
+      font-size: 0.93rem;
+      line-height: 1.35;
+    }
+
+    .dot {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+    }
+
+    .dot.atom {
+      background: var(--cyan);
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.9);
+    }
+
+    .dot.bond {
+      background: var(--violet);
+      box-shadow: 0 0 14px rgba(167, 139, 250, 0.9);
+    }
+
+    .dot.eq {
+      background: #cbd5e1;
+      opacity: 0.75;
+    }
+
+    .note-card p,
+    .note-card li {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.94rem;
+    }
+
+    .note-card ul {
+      margin: 10px 0 0;
+      padding-left: 1.15rem;
+    }
+
+    .formula-box {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(2, 6, 23, 0.56);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      color: #dbeafe;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      line-height: 1.55;
+      font-size: 0.88rem;
+    }
+
+    @media (max-width: 1020px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      canvas {
+        height: 660px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .site-header,
+      main {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .hero {
+        border-radius: 22px;
+      }
+
+      canvas {
+        height: 620px;
+        min-height: 580px;
+      }
+
+      .status-strip {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <a class="back-link" href="../index.html">← Back to Interactive Learning Lab</a>
+
+    <section class="hero">
+      <p class="eyebrow">Physics Simulation • Thermal Motion • Lattice Vibrations</p>
+      <h1>Atomic Lattice Vibration Explorer</h1>
+      <p class="subtitle">
+        A visual model of atoms vibrating about equilibrium positions in a crystalline lattice.
+        Increase temperature to increase vibration amplitude and kinetic energy. Add a coherent
+        phonon wave to see collective lattice motion superposed on random thermal motion.
+      </p>
+    </section>
+  </header>
+
+  <main>
+    <section class="simulation-card">
+      <div class="canvas-wrap">
+        <canvas id="latticeCanvas"></canvas>
+      </div>
+
+      <div class="status-strip">
+        <div class="status-item">
+          <strong id="tempStatus">Temperature: 20</strong>
+          <span>Controls random thermal vibration.</span>
+        </div>
+
+        <div class="status-item">
+          <strong id="ampStatus">Amplitude: 3.0 px</strong>
+          <span>Typical displacement from equilibrium.</span>
+        </div>
+
+        <div class="status-item">
+          <strong id="keStatus">Relative KE: 0.04</strong>
+          <span>Roughly proportional to vibration².</span>
+        </div>
+
+        <div class="status-item">
+          <strong id="modeStatus">Mode: thermal</strong>
+          <span>Optional phonon wave adds collective motion.</span>
+        </div>
+      </div>
+    </section>
+
+    <aside class="side-panel">
+      <section class="control-card">
+        <h2>Controls</h2>
+
+        <div class="control-group">
+          <label for="tempSlider">
+            Temperature
+            <span id="tempValue">20</span>
+          </label>
+          <input type="range" id="tempSlider" min="0" max="100" step="1" value="20">
+        </div>
+
+        <div class="control-group">
+          <label for="bondSlider">
+            Bond stiffness
+            <span id="bondValue">60%</span>
+          </label>
+          <input type="range" id="bondSlider" min="0" max="100" step="1" value="60">
+        </div>
+
+        <div class="control-group">
+          <label for="disorderSlider">
+            Thermal disorder
+            <span id="disorderValue">35%</span>
+          </label>
+          <input type="range" id="disorderSlider" min="0" max="100" step="1" value="35">
+        </div>
+
+        <div class="switch-row">
+          <div>
+            <strong>Show bonds</strong>
+            <small>Draw nearest-neighbour connections.</small>
+          </div>
+
+          <label class="switch" aria-label="Show bonds">
+            <input id="bondsToggle" type="checkbox" checked>
+            <span class="slider-switch"></span>
+          </label>
+        </div>
+
+        <div class="switch-row">
+          <div>
+            <strong>Equilibrium sites</strong>
+            <small>Show fixed lattice positions.</small>
+          </div>
+
+          <label class="switch" aria-label="Show equilibrium sites">
+            <input id="equilibriumToggle" type="checkbox" checked>
+            <span class="slider-switch"></span>
+          </label>
+        </div>
+
+        <div class="switch-row">
+          <div>
+            <strong>Phonon wave</strong>
+            <small>Add a coherent travelling lattice wave.</small>
+          </div>
+
+          <label class="switch" aria-label="Toggle phonon wave">
+            <input id="phononToggle" type="checkbox">
+            <span class="slider-switch"></span>
+          </label>
+        </div>
+
+        <div class="button-row">
+          <button id="pauseBtn">Pause</button>
+          <button id="resetBtn" class="secondary">Reset phases</button>
+        </div>
+      </section>
+
+      <section class="note-card">
+        <h2>Interpretation</h2>
+
+        <div class="legend">
+          <div class="legend-item"><span class="dot atom"></span> Moving atom position</div>
+          <div class="legend-item"><span class="dot eq"></span> Equilibrium lattice site</div>
+          <div class="legend-item"><span class="dot bond"></span> Nearest-neighbour bond</div>
+        </div>
+
+        <div class="formula-box">
+          Thermal idea: KE ∝ vibration²<br>
+          Higher T → larger mean vibration<br>
+          Phonon: collective wave-like lattice motion
+        </div>
+
+        <p>
+          In a real solid, atoms do not sit still. They oscillate around equilibrium positions.
+          Temperature measures the average thermal energy of these motions. A phonon is a
+          collective vibration pattern of the lattice.
+        </p>
+
+        <ul>
+          <li>Temperature increases the random vibration strength.</li>
+          <li>Bond stiffness visually tightens or softens the lattice links.</li>
+          <li>Thermal disorder makes neighbouring atoms less synchronized.</li>
+          <li>The phonon switch adds an organized wave on top of random motion.</li>
+        </ul>
+      </section>
+    </aside>
+  </main>
+
+  <script>
+    const canvas = document.getElementById("latticeCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const tempSlider = document.getElementById("tempSlider");
+    const bondSlider = document.getElementById("bondSlider");
+    const disorderSlider = document.getElementById("disorderSlider");
+
+    const bondsToggle = document.getElementById("bondsToggle");
+    const equilibriumToggle = document.getElementById("equilibriumToggle");
+    const phononToggle = document.getElementById("phononToggle");
+
+    const tempValue = document.getElementById("tempValue");
+    const bondValue = document.getElementById("bondValue");
+    const disorderValue = document.getElementById("disorderValue");
+
+    const tempStatus = document.getElementById("tempStatus");
+    const ampStatus = document.getElementById("ampStatus");
+    const keStatus = document.getElementById("keStatus");
+    const modeStatus = document.getElementById("modeStatus");
+
+    const pauseBtn = document.getElementById("pauseBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    let width = 1000;
+    let height = 690;
+    let dpr = 1;
+    let atoms = [];
+    let time = 0;
+    let lastTimestamp = 0;
+    let paused = false;
+    let rows = 0;
+    let cols = 0;
+    let spacing = 30;
+    let originX = 0;
+    let originY = 0;
+
+    function rand(min, max) {
+      return min + Math.random() * (max - min);
+    }
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function resizeCanvas() {
+      dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      const rect = canvas.getBoundingClientRect();
+
+      width = Math.max(560, rect.width);
+      height = Math.max(560, rect.height);
+
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      createLattice();
+    }
+
+    function createLattice() {
+      atoms = [];
+
+      spacing = clamp(Math.min(width, height) / 24, 22, 34);
+
+      cols = Math.floor((width * 0.80) / spacing);
+      rows = Math.floor((height * 0.64) / spacing);
+
+      cols = clamp(cols, 12, 30);
+      rows = clamp(rows, 10, 22);
+
+      originX = (width - (cols - 1) * spacing) / 2;
+      originY = (height - (rows - 1) * spacing) / 2 + 20;
+
+      let id = 0;
+
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          atoms.push({
+            id,
+            r,
+            c,
+            x0: originX + c * spacing,
+            y0: originY + r * spacing,
+            x: originX + c * spacing,
+            y: originY + r * spacing,
+            phaseX: rand(0, Math.PI * 2),
+            phaseY: rand(0, Math.PI * 2),
+            phaseP: rand(0, Math.PI * 2),
+            ampFactor: rand(0.65, 1.35),
+            dir: rand(0, Math.PI * 2),
+            recentDisp: 0
+          });
+          id++;
+        }
+      }
+    }
+
+    function resetPhases() {
+      for (const atom of atoms) {
+        atom.phaseX = rand(0, Math.PI * 2);
+        atom.phaseY = rand(0, Math.PI * 2);
+        atom.phaseP = rand(0, Math.PI * 2);
+        atom.ampFactor = rand(0.65, 1.35);
+        atom.dir = rand(0, Math.PI * 2);
+      }
+    }
+
+    function getAtom(r, c) {
+      if (r < 0 || c < 0 || r >= rows || c >= cols) return null;
+      return atoms[r * cols + c];
+    }
+
+    function getParameters() {
+      const temp = Number(tempSlider.value);
+      const stiffness = Number(bondSlider.value) / 100;
+      const disorder = Number(disorderSlider.value) / 100;
+
+      const tempNorm = temp / 100;
+      const amplitude = 0.8 + tempNorm * 13.0;
+      const frequency = 1.0 + tempNorm * 5.2 + stiffness * 1.4;
+      const ke = Math.pow(amplitude / 14, 2);
+
+      return {
+        temp,
+        stiffness,
+        disorder,
+        tempNorm,
+        amplitude,
+        frequency,
+        ke
+      };
+    }
+
+    function updateLabels(params) {
+      tempValue.textContent = `${params.temp}`;
+      bondValue.textContent = `${Math.round(params.stiffness * 100)}%`;
+      disorderValue.textContent = `${Math.round(params.disorder * 100)}%`;
+
+      tempStatus.textContent = `Temperature: ${params.temp}`;
+      ampStatus.textContent = `Amplitude: ${params.amplitude.toFixed(1)} px`;
+      keStatus.textContent = `Relative KE: ${params.ke.toFixed(2)}`;
+      modeStatus.textContent = phononToggle.checked ? "Mode: thermal + phonon" : "Mode: thermal";
+    }
+
+    function drawBackground() {
+      const grad = ctx.createRadialGradient(width * 0.5, height * 0.45, 40, width * 0.5, height * 0.5, Math.max(width, height));
+      grad.addColorStop(0, "#0f172a");
+      grad.addColorStop(0.55, "#020617");
+      grad.addColorStop(1, "#000000");
+
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.save();
+      ctx.fillStyle = "rgba(226, 232, 240, 0.23)";
+      for (let i = 0; i < 100; i++) {
+        const x = (i * 137.508) % width;
+        const y = (i * 83.23) % height;
+        const r = (i % 7 === 0) ? 1.2 : 0.65;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    function roundRect(x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    }
+
+    function drawLatticePanel() {
+      const pad = 34;
+
+      ctx.save();
+      ctx.fillStyle = "rgba(15, 23, 42, 0.42)";
+      roundRect(pad, pad, width - 2 * pad, height - 2 * pad, 24);
+      ctx.fill();
+
+      ctx.strokeStyle = "rgba(148, 163, 184, 0.22)";
+      ctx.lineWidth = 1;
+      roundRect(pad, pad, width - 2 * pad, height - 2 * pad, 24);
+      ctx.stroke();
+
+      ctx.fillStyle = "rgba(226, 232, 240, 0.94)";
+      ctx.font = "800 15px system-ui, Arial";
+      ctx.fillText("Square lattice: atoms vibrating about equilibrium sites", pad + 18, pad + 28);
+
+      ctx.fillStyle = "rgba(148, 163, 184, 0.92)";
+      ctx.font = "12px system-ui, Arial";
+      ctx.fillText("Temperature controls random thermal vibration; phonon wave adds collective motion", pad + 18, pad + 48);
+
+      ctx.restore();
+    }
+
+    function updateAtomPositions(params, dt) {
+      let totalDispSq = 0;
+
+      for (const atom of atoms) {
+        const localDisorder = 1 + params.disorder * (atom.ampFactor - 1);
+        const thermalA = params.amplitude * localDisorder;
+
+        const omega = 2 * Math.PI * params.frequency;
+        const randomX = thermalA * Math.sin(omega * time + atom.phaseX) * Math.cos(atom.dir);
+        const randomY = thermalA * Math.cos(omega * 1.17 * time + atom.phaseY) * Math.sin(atom.dir + 0.4);
+
+        let phononX = 0;
+        let phononY = 0;
+
+        if (phononToggle.checked) {
+          const wavelength = Math.max(5 * spacing, width * 0.42);
+          const k = 2 * Math.PI / wavelength;
+          const phase = k * (atom.x0 - originX) - 2 * Math.PI * 0.55 * time + atom.phaseP * 0.08;
+          const phononAmplitude = 5 + params.tempNorm * 5;
+          phononY = phononAmplitude * Math.sin(phase);
+          phononX = 0.35 * phononAmplitude * Math.cos(phase);
+        }
+
+        atom.x = atom.x0 + randomX + phononX;
+        atom.y = atom.y0 + randomY + phononY;
+
+        const dx = atom.x - atom.x0;
+        const dy = atom.y - atom.y0;
+        atom.recentDisp = Math.sqrt(dx * dx + dy * dy);
+        totalDispSq += dx * dx + dy * dy;
+      }
+
+      return atoms.length ? totalDispSq / atoms.length : 0;
+    }
+
+    function atomColor(params, atom) {
+      const hot = clamp(params.tempNorm + atom.recentDisp / 26, 0, 1);
+
+      const r = Math.round(80 + 175 * hot);
+      const g = Math.round(190 + 40 * (1 - Math.abs(hot - 0.5)));
+      const b = Math.round(255 - 145 * hot);
+
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    function drawBonds(params) {
+      if (!bondsToggle.checked) return;
+
+      ctx.save();
+
+      const alpha = 0.06 + params.stiffness * 0.22;
+      ctx.lineWidth = 0.8 + params.stiffness * 1.1;
+      ctx.strokeStyle = `rgba(167, 139, 250, ${alpha})`;
+
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const atom = getAtom(r, c);
+          const right = getAtom(r, c + 1);
+          const down = getAtom(r + 1, c);
+
+          if (right) {
+            ctx.beginPath();
+            ctx.moveTo(atom.x, atom.y);
+            ctx.lineTo(right.x, right.y);
+            ctx.stroke();
+          }
+
+          if (down) {
+            ctx.beginPath();
+            ctx.moveTo(atom.x, atom.y);
+            ctx.lineTo(down.x, down.y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      ctx.restore();
+    }
+
+    function drawEquilibriumSites() {
+      if (!equilibriumToggle.checked) return;
+
+      ctx.save();
+      ctx.fillStyle = "rgba(226, 232, 240, 0.22)";
+
+      for (const atom of atoms) {
+        ctx.beginPath();
+        ctx.arc(atom.x0, atom.y0, 1.55, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+
+    function drawAtoms(params) {
+      ctx.save();
+
+      for (const atom of atoms) {
+        const r = 3.4 + clamp(atom.recentDisp / 14, 0, 1.8);
+
+        ctx.beginPath();
+        ctx.arc(atom.x, atom.y, r * 2.1, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(56, 189, 248, ${0.035 + params.tempNorm * 0.055})`;
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(atom.x, atom.y, r, 0, Math.PI * 2);
+        ctx.fillStyle = atomColor(params, atom);
+        ctx.shadowBlur = 11 + params.tempNorm * 12;
+        ctx.shadowColor = atomColor(params, atom);
+        ctx.fill();
+
+        ctx.shadowBlur = 0;
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.50)";
+        ctx.lineWidth = 0.6;
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+
+    function drawPhononArrow() {
+      if (!phononToggle.checked) return;
+
+      ctx.save();
+
+      const y = 78;
+      ctx.strokeStyle = "rgba(186, 230, 253, 0.75)";
+      ctx.fillStyle = "rgba(186, 230, 253, 0.90)";
+      ctx.lineWidth = 3;
+
+      ctx.beginPath();
+      ctx.moveTo(width * 0.66, y);
+      ctx.lineTo(width * 0.83, y);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(width * 0.83, y);
+      ctx.lineTo(width * 0.83 - 12, y - 8);
+      ctx.lineTo(width * 0.83 - 12, y + 8);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.font = "800 13px system-ui, Arial";
+      ctx.fillText("phonon wave direction", width * 0.66, y - 16);
+
+      ctx.restore();
+    }
+
+    function animate(timestamp) {
+      if (!lastTimestamp) lastTimestamp = timestamp;
+      const dt = Math.min((timestamp - lastTimestamp) / 1000, 0.05);
+      lastTimestamp = timestamp;
+
+      if (!paused) {
+        time += dt;
+      }
+
+      const params = getParameters();
+      updateLabels(params);
+
+      drawBackground();
+      drawLatticePanel();
+
+      const avgDispSq = updateAtomPositions(params, dt);
+
+      drawEquilibriumSites();
+      drawBonds(params);
+      drawAtoms(params);
+      drawPhononArrow();
+      requestAnimationFrame(animate);
+    }
+
+    pauseBtn.addEventListener("click", () => {
+      paused = !paused;
+      pauseBtn.textContent = paused ? "Resume" : "Pause";
+    });
+
+    resetBtn.addEventListener("click", () => {
+      time = 0;
+      resetPhases();
+    });
+
+    window.addEventListener("resize", resizeCanvas);
+
+    resizeCanvas();
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>
