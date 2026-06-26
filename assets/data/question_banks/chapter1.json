@@ -1,14 +1,24 @@
 {
-  "schemaVersion": "1.0",
+  "schemaVersion": "2.0-latex",
   "bankId": "chapter1",
   "title": "Chapter 1 Question Bank: Mole Concept and Significant Figures",
-  "description": "Question bank generated from the uploaded topic list. Questions are written in Markdown and LaTeX format for rendering with MathJax.",
-  "createdFor": "Interactive Learning Lab",
-  "sourceFile": "QB_Topics - Sheet2.csv",
+  "description": "Question bank using LaTeX strings directly in JSON. No Markdown parser is required. Every LaTeX backslash is escaped in JSON as double backslash.",
   "rendering": {
-    "markdownFieldSuffix": "Md",
-    "mathRenderer": "MathJax",
-    "chemistryPackage": "mhchem"
+    "format": "latex",
+    "fields": [
+      "promptLatex",
+      "optionsLatex",
+      "answerLatex",
+      "explanationLatex",
+      "hintsLatex"
+    ],
+    "renderer": "MathJax",
+    "chemistryPackage": "mhchem",
+    "notes": [
+      "Inside JSON, write \\frac as \\\\frac and \\ce as \\\\ce.",
+      "The quiz engine inserts text into the DOM and then calls MathJax.typesetPromise().",
+      "No Markdown parsing is used."
+    ]
   },
   "topics": [
     {
@@ -114,19 +124,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "How many moles are present in $36~\\mathrm{g}$ of water, $\\ce{H2O}$? Take molar mass $=18~\\mathrm{g~mol^{-1}}$.",
-      "optionsMd": [
+      "promptLatex": "How many moles are present in $36~\\mathrm{g}$ of water, $\\ce{H2O}$? Take molar mass $=18~\\mathrm{g~mol^{-1}}$.",
+      "optionsLatex": [
         "$1.0~\\mathrm{mol}$",
         "$2.0~\\mathrm{mol}$",
         "$0.50~\\mathrm{mol}$",
         "$18~\\mathrm{mol}$"
       ],
-      "answer": "$2.0~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$2.0~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$2.0~\\mathrm{mol}$"
       ],
-      "explanationMd": "$n=\\dfrac{m}{M}=\\dfrac{36}{18}=2.0~\\mathrm{mol}$.",
-      "hintsMd": [
+      "explanationLatex": "$n=\\dfrac{m}{M}=\\dfrac{36}{18}=2.0~\\mathrm{mol}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -147,19 +157,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "What is the mass of $0.50~\\mathrm{mol}$ of $\\ce{CO2}$? Molar mass of $\\ce{CO2}=44~\\mathrm{g~mol^{-1}}$.",
-      "optionsMd": [
+      "promptLatex": "What is the mass of $0.50~\\mathrm{mol}$ of $\\ce{CO2}$? Molar mass of $\\ce{CO2}=44~\\mathrm{g~mol^{-1}}$.",
+      "optionsLatex": [
         "$11~\\mathrm{g}$",
         "$22~\\mathrm{g}$",
         "$44~\\mathrm{g}$",
         "$88~\\mathrm{g}$"
       ],
-      "answer": "$22~\\mathrm{g}$",
-      "acceptedAnswers": [
+      "answerLatex": "$22~\\mathrm{g}$",
+      "acceptedAnswersLatex": [
         "$22~\\mathrm{g}$"
       ],
-      "explanationMd": "$m=nM=0.50\\times44=22~\\mathrm{g}$.",
-      "hintsMd": [
+      "explanationLatex": "$m=nM=0.50\\times44=22~\\mathrm{g}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -180,19 +190,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "How many carbon atoms are present in $0.25~\\mathrm{mol}$ of carbon atoms? Use $N_A=6.02\\times10^{23}$.",
-      "optionsMd": [
+      "promptLatex": "How many carbon atoms are present in $0.25~\\mathrm{mol}$ of carbon atoms? Use $N_A=6.02\\times10^{23}$.",
+      "optionsLatex": [
         "$1.51\\times10^{23}$",
         "$3.01\\times10^{23}$",
         "$6.02\\times10^{23}$",
         "$2.41\\times10^{24}$"
       ],
-      "answer": "$1.51\\times10^{23}$",
-      "acceptedAnswers": [
+      "answerLatex": "$1.51\\times10^{23}$",
+      "acceptedAnswersLatex": [
         "$1.51\\times10^{23}$"
       ],
-      "explanationMd": "Number of atoms $=0.25N_A=0.25\\times6.02\\times10^{23}=1.505\\times10^{23}$.",
-      "hintsMd": [
+      "explanationLatex": "Number of atoms $=0.25N_A=0.25\\times6.02\\times10^{23}=1.505\\times10^{23}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -213,19 +223,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "How many moles are present in $9.8~\\mathrm{g}$ of $\\ce{H2SO4}$? Molar mass $=98~\\mathrm{g~mol^{-1}}$.",
-      "optionsMd": [
+      "promptLatex": "How many moles are present in $9.8~\\mathrm{g}$ of $\\ce{H2SO4}$? Molar mass $=98~\\mathrm{g~mol^{-1}}$.",
+      "optionsLatex": [
         "$0.10~\\mathrm{mol}$",
         "$1.0~\\mathrm{mol}$",
         "$9.8~\\mathrm{mol}$",
         "$0.98~\\mathrm{mol}$"
       ],
-      "answer": "$0.10~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$0.10~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$0.10~\\mathrm{mol}$"
       ],
-      "explanationMd": "$n=\\dfrac{9.8}{98}=0.10~\\mathrm{mol}$.",
-      "hintsMd": [
+      "explanationLatex": "$n=\\dfrac{9.8}{98}=0.10~\\mathrm{mol}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -246,19 +256,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "What is the mass of $0.20~\\mathrm{mol}$ of $\\ce{CaCO3}$? Molar mass $=100~\\mathrm{g~mol^{-1}}$.",
-      "optionsMd": [
+      "promptLatex": "What is the mass of $0.20~\\mathrm{mol}$ of $\\ce{CaCO3}$? Molar mass $=100~\\mathrm{g~mol^{-1}}$.",
+      "optionsLatex": [
         "$5.0~\\mathrm{g}$",
         "$10.0~\\mathrm{g}$",
         "$20.0~\\mathrm{g}$",
         "$50.0~\\mathrm{g}$"
       ],
-      "answer": "$20.0~\\mathrm{g}$",
-      "acceptedAnswers": [
+      "answerLatex": "$20.0~\\mathrm{g}$",
+      "acceptedAnswersLatex": [
         "$20.0~\\mathrm{g}$"
       ],
-      "explanationMd": "$m=nM=0.20\\times100=20.0~\\mathrm{g}$.",
-      "hintsMd": [
+      "explanationLatex": "$m=nM=0.20\\times100=20.0~\\mathrm{g}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -279,19 +289,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "How many $\\ce{N2}$ molecules are present in $5.6~\\mathrm{g}$ of $\\ce{N2}$? Molar mass $=28~\\mathrm{g~mol^{-1}}$.",
-      "optionsMd": [
+      "promptLatex": "How many $\\ce{N2}$ molecules are present in $5.6~\\mathrm{g}$ of $\\ce{N2}$? Molar mass $=28~\\mathrm{g~mol^{-1}}$.",
+      "optionsLatex": [
         "$1.20\\times10^{23}$",
         "$3.01\\times10^{23}$",
         "$6.02\\times10^{23}$",
         "$2.40\\times10^{23}$"
       ],
-      "answer": "$1.20\\times10^{23}$",
-      "acceptedAnswers": [
+      "answerLatex": "$1.20\\times10^{23}$",
+      "acceptedAnswersLatex": [
         "$1.20\\times10^{23}$"
       ],
-      "explanationMd": "$n=5.6/28=0.20~\\mathrm{mol}$. Molecules $=0.20N_A=1.204\\times10^{23}$.",
-      "hintsMd": [
+      "explanationLatex": "$n=5.6/28=0.20~\\mathrm{mol}$. Molecules $=0.20N_A=1.204\\times10^{23}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -312,19 +322,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "How many moles of oxygen atoms are present in $0.50~\\mathrm{mol}$ of $\\ce{CO2}$?",
-      "optionsMd": [
+      "promptLatex": "How many moles of oxygen atoms are present in $0.50~\\mathrm{mol}$ of $\\ce{CO2}$?",
+      "optionsLatex": [
         "$0.25~\\mathrm{mol}$",
         "$0.50~\\mathrm{mol}$",
         "$1.00~\\mathrm{mol}$",
         "$2.00~\\mathrm{mol}$"
       ],
-      "answer": "$1.00~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$1.00~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$1.00~\\mathrm{mol}$"
       ],
-      "explanationMd": "Each molecule of $\\ce{CO2}$ contains 2 oxygen atoms. Moles of O atoms $=2\\times0.50=1.00~\\mathrm{mol}$.",
-      "hintsMd": [
+      "explanationLatex": "Each molecule of $\\ce{CO2}$ contains 2 oxygen atoms. Moles of O atoms $=2\\times0.50=1.00~\\mathrm{mol}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -345,19 +355,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "What is the mass of $3.01\\times10^{23}$ molecules of $\\ce{NH3}$? Molar mass of $\\ce{NH3}=17~\\mathrm{g~mol^{-1}}$.",
-      "optionsMd": [
+      "promptLatex": "What is the mass of $3.01\\times10^{23}$ molecules of $\\ce{NH3}$? Molar mass of $\\ce{NH3}=17~\\mathrm{g~mol^{-1}}$.",
+      "optionsLatex": [
         "$4.25~\\mathrm{g}$",
         "$8.5~\\mathrm{g}$",
         "$17~\\mathrm{g}$",
         "$34~\\mathrm{g}$"
       ],
-      "answer": "$8.5~\\mathrm{g}$",
-      "acceptedAnswers": [
+      "answerLatex": "$8.5~\\mathrm{g}$",
+      "acceptedAnswersLatex": [
         "$8.5~\\mathrm{g}$"
       ],
-      "explanationMd": "$3.01\\times10^{23}$ molecules $=0.50~\\mathrm{mol}$. Hence mass $=0.50\\times17=8.5~\\mathrm{g}$.",
-      "hintsMd": [
+      "explanationLatex": "$3.01\\times10^{23}$ molecules $=0.50~\\mathrm{mol}$. Hence mass $=0.50\\times17=8.5~\\mathrm{g}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -378,19 +388,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "Assuming complete dissociation, how many moles of ions are produced by $1.0~\\mathrm{mol}$ of $\\ce{NaCl}$?",
-      "optionsMd": [
+      "promptLatex": "Assuming complete dissociation, how many moles of ions are produced by $1.0~\\mathrm{mol}$ of $\\ce{NaCl}$?",
+      "optionsLatex": [
         "$1.0~\\mathrm{mol}$",
         "$2.0~\\mathrm{mol}$",
         "$0.5~\\mathrm{mol}$",
         "$6.02\\times10^{23}~\\mathrm{mol}$"
       ],
-      "answer": "$2.0~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$2.0~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$2.0~\\mathrm{mol}$"
       ],
-      "explanationMd": "$\\ce{NaCl -> Na+ + Cl-}$. One formula unit gives two ions. Hence $1.0~\\mathrm{mol}$ gives $2.0~\\mathrm{mol}$ ions.",
-      "hintsMd": [
+      "explanationLatex": "$\\ce{NaCl -> Na+ + Cl-}$. One formula unit gives two ions. Hence $1.0~\\mathrm{mol}$ gives $2.0~\\mathrm{mol}$ ions.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -411,19 +421,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "Find the mass of $0.25~\\mathrm{mol}$ of $\\ce{Al2(SO4)3}$. Molar mass $=342~\\mathrm{g~mol^{-1}}$.",
-      "optionsMd": [
+      "promptLatex": "Find the mass of $0.25~\\mathrm{mol}$ of $\\ce{Al2(SO4)3}$. Molar mass $=342~\\mathrm{g~mol^{-1}}$.",
+      "optionsLatex": [
         "$42.75~\\mathrm{g}$",
         "$68.4~\\mathrm{g}$",
         "$85.5~\\mathrm{g}$",
         "$171~\\mathrm{g}$"
       ],
-      "answer": "$85.5~\\mathrm{g}$",
-      "acceptedAnswers": [
+      "answerLatex": "$85.5~\\mathrm{g}$",
+      "acceptedAnswersLatex": [
         "$85.5~\\mathrm{g}$"
       ],
-      "explanationMd": "$m=nM=0.25\\times342=85.5~\\mathrm{g}$.",
-      "hintsMd": [
+      "explanationLatex": "$m=nM=0.25\\times342=85.5~\\mathrm{g}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -444,19 +454,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "A gas occupies $8.21~\\mathrm{L}$ at $1.00~\\mathrm{atm}$ and $300~\\mathrm{K}$. Find moles. Use $R=0.0821~\\mathrm{L~atm~mol^{-1}~K^{-1}}$.",
-      "optionsMd": [
+      "promptLatex": "A gas occupies $8.21~\\mathrm{L}$ at $1.00~\\mathrm{atm}$ and $300~\\mathrm{K}$. Find moles. Use $R=0.0821~\\mathrm{L~atm~mol^{-1}~K^{-1}}$.",
+      "optionsLatex": [
         "$0.167~\\mathrm{mol}$",
         "$0.333~\\mathrm{mol}$",
         "$1.00~\\mathrm{mol}$",
         "$3.00~\\mathrm{mol}$"
       ],
-      "answer": "$0.333~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$0.333~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$0.333~\\mathrm{mol}$"
       ],
-      "explanationMd": "$n=\\dfrac{PV}{RT}=\\dfrac{1.00\\times8.21}{0.0821\\times300}=0.333~\\mathrm{mol}$.",
-      "hintsMd": [
+      "explanationLatex": "$n=\\dfrac{PV}{RT}=\\dfrac{1.00\\times8.21}{0.0821\\times300}=0.333~\\mathrm{mol}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -477,19 +487,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "$\\ce{N2}$ occupies $4.10~\\mathrm{L}$ at $2.00~\\mathrm{atm}$ and $300~\\mathrm{K}$. Find mass of $\\ce{N2}$. Molar mass $=28~\\mathrm{g~mol^{-1}}$.",
-      "optionsMd": [
+      "promptLatex": "$\\ce{N2}$ occupies $4.10~\\mathrm{L}$ at $2.00~\\mathrm{atm}$ and $300~\\mathrm{K}$. Find mass of $\\ce{N2}$. Molar mass $=28~\\mathrm{g~mol^{-1}}$.",
+      "optionsLatex": [
         "$4.67~\\mathrm{g}$",
         "$9.33~\\mathrm{g}$",
         "$18.7~\\mathrm{g}$",
         "$28.0~\\mathrm{g}$"
       ],
-      "answer": "$9.33~\\mathrm{g}$",
-      "acceptedAnswers": [
+      "answerLatex": "$9.33~\\mathrm{g}$",
+      "acceptedAnswersLatex": [
         "$9.33~\\mathrm{g}$"
       ],
-      "explanationMd": "$n=PV/RT=(2.00\\times4.10)/(0.0821\\times300)=0.333~\\mathrm{mol}$. Mass $=0.333\\times28=9.33~\\mathrm{g}$.",
-      "hintsMd": [
+      "explanationLatex": "$n=PV/RT=(2.00\\times4.10)/(0.0821\\times300)=0.333~\\mathrm{mol}$. Mass $=0.333\\times28=9.33~\\mathrm{g}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -510,19 +520,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "What volume is occupied by $3.2~\\mathrm{g}$ of $\\ce{O2}$ at $1.00~\\mathrm{atm}$ and $300~\\mathrm{K}$? Molar mass $=32~\\mathrm{g~mol^{-1}}$.",
-      "optionsMd": [
+      "promptLatex": "What volume is occupied by $3.2~\\mathrm{g}$ of $\\ce{O2}$ at $1.00~\\mathrm{atm}$ and $300~\\mathrm{K}$? Molar mass $=32~\\mathrm{g~mol^{-1}}$.",
+      "optionsLatex": [
         "$1.23~\\mathrm{L}$",
         "$2.46~\\mathrm{L}$",
         "$4.92~\\mathrm{L}$",
         "$24.6~\\mathrm{L}$"
       ],
-      "answer": "$2.46~\\mathrm{L}$",
-      "acceptedAnswers": [
+      "answerLatex": "$2.46~\\mathrm{L}$",
+      "acceptedAnswersLatex": [
         "$2.46~\\mathrm{L}$"
       ],
-      "explanationMd": "$n=3.2/32=0.10~\\mathrm{mol}$. $V=nRT/P=0.10\\times0.0821\\times300=2.46~\\mathrm{L}$.",
-      "hintsMd": [
+      "explanationLatex": "$n=3.2/32=0.10~\\mathrm{mol}$. $V=nRT/P=0.10\\times0.0821\\times300=2.46~\\mathrm{L}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -543,19 +553,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "Find the volume of $11~\\mathrm{g}$ of $\\ce{CO2}$ at $1.20~\\mathrm{atm}$ and $300~\\mathrm{K}$. Molar mass $=44~\\mathrm{g~mol^{-1}}$.",
-      "optionsMd": [
+      "promptLatex": "Find the volume of $11~\\mathrm{g}$ of $\\ce{CO2}$ at $1.20~\\mathrm{atm}$ and $300~\\mathrm{K}$. Molar mass $=44~\\mathrm{g~mol^{-1}}$.",
+      "optionsLatex": [
         "$2.56~\\mathrm{L}$",
         "$5.13~\\mathrm{L}$",
         "$6.15~\\mathrm{L}$",
         "$12.3~\\mathrm{L}$"
       ],
-      "answer": "$5.13~\\mathrm{L}$",
-      "acceptedAnswers": [
+      "answerLatex": "$5.13~\\mathrm{L}$",
+      "acceptedAnswersLatex": [
         "$5.13~\\mathrm{L}$"
       ],
-      "explanationMd": "$n=11/44=0.25~\\mathrm{mol}$. $V=nRT/P=(0.25\\times0.0821\\times300)/1.20=5.13~\\mathrm{L}$.",
-      "hintsMd": [
+      "explanationLatex": "$n=11/44=0.25~\\mathrm{mol}$. $V=nRT/P=(0.25\\times0.0821\\times300)/1.20=5.13~\\mathrm{L}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -576,19 +586,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "A gas has $V=5.00~\\mathrm{L}$, $P=0.50~\\mathrm{atm}$ and $T=250~\\mathrm{K}$. Find $n$.",
-      "optionsMd": [
+      "promptLatex": "A gas has $V=5.00~\\mathrm{L}$, $P=0.50~\\mathrm{atm}$ and $T=250~\\mathrm{K}$. Find $n$.",
+      "optionsLatex": [
         "$0.061~\\mathrm{mol}$",
         "$0.122~\\mathrm{mol}$",
         "$0.244~\\mathrm{mol}$",
         "$1.22~\\mathrm{mol}$"
       ],
-      "answer": "$0.122~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$0.122~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$0.122~\\mathrm{mol}$"
       ],
-      "explanationMd": "$n=PV/RT=(0.50\\times5.00)/(0.0821\\times250)=0.122~\\mathrm{mol}$.",
-      "hintsMd": [
+      "explanationLatex": "$n=PV/RT=(0.50\\times5.00)/(0.0821\\times250)=0.122~\\mathrm{mol}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -609,19 +619,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "Find the volume of $1.00~\\mathrm{mol}$ gas at $273~\\mathrm{K}$ and $2.00~\\mathrm{atm}$.",
-      "optionsMd": [
+      "promptLatex": "Find the volume of $1.00~\\mathrm{mol}$ gas at $273~\\mathrm{K}$ and $2.00~\\mathrm{atm}$.",
+      "optionsLatex": [
         "$5.6~\\mathrm{L}$",
         "$11.2~\\mathrm{L}$",
         "$22.4~\\mathrm{L}$",
         "$44.8~\\mathrm{L}$"
       ],
-      "answer": "$11.2~\\mathrm{L}$",
-      "acceptedAnswers": [
+      "answerLatex": "$11.2~\\mathrm{L}$",
+      "acceptedAnswersLatex": [
         "$11.2~\\mathrm{L}$"
       ],
-      "explanationMd": "$V=nRT/P=(1.00\\times0.0821\\times273)/2.00\\approx11.2~\\mathrm{L}$.",
-      "hintsMd": [
+      "explanationLatex": "$V=nRT/P=(1.00\\times0.0821\\times273)/2.00\\approx11.2~\\mathrm{L}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -642,19 +652,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "At $300~\\mathrm{K}$ and $1.00~\\mathrm{atm}$, a gas occupies $24.6~\\mathrm{L}$. Find the number of moles.",
-      "optionsMd": [
+      "promptLatex": "At $300~\\mathrm{K}$ and $1.00~\\mathrm{atm}$, a gas occupies $24.6~\\mathrm{L}$. Find the number of moles.",
+      "optionsLatex": [
         "$0.50~\\mathrm{mol}$",
         "$1.00~\\mathrm{mol}$",
         "$2.00~\\mathrm{mol}$",
         "$24.6~\\mathrm{mol}$"
       ],
-      "answer": "$1.00~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$1.00~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$1.00~\\mathrm{mol}$"
       ],
-      "explanationMd": "$n=PV/RT=1.00\\times24.6/(0.0821\\times300)\\approx1.00~\\mathrm{mol}$.",
-      "hintsMd": [
+      "explanationLatex": "$n=PV/RT=1.00\\times24.6/(0.0821\\times300)\\approx1.00~\\mathrm{mol}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -675,19 +685,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "Find the mass of $\\ce{O2}$ occupying $12.3~\\mathrm{L}$ at $1.00~\\mathrm{atm}$ and $300~\\mathrm{K}$.",
-      "optionsMd": [
+      "promptLatex": "Find the mass of $\\ce{O2}$ occupying $12.3~\\mathrm{L}$ at $1.00~\\mathrm{atm}$ and $300~\\mathrm{K}$.",
+      "optionsLatex": [
         "$8.0~\\mathrm{g}$",
         "$16.0~\\mathrm{g}$",
         "$24.0~\\mathrm{g}$",
         "$32.0~\\mathrm{g}$"
       ],
-      "answer": "$16.0~\\mathrm{g}$",
-      "acceptedAnswers": [
+      "answerLatex": "$16.0~\\mathrm{g}$",
+      "acceptedAnswersLatex": [
         "$16.0~\\mathrm{g}$"
       ],
-      "explanationMd": "$n=PV/RT=12.3/(0.0821\\times300)=0.50~\\mathrm{mol}$. Mass $=0.50\\times32=16.0~\\mathrm{g}$.",
-      "hintsMd": [
+      "explanationLatex": "$n=PV/RT=12.3/(0.0821\\times300)=0.50~\\mathrm{mol}$. Mass $=0.50\\times32=16.0~\\mathrm{g}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -708,19 +718,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "What volume is occupied by $0.20~\\mathrm{mol}$ of $\\ce{NH3}$ at $0.82~\\mathrm{atm}$ and $300~\\mathrm{K}$?",
-      "optionsMd": [
+      "promptLatex": "What volume is occupied by $0.20~\\mathrm{mol}$ of $\\ce{NH3}$ at $0.82~\\mathrm{atm}$ and $300~\\mathrm{K}$?",
+      "optionsLatex": [
         "$3.0~\\mathrm{L}$",
         "$6.0~\\mathrm{L}$",
         "$12.0~\\mathrm{L}$",
         "$24.0~\\mathrm{L}$"
       ],
-      "answer": "$6.0~\\mathrm{L}$",
-      "acceptedAnswers": [
+      "answerLatex": "$6.0~\\mathrm{L}$",
+      "acceptedAnswersLatex": [
         "$6.0~\\mathrm{L}$"
       ],
-      "explanationMd": "$V=nRT/P=(0.20\\times0.0821\\times300)/0.82\\approx6.0~\\mathrm{L}$.",
-      "hintsMd": [
+      "explanationLatex": "$V=nRT/P=(0.20\\times0.0821\\times300)/0.82\\approx6.0~\\mathrm{L}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -741,19 +751,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "Find the pressure of $0.50~\\mathrm{mol}$ gas in a $10.0~\\mathrm{L}$ vessel at $300~\\mathrm{K}$.",
-      "optionsMd": [
+      "promptLatex": "Find the pressure of $0.50~\\mathrm{mol}$ gas in a $10.0~\\mathrm{L}$ vessel at $300~\\mathrm{K}$.",
+      "optionsLatex": [
         "$0.62~\\mathrm{atm}$",
         "$1.23~\\mathrm{atm}$",
         "$2.46~\\mathrm{atm}$",
         "$12.3~\\mathrm{atm}$"
       ],
-      "answer": "$1.23~\\mathrm{atm}$",
-      "acceptedAnswers": [
+      "answerLatex": "$1.23~\\mathrm{atm}$",
+      "acceptedAnswersLatex": [
         "$1.23~\\mathrm{atm}$"
       ],
-      "explanationMd": "$P=nRT/V=(0.50\\times0.0821\\times300)/10.0=1.23~\\mathrm{atm}$.",
-      "hintsMd": [
+      "explanationLatex": "$P=nRT/V=(0.50\\times0.0821\\times300)/10.0=1.23~\\mathrm{atm}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -774,19 +784,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "A compound has $40.0\\%$ C, $6.7\\%$ H and $53.3\\%$ O by mass. What is its empirical formula?",
-      "optionsMd": [
+      "promptLatex": "A compound has $40.0\\%$ C, $6.7\\%$ H and $53.3\\%$ O by mass. What is its empirical formula?",
+      "optionsLatex": [
         "$\\ce{CH2O}$",
         "$\\ce{C2H4O2}$",
         "$\\ce{C6H12O6}$",
         "$\\ce{CHO}$"
       ],
-      "answer": "$\\ce{CH2O}$",
-      "acceptedAnswers": [
+      "answerLatex": "$\\ce{CH2O}$",
+      "acceptedAnswersLatex": [
         "$\\ce{CH2O}$"
       ],
-      "explanationMd": "For $100~\\mathrm{g}$: C moles $=40/12\\approx3.33$, H $=6.7/1=6.7$, O $=53.3/16\\approx3.33$. Ratio $1:2:1$, so empirical formula is $\\ce{CH2O}$.",
-      "hintsMd": [],
+      "explanationLatex": "For $100~\\mathrm{g}$: C moles $=40/12\\approx3.33$, H $=6.7/1=6.7$, O $=53.3/16\\approx3.33$. Ratio $1:2:1$, so empirical formula is $\\ce{CH2O}$.",
+      "hintsLatex": [],
       "tags": [
         "mole-concept",
         "t3"
@@ -805,19 +815,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "A compound has empirical formula $\\ce{CH2O}$ and molar mass $180~\\mathrm{g~mol^{-1}}$. Find its molecular formula.",
-      "optionsMd": [
+      "promptLatex": "A compound has empirical formula $\\ce{CH2O}$ and molar mass $180~\\mathrm{g~mol^{-1}}$. Find its molecular formula.",
+      "optionsLatex": [
         "$\\ce{CH2O}$",
         "$\\ce{C2H4O2}$",
         "$\\ce{C6H12O6}$",
         "$\\ce{C3H6O3}$"
       ],
-      "answer": "$\\ce{C6H12O6}$",
-      "acceptedAnswers": [
+      "answerLatex": "$\\ce{C6H12O6}$",
+      "acceptedAnswersLatex": [
         "$\\ce{C6H12O6}$"
       ],
-      "explanationMd": "Empirical formula mass of $\\ce{CH2O}=30$. Multiplier $=180/30=6$. Hence molecular formula $=\\ce{C6H12O6}$.",
-      "hintsMd": [],
+      "explanationLatex": "Empirical formula mass of $\\ce{CH2O}=30$. Multiplier $=180/30=6$. Hence molecular formula $=\\ce{C6H12O6}$.",
+      "hintsLatex": [],
       "tags": [
         "mole-concept",
         "t3"
@@ -836,19 +846,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "A compound contains $52.2\\%$ C, $13.0\\%$ H and $34.8\\%$ O. Choose the empirical formula.",
-      "optionsMd": [
+      "promptLatex": "A compound contains $52.2\\%$ C, $13.0\\%$ H and $34.8\\%$ O. Choose the empirical formula.",
+      "optionsLatex": [
         "$\\ce{CH2O}$",
         "$\\ce{C2H6O}$",
         "$\\ce{C2H4O2}$",
         "$\\ce{C3H8O}$"
       ],
-      "answer": "$\\ce{C2H6O}$",
-      "acceptedAnswers": [
+      "answerLatex": "$\\ce{C2H6O}$",
+      "acceptedAnswersLatex": [
         "$\\ce{C2H6O}$"
       ],
-      "explanationMd": "For $100~\\mathrm{g}$: C $=52.2/12=4.35$, H $=13.0$, O $=34.8/16=2.175$. Dividing by $2.175$ gives $2:6:1$.",
-      "hintsMd": [],
+      "explanationLatex": "For $100~\\mathrm{g}$: C $=52.2/12=4.35$, H $=13.0$, O $=34.8/16=2.175$. Dividing by $2.175$ gives $2:6:1$.",
+      "hintsLatex": [],
       "tags": [
         "mole-concept",
         "t3"
@@ -867,19 +877,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "The empirical formula of a compound is $\\ce{NO2}$ and its molar mass is $92~\\mathrm{g~mol^{-1}}$. What is the molecular formula?",
-      "optionsMd": [
+      "promptLatex": "The empirical formula of a compound is $\\ce{NO2}$ and its molar mass is $92~\\mathrm{g~mol^{-1}}$. What is the molecular formula?",
+      "optionsLatex": [
         "$\\ce{NO2}$",
         "$\\ce{N2O4}$",
         "$\\ce{N2O5}$",
         "$\\ce{NO}$"
       ],
-      "answer": "$\\ce{N2O4}$",
-      "acceptedAnswers": [
+      "answerLatex": "$\\ce{N2O4}$",
+      "acceptedAnswersLatex": [
         "$\\ce{N2O4}$"
       ],
-      "explanationMd": "Empirical formula mass of $\\ce{NO2}=46$. Multiplier $=92/46=2$. Molecular formula $=\\ce{N2O4}$.",
-      "hintsMd": [],
+      "explanationLatex": "Empirical formula mass of $\\ce{NO2}=46$. Multiplier $=92/46=2$. Molecular formula $=\\ce{N2O4}$.",
+      "hintsLatex": [],
       "tags": [
         "mole-concept",
         "t3"
@@ -898,19 +908,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "A hydrocarbon contains $75\\%$ carbon and $25\\%$ hydrogen by mass. What is the empirical formula?",
-      "optionsMd": [
+      "promptLatex": "A hydrocarbon contains $75\\%$ carbon and $25\\%$ hydrogen by mass. What is the empirical formula?",
+      "optionsLatex": [
         "$\\ce{CH}$",
         "$\\ce{CH2}$",
         "$\\ce{CH4}$",
         "$\\ce{C2H6}$"
       ],
-      "answer": "$\\ce{CH4}$",
-      "acceptedAnswers": [
+      "answerLatex": "$\\ce{CH4}$",
+      "acceptedAnswersLatex": [
         "$\\ce{CH4}$"
       ],
-      "explanationMd": "For $100~\\mathrm{g}$: C $=75/12=6.25$, H $=25/1=25$. Ratio $=1:4$, so empirical formula is $\\ce{CH4}$.",
-      "hintsMd": [],
+      "explanationLatex": "For $100~\\mathrm{g}$: C $=75/12=6.25$, H $=25/1=25$. Ratio $=1:4$, so empirical formula is $\\ce{CH4}$.",
+      "hintsLatex": [],
       "tags": [
         "mole-concept",
         "t3"
@@ -929,19 +939,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "For $\\ce{2H2 + O2 -> 2H2O}$, if $3~\\mathrm{mol}$ $\\ce{H2}$ reacts with $1~\\mathrm{mol}$ $\\ce{O2}$, which reagent is limiting?",
-      "optionsMd": [
+      "promptLatex": "For $\\ce{2H2 + O2 -> 2H2O}$, if $3~\\mathrm{mol}$ $\\ce{H2}$ reacts with $1~\\mathrm{mol}$ $\\ce{O2}$, which reagent is limiting?",
+      "optionsLatex": [
         "$\\ce{H2}$",
         "$\\ce{O2}$",
         "Both are exactly consumed",
         "Cannot be decided"
       ],
-      "answer": "$\\ce{O2}$",
-      "acceptedAnswers": [
+      "answerLatex": "$\\ce{O2}$",
+      "acceptedAnswersLatex": [
         "$\\ce{O2}$"
       ],
-      "explanationMd": "$1~\\mathrm{mol}$ $\\ce{O2}$ needs $2~\\mathrm{mol}$ $\\ce{H2}$, but $3~\\mathrm{mol}$ $\\ce{H2}$ is available. Oxygen is limiting.",
-      "hintsMd": [
+      "explanationLatex": "$1~\\mathrm{mol}$ $\\ce{O2}$ needs $2~\\mathrm{mol}$ $\\ce{H2}$, but $3~\\mathrm{mol}$ $\\ce{H2}$ is available. Oxygen is limiting.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -962,19 +972,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "For $\\ce{N2 + 3H2 -> 2NH3}$, $2~\\mathrm{mol}$ $\\ce{N2}$ reacts with $3~\\mathrm{mol}$ $\\ce{H2}$. How many moles of $\\ce{NH3}$ are formed?",
-      "optionsMd": [
+      "promptLatex": "For $\\ce{N2 + 3H2 -> 2NH3}$, $2~\\mathrm{mol}$ $\\ce{N2}$ reacts with $3~\\mathrm{mol}$ $\\ce{H2}$. How many moles of $\\ce{NH3}$ are formed?",
+      "optionsLatex": [
         "$1~\\mathrm{mol}$",
         "$2~\\mathrm{mol}$",
         "$3~\\mathrm{mol}$",
         "$4~\\mathrm{mol}$"
       ],
-      "answer": "$2~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$2~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$2~\\mathrm{mol}$"
       ],
-      "explanationMd": "$3~\\mathrm{mol}$ $\\ce{H2}$ produces $2~\\mathrm{mol}$ $\\ce{NH3}$. Hence $\\ce{H2}$ is limiting and product is $2~\\mathrm{mol}$.",
-      "hintsMd": [
+      "explanationLatex": "$3~\\mathrm{mol}$ $\\ce{H2}$ produces $2~\\mathrm{mol}$ $\\ce{NH3}$. Hence $\\ce{H2}$ is limiting and product is $2~\\mathrm{mol}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -995,19 +1005,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "For $\\ce{CaCO3 + 2HCl -> CaCl2 + H2O + CO2}$, $0.50~\\mathrm{mol}$ $\\ce{CaCO3}$ and $0.80~\\mathrm{mol}$ $\\ce{HCl}$ react. How many moles of $\\ce{CO2}$ form?",
-      "optionsMd": [
+      "promptLatex": "For $\\ce{CaCO3 + 2HCl -> CaCl2 + H2O + CO2}$, $0.50~\\mathrm{mol}$ $\\ce{CaCO3}$ and $0.80~\\mathrm{mol}$ $\\ce{HCl}$ react. How many moles of $\\ce{CO2}$ form?",
+      "optionsLatex": [
         "$0.25~\\mathrm{mol}$",
         "$0.40~\\mathrm{mol}$",
         "$0.50~\\mathrm{mol}$",
         "$0.80~\\mathrm{mol}$"
       ],
-      "answer": "$0.40~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$0.40~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$0.40~\\mathrm{mol}$"
       ],
-      "explanationMd": "$0.80~\\mathrm{mol}$ $\\ce{HCl}$ can react with $0.40~\\mathrm{mol}$ $\\ce{CaCO3}$, so $\\ce{HCl}$ is limiting. $\\ce{CO2}$ formed $=0.40~\\mathrm{mol}$.",
-      "hintsMd": [
+      "explanationLatex": "$0.80~\\mathrm{mol}$ $\\ce{HCl}$ can react with $0.40~\\mathrm{mol}$ $\\ce{CaCO3}$, so $\\ce{HCl}$ is limiting. $\\ce{CO2}$ formed $=0.40~\\mathrm{mol}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1028,19 +1038,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "For $\\ce{4Fe + 3O2 -> 2Fe2O3}$, $2.0~\\mathrm{mol}$ Fe and $1.0~\\mathrm{mol}$ $\\ce{O2}$ react. How many moles of $\\ce{Fe2O3}$ form?",
-      "optionsMd": [
+      "promptLatex": "For $\\ce{4Fe + 3O2 -> 2Fe2O3}$, $2.0~\\mathrm{mol}$ Fe and $1.0~\\mathrm{mol}$ $\\ce{O2}$ react. How many moles of $\\ce{Fe2O3}$ form?",
+      "optionsLatex": [
         "$0.50~\\mathrm{mol}$",
         "$0.667~\\mathrm{mol}$",
         "$1.00~\\mathrm{mol}$",
         "$1.50~\\mathrm{mol}$"
       ],
-      "answer": "$0.667~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$0.667~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$0.667~\\mathrm{mol}$"
       ],
-      "explanationMd": "$3~\\mathrm{mol}$ $\\ce{O2}$ give $2~\\mathrm{mol}$ $\\ce{Fe2O3}$. Therefore $1~\\mathrm{mol}$ $\\ce{O2}$ gives $2/3=0.667~\\mathrm{mol}$ product. Oxygen is limiting.",
-      "hintsMd": [
+      "explanationLatex": "$3~\\mathrm{mol}$ $\\ce{O2}$ give $2~\\mathrm{mol}$ $\\ce{Fe2O3}$. Therefore $1~\\mathrm{mol}$ $\\ce{O2}$ gives $2/3=0.667~\\mathrm{mol}$ product. Oxygen is limiting.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1061,19 +1071,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "For $\\ce{CH4 + 2O2 -> CO2 + 2H2O}$, $1.0~\\mathrm{mol}$ $\\ce{CH4}$ and $1.5~\\mathrm{mol}$ $\\ce{O2}$ are mixed. How many moles of $\\ce{CO2}$ form?",
-      "optionsMd": [
+      "promptLatex": "For $\\ce{CH4 + 2O2 -> CO2 + 2H2O}$, $1.0~\\mathrm{mol}$ $\\ce{CH4}$ and $1.5~\\mathrm{mol}$ $\\ce{O2}$ are mixed. How many moles of $\\ce{CO2}$ form?",
+      "optionsLatex": [
         "$0.50~\\mathrm{mol}$",
         "$0.75~\\mathrm{mol}$",
         "$1.00~\\mathrm{mol}$",
         "$1.50~\\mathrm{mol}$"
       ],
-      "answer": "$0.75~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$0.75~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$0.75~\\mathrm{mol}$"
       ],
-      "explanationMd": "$2~\\mathrm{mol}$ $\\ce{O2}$ produce $1~\\mathrm{mol}$ $\\ce{CO2}$. Hence $1.5~\\mathrm{mol}$ $\\ce{O2}$ produces $0.75~\\mathrm{mol}$ $\\ce{CO2}$.",
-      "hintsMd": [
+      "explanationLatex": "$2~\\mathrm{mol}$ $\\ce{O2}$ produce $1~\\mathrm{mol}$ $\\ce{CO2}$. Hence $1.5~\\mathrm{mol}$ $\\ce{O2}$ produces $0.75~\\mathrm{mol}$ $\\ce{CO2}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1094,19 +1104,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "For $\\ce{2Al + 3Cl2 -> 2AlCl3}$, $1.0~\\mathrm{mol}$ Al and $2.0~\\mathrm{mol}$ $\\ce{Cl2}$ react. Which is limiting?",
-      "optionsMd": [
+      "promptLatex": "For $\\ce{2Al + 3Cl2 -> 2AlCl3}$, $1.0~\\mathrm{mol}$ Al and $2.0~\\mathrm{mol}$ $\\ce{Cl2}$ react. Which is limiting?",
+      "optionsLatex": [
         "Al",
         "$\\ce{Cl2}$",
         "Both exactly",
         "$\\ce{AlCl3}$"
       ],
-      "answer": "Al",
-      "acceptedAnswers": [
+      "answerLatex": "Al",
+      "acceptedAnswersLatex": [
         "Al"
       ],
-      "explanationMd": "$1.0~\\mathrm{mol}$ Al needs $1.5~\\mathrm{mol}$ $\\ce{Cl2}$; $2.0~\\mathrm{mol}$ $\\ce{Cl2}$ is available. Al is limiting.",
-      "hintsMd": [
+      "explanationLatex": "$1.0~\\mathrm{mol}$ Al needs $1.5~\\mathrm{mol}$ $\\ce{Cl2}$; $2.0~\\mathrm{mol}$ $\\ce{Cl2}$ is available. Al is limiting.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1127,19 +1137,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "For $\\ce{AgNO3 + NaCl -> AgCl v + NaNO3}$, $0.20~\\mathrm{mol}$ $\\ce{AgNO3}$ reacts with $0.30~\\mathrm{mol}$ $\\ce{NaCl}$. How much $\\ce{AgCl}$ forms?",
-      "optionsMd": [
+      "promptLatex": "For $\\ce{AgNO3 + NaCl -> AgCl v + NaNO3}$, $0.20~\\mathrm{mol}$ $\\ce{AgNO3}$ reacts with $0.30~\\mathrm{mol}$ $\\ce{NaCl}$. How much $\\ce{AgCl}$ forms?",
+      "optionsLatex": [
         "$0.10~\\mathrm{mol}$",
         "$0.20~\\mathrm{mol}$",
         "$0.30~\\mathrm{mol}$",
         "$0.50~\\mathrm{mol}$"
       ],
-      "answer": "$0.20~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$0.20~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$0.20~\\mathrm{mol}$"
       ],
-      "explanationMd": "The mole ratio is $1:1$. $\\ce{AgNO3}$ is limiting, so $0.20~\\mathrm{mol}$ $\\ce{AgCl}$ forms.",
-      "hintsMd": [
+      "explanationLatex": "The mole ratio is $1:1$. $\\ce{AgNO3}$ is limiting, so $0.20~\\mathrm{mol}$ $\\ce{AgCl}$ forms.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1160,19 +1170,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "For $\\ce{2Na + Cl2 -> 2NaCl}$, $0.50~\\mathrm{mol}$ Na reacts with $0.40~\\mathrm{mol}$ $\\ce{Cl2}$. How much $\\ce{Cl2}$ remains?",
-      "optionsMd": [
+      "promptLatex": "For $\\ce{2Na + Cl2 -> 2NaCl}$, $0.50~\\mathrm{mol}$ Na reacts with $0.40~\\mathrm{mol}$ $\\ce{Cl2}$. How much $\\ce{Cl2}$ remains?",
+      "optionsLatex": [
         "$0.05~\\mathrm{mol}$",
         "$0.10~\\mathrm{mol}$",
         "$0.15~\\mathrm{mol}$",
         "$0.20~\\mathrm{mol}$"
       ],
-      "answer": "$0.15~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$0.15~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$0.15~\\mathrm{mol}$"
       ],
-      "explanationMd": "$0.50~\\mathrm{mol}$ Na needs $0.25~\\mathrm{mol}$ $\\ce{Cl2}$. Initial $\\ce{Cl2}=0.40~\\mathrm{mol}$, so remaining $=0.15~\\mathrm{mol}$.",
-      "hintsMd": [
+      "explanationLatex": "$0.50~\\mathrm{mol}$ Na needs $0.25~\\mathrm{mol}$ $\\ce{Cl2}$. Initial $\\ce{Cl2}=0.40~\\mathrm{mol}$, so remaining $=0.15~\\mathrm{mol}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1193,19 +1203,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "For $\\ce{Zn + 2HCl -> ZnCl2 + H2}$, $0.30~\\mathrm{mol}$ Zn reacts with $0.40~\\mathrm{mol}$ HCl. How many moles of $\\ce{H2}$ form?",
-      "optionsMd": [
+      "promptLatex": "For $\\ce{Zn + 2HCl -> ZnCl2 + H2}$, $0.30~\\mathrm{mol}$ Zn reacts with $0.40~\\mathrm{mol}$ HCl. How many moles of $\\ce{H2}$ form?",
+      "optionsLatex": [
         "$0.10~\\mathrm{mol}$",
         "$0.20~\\mathrm{mol}$",
         "$0.30~\\mathrm{mol}$",
         "$0.40~\\mathrm{mol}$"
       ],
-      "answer": "$0.20~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$0.20~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$0.20~\\mathrm{mol}$"
       ],
-      "explanationMd": "$2~\\mathrm{mol}$ HCl produce $1~\\mathrm{mol}$ $\\ce{H2}$. Hence $0.40~\\mathrm{mol}$ HCl produces $0.20~\\mathrm{mol}$ $\\ce{H2}$.",
-      "hintsMd": [
+      "explanationLatex": "$2~\\mathrm{mol}$ HCl produce $1~\\mathrm{mol}$ $\\ce{H2}$. Hence $0.40~\\mathrm{mol}$ HCl produces $0.20~\\mathrm{mol}$ $\\ce{H2}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1226,19 +1236,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "For $\\ce{Mg + 2HCl -> MgCl2 + H2}$, $0.10~\\mathrm{mol}$ Mg reacts with $0.15~\\mathrm{mol}$ HCl. How many moles of $\\ce{H2}$ form?",
-      "optionsMd": [
+      "promptLatex": "For $\\ce{Mg + 2HCl -> MgCl2 + H2}$, $0.10~\\mathrm{mol}$ Mg reacts with $0.15~\\mathrm{mol}$ HCl. How many moles of $\\ce{H2}$ form?",
+      "optionsLatex": [
         "$0.050~\\mathrm{mol}$",
         "$0.075~\\mathrm{mol}$",
         "$0.100~\\mathrm{mol}$",
         "$0.150~\\mathrm{mol}$"
       ],
-      "answer": "$0.075~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$0.075~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$0.075~\\mathrm{mol}$"
       ],
-      "explanationMd": "$0.15~\\mathrm{mol}$ HCl is limiting. Since $2~\\mathrm{mol}$ HCl produce $1~\\mathrm{mol}$ $\\ce{H2}$, product $=0.075~\\mathrm{mol}$.",
-      "hintsMd": [
+      "explanationLatex": "$0.15~\\mathrm{mol}$ HCl is limiting. Since $2~\\mathrm{mol}$ HCl produce $1~\\mathrm{mol}$ $\\ce{H2}$, product $=0.075~\\mathrm{mol}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1259,19 +1269,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "A solution contains $10~\\mathrm{g}$ NaCl and $90~\\mathrm{g}$ water. What is the mass fraction of NaCl?",
-      "optionsMd": [
+      "promptLatex": "A solution contains $10~\\mathrm{g}$ NaCl and $90~\\mathrm{g}$ water. What is the mass fraction of NaCl?",
+      "optionsLatex": [
         "$0.05$",
         "$0.10$",
         "$0.20$",
         "$0.90$"
       ],
-      "answer": "$0.10$",
-      "acceptedAnswers": [
+      "answerLatex": "$0.10$",
+      "acceptedAnswersLatex": [
         "$0.10$"
       ],
-      "explanationMd": "Mass fraction $=\\dfrac{m_{\\text{solute}}}{m_{\\text{solution}}}=\\dfrac{10}{100}=0.10$.",
-      "hintsMd": [
+      "explanationLatex": "Mass fraction $=\\dfrac{m_{\\text{solute}}}{m_{\\text{solution}}}=\\dfrac{10}{100}=0.10$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1292,19 +1302,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "A mixture contains $1~\\mathrm{mol}$ ethanol and $4~\\mathrm{mol}$ water. What is the mole fraction of ethanol?",
-      "optionsMd": [
+      "promptLatex": "A mixture contains $1~\\mathrm{mol}$ ethanol and $4~\\mathrm{mol}$ water. What is the mole fraction of ethanol?",
+      "optionsLatex": [
         "$0.10$",
         "$0.20$",
         "$0.25$",
         "$0.80$"
       ],
-      "answer": "$0.20$",
-      "acceptedAnswers": [
+      "answerLatex": "$0.20$",
+      "acceptedAnswersLatex": [
         "$0.20$"
       ],
-      "explanationMd": "$X_{\\text{ethanol}}=\\dfrac{1}{1+4}=0.20$.",
-      "hintsMd": [
+      "explanationLatex": "$X_{\\text{ethanol}}=\\dfrac{1}{1+4}=0.20$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1325,19 +1335,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "Find the molarity of a solution containing $0.50~\\mathrm{mol}$ solute in $2.0~\\mathrm{L}$ solution.",
-      "optionsMd": [
+      "promptLatex": "Find the molarity of a solution containing $0.50~\\mathrm{mol}$ solute in $2.0~\\mathrm{L}$ solution.",
+      "optionsLatex": [
         "$0.10~\\mathrm{M}$",
         "$0.25~\\mathrm{M}$",
         "$1.0~\\mathrm{M}$",
         "$2.5~\\mathrm{M}$"
       ],
-      "answer": "$0.25~\\mathrm{M}$",
-      "acceptedAnswers": [
+      "answerLatex": "$0.25~\\mathrm{M}$",
+      "acceptedAnswersLatex": [
         "$0.25~\\mathrm{M}$"
       ],
-      "explanationMd": "$M=\\dfrac{n}{V}=\\dfrac{0.50}{2.0}=0.25~\\mathrm{M}$.",
-      "hintsMd": [
+      "explanationLatex": "$M=\\dfrac{n}{V}=\\dfrac{0.50}{2.0}=0.25~\\mathrm{M}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1358,19 +1368,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "How many moles of solute are present in $250~\\mathrm{mL}$ of $0.20~\\mathrm{M}$ solution?",
-      "optionsMd": [
+      "promptLatex": "How many moles of solute are present in $250~\\mathrm{mL}$ of $0.20~\\mathrm{M}$ solution?",
+      "optionsLatex": [
         "$0.025~\\mathrm{mol}$",
         "$0.050~\\mathrm{mol}$",
         "$0.100~\\mathrm{mol}$",
         "$0.200~\\mathrm{mol}$"
       ],
-      "answer": "$0.050~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$0.050~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$0.050~\\mathrm{mol}$"
       ],
-      "explanationMd": "$n=MV=0.20\\times0.250=0.050~\\mathrm{mol}$.",
-      "hintsMd": [
+      "explanationLatex": "$n=MV=0.20\\times0.250=0.050~\\mathrm{mol}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1391,19 +1401,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "Find molality if $0.50~\\mathrm{mol}$ solute is dissolved in $2.0~\\mathrm{kg}$ solvent.",
-      "optionsMd": [
+      "promptLatex": "Find molality if $0.50~\\mathrm{mol}$ solute is dissolved in $2.0~\\mathrm{kg}$ solvent.",
+      "optionsLatex": [
         "$0.25~\\mathrm{m}$",
         "$0.50~\\mathrm{m}$",
         "$1.0~\\mathrm{m}$",
         "$2.0~\\mathrm{m}$"
       ],
-      "answer": "$0.25~\\mathrm{m}$",
-      "acceptedAnswers": [
+      "answerLatex": "$0.25~\\mathrm{m}$",
+      "acceptedAnswersLatex": [
         "$0.25~\\mathrm{m}$"
       ],
-      "explanationMd": "Molality $m=\\dfrac{n_{\\text{solute}}}{\\text{kg solvent}}=\\dfrac{0.50}{2.0}=0.25~\\mathrm{m}$.",
-      "hintsMd": [
+      "explanationLatex": "Molality $m=\\dfrac{n_{\\text{solute}}}{\\text{kg solvent}}=\\dfrac{0.50}{2.0}=0.25~\\mathrm{m}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1424,19 +1434,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "A solution contains $18~\\mathrm{g}$ glucose in $200~\\mathrm{g}$ solution. What is mass percent of glucose?",
-      "optionsMd": [
+      "promptLatex": "A solution contains $18~\\mathrm{g}$ glucose in $200~\\mathrm{g}$ solution. What is mass percent of glucose?",
+      "optionsLatex": [
         "$4.5\\%$",
         "$9.0\\%$",
         "$18\\%$",
         "$36\\%$"
       ],
-      "answer": "$9.0\\%$",
-      "acceptedAnswers": [
+      "answerLatex": "$9.0\\%$",
+      "acceptedAnswersLatex": [
         "$9.0\\%$"
       ],
-      "explanationMd": "Mass percent $=\\dfrac{18}{200}\\times100=9.0\\%$.",
-      "hintsMd": [
+      "explanationLatex": "Mass percent $=\\dfrac{18}{200}\\times100=9.0\\%$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1457,19 +1467,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "A mixture contains $1~\\mathrm{mol}$ NaCl and $9~\\mathrm{mol}$ water. Ignoring dissociation, what is mole fraction of NaCl?",
-      "optionsMd": [
+      "promptLatex": "A mixture contains $1~\\mathrm{mol}$ NaCl and $9~\\mathrm{mol}$ water. Ignoring dissociation, what is mole fraction of NaCl?",
+      "optionsLatex": [
         "$0.05$",
         "$0.10$",
         "$0.20$",
         "$0.90$"
       ],
-      "answer": "$0.10$",
-      "acceptedAnswers": [
+      "answerLatex": "$0.10$",
+      "acceptedAnswersLatex": [
         "$0.10$"
       ],
-      "explanationMd": "$X_{\\ce{NaCl}}=\\dfrac{1}{1+9}=0.10$.",
-      "hintsMd": [
+      "explanationLatex": "$X_{\\ce{NaCl}}=\\dfrac{1}{1+9}=0.10$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1490,19 +1500,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "$4.9~\\mathrm{g}$ of $\\ce{H2SO4}$ is dissolved to make $500~\\mathrm{mL}$ solution. Find molarity. Molar mass $=98~\\mathrm{g~mol^{-1}}$.",
-      "optionsMd": [
+      "promptLatex": "$4.9~\\mathrm{g}$ of $\\ce{H2SO4}$ is dissolved to make $500~\\mathrm{mL}$ solution. Find molarity. Molar mass $=98~\\mathrm{g~mol^{-1}}$.",
+      "optionsLatex": [
         "$0.05~\\mathrm{M}$",
         "$0.10~\\mathrm{M}$",
         "$0.20~\\mathrm{M}$",
         "$1.0~\\mathrm{M}$"
       ],
-      "answer": "$0.10~\\mathrm{M}$",
-      "acceptedAnswers": [
+      "answerLatex": "$0.10~\\mathrm{M}$",
+      "acceptedAnswersLatex": [
         "$0.10~\\mathrm{M}$"
       ],
-      "explanationMd": "Moles $=4.9/98=0.050~\\mathrm{mol}$. Volume $=0.500~\\mathrm{L}$. $M=0.050/0.500=0.10~\\mathrm{M}$.",
-      "hintsMd": [
+      "explanationLatex": "Moles $=4.9/98=0.050~\\mathrm{mol}$. Volume $=0.500~\\mathrm{L}$. $M=0.050/0.500=0.10~\\mathrm{M}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1523,19 +1533,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "$6.0~\\mathrm{g}$ urea, $\\ce{NH2CONH2}$, is dissolved in $500~\\mathrm{g}$ water. Molar mass of urea $=60~\\mathrm{g~mol^{-1}}$. Find molality.",
-      "optionsMd": [
+      "promptLatex": "$6.0~\\mathrm{g}$ urea, $\\ce{NH2CONH2}$, is dissolved in $500~\\mathrm{g}$ water. Molar mass of urea $=60~\\mathrm{g~mol^{-1}}$. Find molality.",
+      "optionsLatex": [
         "$0.10~\\mathrm{m}$",
         "$0.20~\\mathrm{m}$",
         "$0.50~\\mathrm{m}$",
         "$1.0~\\mathrm{m}$"
       ],
-      "answer": "$0.20~\\mathrm{m}$",
-      "acceptedAnswers": [
+      "answerLatex": "$0.20~\\mathrm{m}$",
+      "acceptedAnswersLatex": [
         "$0.20~\\mathrm{m}$"
       ],
-      "explanationMd": "Moles of urea $=6.0/60=0.10~\\mathrm{mol}$. Solvent mass $=0.500~\\mathrm{kg}$. Molality $=0.10/0.500=0.20~\\mathrm{m}$.",
-      "hintsMd": [
+      "explanationLatex": "Moles of urea $=6.0/60=0.10~\\mathrm{mol}$. Solvent mass $=0.500~\\mathrm{kg}$. Molality $=0.10/0.500=0.20~\\mathrm{m}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1556,19 +1566,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "What mass of NaOH is needed to prepare $250~\\mathrm{mL}$ of $0.50~\\mathrm{M}$ solution? Molar mass $=40~\\mathrm{g~mol^{-1}}$.",
-      "optionsMd": [
+      "promptLatex": "What mass of NaOH is needed to prepare $250~\\mathrm{mL}$ of $0.50~\\mathrm{M}$ solution? Molar mass $=40~\\mathrm{g~mol^{-1}}$.",
+      "optionsLatex": [
         "$2.5~\\mathrm{g}$",
         "$5.0~\\mathrm{g}$",
         "$10.0~\\mathrm{g}$",
         "$20.0~\\mathrm{g}$"
       ],
-      "answer": "$5.0~\\mathrm{g}$",
-      "acceptedAnswers": [
+      "answerLatex": "$5.0~\\mathrm{g}$",
+      "acceptedAnswersLatex": [
         "$5.0~\\mathrm{g}$"
       ],
-      "explanationMd": "Moles $=MV=0.50\\times0.250=0.125~\\mathrm{mol}$. Mass $=0.125\\times40=5.0~\\mathrm{g}$.",
-      "hintsMd": [
+      "explanationLatex": "Moles $=MV=0.50\\times0.250=0.125~\\mathrm{mol}$. Mass $=0.125\\times40=5.0~\\mathrm{g}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1589,19 +1599,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "Using $\\ce{CaCO3 -> CaO + CO2}$, how many moles of $\\ce{CO2}$ are obtained from $0.50~\\mathrm{mol}$ $\\ce{CaCO3}$?",
-      "optionsMd": [
+      "promptLatex": "Using $\\ce{CaCO3 -> CaO + CO2}$, how many moles of $\\ce{CO2}$ are obtained from $0.50~\\mathrm{mol}$ $\\ce{CaCO3}$?",
+      "optionsLatex": [
         "$0.25~\\mathrm{mol}$",
         "$0.50~\\mathrm{mol}$",
         "$1.0~\\mathrm{mol}$",
         "$2.0~\\mathrm{mol}$"
       ],
-      "answer": "$0.50~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$0.50~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$0.50~\\mathrm{mol}$"
       ],
-      "explanationMd": "The ratio $\\ce{CaCO3:CO2}=1:1$. Hence $0.50~\\mathrm{mol}$ $\\ce{CO2}$ is formed.",
-      "hintsMd": [
+      "explanationLatex": "The ratio $\\ce{CaCO3:CO2}=1:1$. Hence $0.50~\\mathrm{mol}$ $\\ce{CO2}$ is formed.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1622,19 +1632,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "For $\\ce{N2 + 3H2 -> 2NH3}$, how many moles of $\\ce{NH3}$ contain the same number of N atoms as $1~\\mathrm{mol}$ $\\ce{N2}$?",
-      "optionsMd": [
+      "promptLatex": "For $\\ce{N2 + 3H2 -> 2NH3}$, how many moles of $\\ce{NH3}$ contain the same number of N atoms as $1~\\mathrm{mol}$ $\\ce{N2}$?",
+      "optionsLatex": [
         "$1~\\mathrm{mol}$",
         "$2~\\mathrm{mol}$",
         "$3~\\mathrm{mol}$",
         "$6~\\mathrm{mol}$"
       ],
-      "answer": "$2~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$2~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$2~\\mathrm{mol}$"
       ],
-      "explanationMd": "$1~\\mathrm{mol}$ $\\ce{N2}$ contains $2~\\mathrm{mol}$ N atoms. Each $\\ce{NH3}$ contains one N atom, so $2~\\mathrm{mol}$ $\\ce{NH3}$ is needed.",
-      "hintsMd": [
+      "explanationLatex": "$1~\\mathrm{mol}$ $\\ce{N2}$ contains $2~\\mathrm{mol}$ N atoms. Each $\\ce{NH3}$ contains one N atom, so $2~\\mathrm{mol}$ $\\ce{NH3}$ is needed.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1655,19 +1665,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "How many moles of Fe atoms are present in $0.20~\\mathrm{mol}$ $\\ce{Fe2O3}$?",
-      "optionsMd": [
+      "promptLatex": "How many moles of Fe atoms are present in $0.20~\\mathrm{mol}$ $\\ce{Fe2O3}$?",
+      "optionsLatex": [
         "$0.10~\\mathrm{mol}$",
         "$0.20~\\mathrm{mol}$",
         "$0.40~\\mathrm{mol}$",
         "$0.60~\\mathrm{mol}$"
       ],
-      "answer": "$0.40~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$0.40~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$0.40~\\mathrm{mol}$"
       ],
-      "explanationMd": "Each $\\ce{Fe2O3}$ unit contains 2 Fe atoms. Moles of Fe atoms $=2\\times0.20=0.40~\\mathrm{mol}$.",
-      "hintsMd": [
+      "explanationLatex": "Each $\\ce{Fe2O3}$ unit contains 2 Fe atoms. Moles of Fe atoms $=2\\times0.20=0.40~\\mathrm{mol}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1688,19 +1698,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "For $\\ce{2KClO3 -> 2KCl + 3O2}$, how many moles of $\\ce{O2}$ form from $0.40~\\mathrm{mol}$ $\\ce{KClO3}$?",
-      "optionsMd": [
+      "promptLatex": "For $\\ce{2KClO3 -> 2KCl + 3O2}$, how many moles of $\\ce{O2}$ form from $0.40~\\mathrm{mol}$ $\\ce{KClO3}$?",
+      "optionsLatex": [
         "$0.20~\\mathrm{mol}$",
         "$0.40~\\mathrm{mol}$",
         "$0.60~\\mathrm{mol}$",
         "$1.20~\\mathrm{mol}$"
       ],
-      "answer": "$0.60~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$0.60~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$0.60~\\mathrm{mol}$"
       ],
-      "explanationMd": "$2~\\mathrm{mol}$ $\\ce{KClO3}$ give $3~\\mathrm{mol}$ $\\ce{O2}$. Product $=0.40\\times3/2=0.60~\\mathrm{mol}$.",
-      "hintsMd": [
+      "explanationLatex": "$2~\\mathrm{mol}$ $\\ce{KClO3}$ give $3~\\mathrm{mol}$ $\\ce{O2}$. Product $=0.40\\times3/2=0.60~\\mathrm{mol}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1721,19 +1731,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "If $1~\\mathrm{mol}$ $\\ce{P4}$ is completely converted to $\\ce{H3PO4}$, how many moles of $\\ce{H3PO4}$ can form?",
-      "optionsMd": [
+      "promptLatex": "If $1~\\mathrm{mol}$ $\\ce{P4}$ is completely converted to $\\ce{H3PO4}$, how many moles of $\\ce{H3PO4}$ can form?",
+      "optionsLatex": [
         "$1~\\mathrm{mol}$",
         "$2~\\mathrm{mol}$",
         "$3~\\mathrm{mol}$",
         "$4~\\mathrm{mol}$"
       ],
-      "answer": "$4~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$4~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$4~\\mathrm{mol}$"
       ],
-      "explanationMd": "$1~\\mathrm{mol}$ $\\ce{P4}$ contains $4~\\mathrm{mol}$ P atoms. Each $\\ce{H3PO4}$ has one P atom, so $4~\\mathrm{mol}$ acid forms.",
-      "hintsMd": [
+      "explanationLatex": "$1~\\mathrm{mol}$ $\\ce{P4}$ contains $4~\\mathrm{mol}$ P atoms. Each $\\ce{H3PO4}$ has one P atom, so $4~\\mathrm{mol}$ acid forms.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1754,19 +1764,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "How many moles of $\\ce{Na+}$ ions are present in $0.50~\\mathrm{mol}$ $\\ce{Na2CO3}$?",
-      "optionsMd": [
+      "promptLatex": "How many moles of $\\ce{Na+}$ ions are present in $0.50~\\mathrm{mol}$ $\\ce{Na2CO3}$?",
+      "optionsLatex": [
         "$0.25~\\mathrm{mol}$",
         "$0.50~\\mathrm{mol}$",
         "$1.00~\\mathrm{mol}$",
         "$1.50~\\mathrm{mol}$"
       ],
-      "answer": "$1.00~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$1.00~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$1.00~\\mathrm{mol}$"
       ],
-      "explanationMd": "Each $\\ce{Na2CO3}$ unit contains two sodium ions. Moles of $\\ce{Na+}=2\\times0.50=1.00~\\mathrm{mol}$.",
-      "hintsMd": [
+      "explanationLatex": "Each $\\ce{Na2CO3}$ unit contains two sodium ions. Moles of $\\ce{Na+}=2\\times0.50=1.00~\\mathrm{mol}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1787,19 +1797,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "How many moles of sulfate groups are present in $0.10~\\mathrm{mol}$ $\\ce{Al2(SO4)3}$?",
-      "optionsMd": [
+      "promptLatex": "How many moles of sulfate groups are present in $0.10~\\mathrm{mol}$ $\\ce{Al2(SO4)3}$?",
+      "optionsLatex": [
         "$0.10~\\mathrm{mol}$",
         "$0.20~\\mathrm{mol}$",
         "$0.30~\\mathrm{mol}$",
         "$0.60~\\mathrm{mol}$"
       ],
-      "answer": "$0.30~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$0.30~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$0.30~\\mathrm{mol}$"
       ],
-      "explanationMd": "Each formula unit has three sulfate groups. Moles of sulfate groups $=3\\times0.10=0.30~\\mathrm{mol}$.",
-      "hintsMd": [
+      "explanationLatex": "Each formula unit has three sulfate groups. Moles of sulfate groups $=3\\times0.10=0.30~\\mathrm{mol}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1820,19 +1830,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "In complete combustion, $\\ce{C6H12O6 + 6O2 -> 6CO2 + 6H2O}$. How many moles of $\\ce{CO2}$ form from $0.50~\\mathrm{mol}$ glucose?",
-      "optionsMd": [
+      "promptLatex": "In complete combustion, $\\ce{C6H12O6 + 6O2 -> 6CO2 + 6H2O}$. How many moles of $\\ce{CO2}$ form from $0.50~\\mathrm{mol}$ glucose?",
+      "optionsLatex": [
         "$1.0~\\mathrm{mol}$",
         "$2.0~\\mathrm{mol}$",
         "$3.0~\\mathrm{mol}$",
         "$6.0~\\mathrm{mol}$"
       ],
-      "answer": "$3.0~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$3.0~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$3.0~\\mathrm{mol}$"
       ],
-      "explanationMd": "$1~\\mathrm{mol}$ glucose gives $6~\\mathrm{mol}$ $\\ce{CO2}$. Hence $0.50~\\mathrm{mol}$ gives $3.0~\\mathrm{mol}$.",
-      "hintsMd": [
+      "explanationLatex": "$1~\\mathrm{mol}$ glucose gives $6~\\mathrm{mol}$ $\\ce{CO2}$. Hence $0.50~\\mathrm{mol}$ gives $3.0~\\mathrm{mol}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1853,19 +1863,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "How many moles of nitrogen atoms are present in $0.20~\\mathrm{mol}$ $\\ce{NH4NO3}$?",
-      "optionsMd": [
+      "promptLatex": "How many moles of nitrogen atoms are present in $0.20~\\mathrm{mol}$ $\\ce{NH4NO3}$?",
+      "optionsLatex": [
         "$0.20~\\mathrm{mol}$",
         "$0.40~\\mathrm{mol}$",
         "$0.80~\\mathrm{mol}$",
         "$1.00~\\mathrm{mol}$"
       ],
-      "answer": "$0.40~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$0.40~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$0.40~\\mathrm{mol}$"
       ],
-      "explanationMd": "$\\ce{NH4NO3}$ contains 2 nitrogen atoms per formula unit. Moles of N atoms $=2\\times0.20=0.40~\\mathrm{mol}$.",
-      "hintsMd": [
+      "explanationLatex": "$\\ce{NH4NO3}$ contains 2 nitrogen atoms per formula unit. Moles of N atoms $=2\\times0.20=0.40~\\mathrm{mol}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1886,19 +1896,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "How many moles of sulfur atoms are present in $0.25~\\mathrm{mol}$ $\\ce{Al2(SO4)3}$?",
-      "optionsMd": [
+      "promptLatex": "How many moles of sulfur atoms are present in $0.25~\\mathrm{mol}$ $\\ce{Al2(SO4)3}$?",
+      "optionsLatex": [
         "$0.25~\\mathrm{mol}$",
         "$0.50~\\mathrm{mol}$",
         "$0.75~\\mathrm{mol}$",
         "$1.00~\\mathrm{mol}$"
       ],
-      "answer": "$0.75~\\mathrm{mol}$",
-      "acceptedAnswers": [
+      "answerLatex": "$0.75~\\mathrm{mol}$",
+      "acceptedAnswersLatex": [
         "$0.75~\\mathrm{mol}$"
       ],
-      "explanationMd": "$\\ce{Al2(SO4)3}$ contains 3 sulfur atoms per formula unit. Moles of S atoms $=3\\times0.25=0.75~\\mathrm{mol}$.",
-      "hintsMd": [
+      "explanationLatex": "$\\ce{Al2(SO4)3}$ contains 3 sulfur atoms per formula unit. Moles of S atoms $=3\\times0.25=0.75~\\mathrm{mol}$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -1919,19 +1929,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "For $\\ce{Fe^{2+} -> Fe^{3+} + e-}$, what is the equivalent weight of Fe? Atomic mass of Fe $=55.85$.",
-      "optionsMd": [
+      "promptLatex": "For $\\ce{Fe^{2+} -> Fe^{3+} + e-}$, what is the equivalent weight of Fe? Atomic mass of Fe $=55.85$.",
+      "optionsLatex": [
         "$18.62$",
         "$27.93$",
         "$55.85$",
         "$111.7$"
       ],
-      "answer": "$55.85$",
-      "acceptedAnswers": [
+      "answerLatex": "$55.85$",
+      "acceptedAnswersLatex": [
         "$55.85$"
       ],
-      "explanationMd": "The change is from $+2$ to $+3$, so $n=1$. Equivalent weight $=\\dfrac{55.85}{1}=55.85$.",
-      "hintsMd": [
+      "explanationLatex": "The change is from $+2$ to $+3$, so $n=1$. Equivalent weight $=\\dfrac{55.85}{1}=55.85$.",
+      "hintsLatex": [
         "Povide Molecular Weight"
       ],
       "tags": [
@@ -1952,19 +1962,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "In acidic medium, $\\ce{MnO4^-}$ changes from Mn(+7) to Mn(+2). If atomic mass of Mn is $55$, what is equivalent weight of Mn?",
-      "optionsMd": [
+      "promptLatex": "In acidic medium, $\\ce{MnO4^-}$ changes from Mn(+7) to Mn(+2). If atomic mass of Mn is $55$, what is equivalent weight of Mn?",
+      "optionsLatex": [
         "$5.5$",
         "$11$",
         "$27.5$",
         "$55$"
       ],
-      "answer": "$11$",
-      "acceptedAnswers": [
+      "answerLatex": "$11$",
+      "acceptedAnswersLatex": [
         "$11$"
       ],
-      "explanationMd": "Change in oxidation number $=5$, so equivalent weight $=55/5=11$.",
-      "hintsMd": [
+      "explanationLatex": "Change in oxidation number $=5$, so equivalent weight $=55/5=11$.",
+      "hintsLatex": [
         "Povide Molecular Weight"
       ],
       "tags": [
@@ -1985,19 +1995,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "In $\\ce{Cr2O7^{2-}}$, chromium changes from $+6$ to $+3$. Atomic mass of Cr $=52$. Equivalent weight of Cr is:",
-      "optionsMd": [
+      "promptLatex": "In $\\ce{Cr2O7^{2-}}$, chromium changes from $+6$ to $+3$. Atomic mass of Cr $=52$. Equivalent weight of Cr is:",
+      "optionsLatex": [
         "$17.33$",
         "$26$",
         "$52$",
         "$104$"
       ],
-      "answer": "$17.33$",
-      "acceptedAnswers": [
+      "answerLatex": "$17.33$",
+      "acceptedAnswersLatex": [
         "$17.33$"
       ],
-      "explanationMd": "For each Cr atom, $n=3$. Equivalent weight $=52/3=17.33$.",
-      "hintsMd": [
+      "explanationLatex": "For each Cr atom, $n=3$. Equivalent weight $=52/3=17.33$.",
+      "hintsLatex": [
         "Povide Molecular Weight"
       ],
       "tags": [
@@ -2018,19 +2028,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "$\\ce{Cl2}$ is reduced to $\\ce{Cl-}$. Equivalent weight of $\\ce{Cl2}$ is approximately:",
-      "optionsMd": [
+      "promptLatex": "$\\ce{Cl2}$ is reduced to $\\ce{Cl-}$. Equivalent weight of $\\ce{Cl2}$ is approximately:",
+      "optionsLatex": [
         "$17.75$",
         "$35.45$",
         "$70.9$",
         "$141.8$"
       ],
-      "answer": "$35.45$",
-      "acceptedAnswers": [
+      "answerLatex": "$35.45$",
+      "acceptedAnswersLatex": [
         "$35.45$"
       ],
-      "explanationMd": "$\\ce{Cl2 + 2e- -> 2Cl-}$. Molecular mass $=70.9$, $n=2$. Equivalent weight $=70.9/2=35.45$.",
-      "hintsMd": [
+      "explanationLatex": "$\\ce{Cl2 + 2e- -> 2Cl-}$. Molecular mass $=70.9$, $n=2$. Equivalent weight $=70.9/2=35.45$.",
+      "hintsLatex": [
         "Povide Molecular Weight"
       ],
       "tags": [
@@ -2051,19 +2061,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "Zinc changes as $\\ce{Zn -> Zn^{2+} + 2e-}$. Atomic mass of Zn $=65.4$. Equivalent weight is:",
-      "optionsMd": [
+      "promptLatex": "Zinc changes as $\\ce{Zn -> Zn^{2+} + 2e-}$. Atomic mass of Zn $=65.4$. Equivalent weight is:",
+      "optionsLatex": [
         "$16.35$",
         "$32.7$",
         "$65.4$",
         "$130.8$"
       ],
-      "answer": "$32.7$",
-      "acceptedAnswers": [
+      "answerLatex": "$32.7$",
+      "acceptedAnswersLatex": [
         "$32.7$"
       ],
-      "explanationMd": "$n=2$, so equivalent weight $=65.4/2=32.7$.",
-      "hintsMd": [
+      "explanationLatex": "$n=2$, so equivalent weight $=65.4/2=32.7$.",
+      "hintsLatex": [
         "Povide Molecular Weight"
       ],
       "tags": [
@@ -2084,19 +2094,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "Aluminium changes as $\\ce{Al -> Al^{3+} + 3e-}$. Atomic mass $=27$. Equivalent weight is:",
-      "optionsMd": [
+      "promptLatex": "Aluminium changes as $\\ce{Al -> Al^{3+} + 3e-}$. Atomic mass $=27$. Equivalent weight is:",
+      "optionsLatex": [
         "$9$",
         "$13.5$",
         "$27$",
         "$81$"
       ],
-      "answer": "$9$",
-      "acceptedAnswers": [
+      "answerLatex": "$9$",
+      "acceptedAnswersLatex": [
         "$9$"
       ],
-      "explanationMd": "$n=3$, hence equivalent weight $=27/3=9$.",
-      "hintsMd": [
+      "explanationLatex": "$n=3$, hence equivalent weight $=27/3=9$.",
+      "hintsLatex": [
         "Povide Molecular Weight"
       ],
       "tags": [
@@ -2117,19 +2127,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "$\\ce{O2}$ is reduced to oxide ions according to $\\ce{O2 + 4e- -> 2O^{2-}}$. Equivalent weight of $\\ce{O2}$ is:",
-      "optionsMd": [
+      "promptLatex": "$\\ce{O2}$ is reduced to oxide ions according to $\\ce{O2 + 4e- -> 2O^{2-}}$. Equivalent weight of $\\ce{O2}$ is:",
+      "optionsLatex": [
         "$4$",
         "$8$",
         "$16$",
         "$32$"
       ],
-      "answer": "$8$",
-      "acceptedAnswers": [
+      "answerLatex": "$8$",
+      "acceptedAnswersLatex": [
         "$8$"
       ],
-      "explanationMd": "Molecular mass of $\\ce{O2}=32$ and $n=4$. Equivalent weight $=32/4=8$.",
-      "hintsMd": [
+      "explanationLatex": "Molecular mass of $\\ce{O2}=32$ and $n=4$. Equivalent weight $=32/4=8$.",
+      "hintsLatex": [
         "Povide Molecular Weight"
       ],
       "tags": [
@@ -2150,19 +2160,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "$\\ce{H2}$ is oxidized as $\\ce{H2 -> 2H+ + 2e-}$. Equivalent weight of $\\ce{H2}$ is:",
-      "optionsMd": [
+      "promptLatex": "$\\ce{H2}$ is oxidized as $\\ce{H2 -> 2H+ + 2e-}$. Equivalent weight of $\\ce{H2}$ is:",
+      "optionsLatex": [
         "$0.5$",
         "$1$",
         "$2$",
         "$4$"
       ],
-      "answer": "$1$",
-      "acceptedAnswers": [
+      "answerLatex": "$1$",
+      "acceptedAnswersLatex": [
         "$1$"
       ],
-      "explanationMd": "Molecular mass of $\\ce{H2}=2$ and $n=2$. Equivalent weight $=2/2=1$.",
-      "hintsMd": [
+      "explanationLatex": "Molecular mass of $\\ce{H2}=2$ and $n=2$. Equivalent weight $=2/2=1$.",
+      "hintsLatex": [
         "Povide Molecular Weight"
       ],
       "tags": [
@@ -2183,19 +2193,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "For $\\ce{Cu+ -> Cu^{2+} + e-}$, atomic mass of Cu $=63.5$. Equivalent weight is:",
-      "optionsMd": [
+      "promptLatex": "For $\\ce{Cu+ -> Cu^{2+} + e-}$, atomic mass of Cu $=63.5$. Equivalent weight is:",
+      "optionsLatex": [
         "$31.75$",
         "$63.5$",
         "$127$",
         "$15.875$"
       ],
-      "answer": "$63.5$",
-      "acceptedAnswers": [
+      "answerLatex": "$63.5$",
+      "acceptedAnswersLatex": [
         "$63.5$"
       ],
-      "explanationMd": "Oxidation number changes by 1, so $n=1$. Equivalent weight $=63.5$.",
-      "hintsMd": [
+      "explanationLatex": "Oxidation number changes by 1, so $n=1$. Equivalent weight $=63.5$.",
+      "hintsLatex": [
         "Povide Molecular Weight"
       ],
       "tags": [
@@ -2216,19 +2226,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "Tin changes as $\\ce{Sn^{2+} -> Sn^{4+} + 2e-}$. Atomic mass of Sn $=118.7$. Equivalent weight is:",
-      "optionsMd": [
+      "promptLatex": "Tin changes as $\\ce{Sn^{2+} -> Sn^{4+} + 2e-}$. Atomic mass of Sn $=118.7$. Equivalent weight is:",
+      "optionsLatex": [
         "$29.7$",
         "$59.35$",
         "$118.7$",
         "$237.4$"
       ],
-      "answer": "$59.35$",
-      "acceptedAnswers": [
+      "answerLatex": "$59.35$",
+      "acceptedAnswersLatex": [
         "$59.35$"
       ],
-      "explanationMd": "$n=2$, so equivalent weight $=118.7/2=59.35$.",
-      "hintsMd": [
+      "explanationLatex": "$n=2$, so equivalent weight $=118.7/2=59.35$.",
+      "hintsLatex": [
         "Povide Molecular Weight"
       ],
       "tags": [
@@ -2249,19 +2259,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "Find the equivalent weight of HCl in neutralization. Molar mass $=36.5$.",
-      "optionsMd": [
+      "promptLatex": "Find the equivalent weight of HCl in neutralization. Molar mass $=36.5$.",
+      "optionsLatex": [
         "$18.25$",
         "$36.5$",
         "$73$",
         "$1$"
       ],
-      "answer": "$36.5$",
-      "acceptedAnswers": [
+      "answerLatex": "$36.5$",
+      "acceptedAnswersLatex": [
         "$36.5$"
       ],
-      "explanationMd": "HCl is monobasic, so $n=1$. Equivalent weight $=36.5/1=36.5$.",
-      "hintsMd": [
+      "explanationLatex": "HCl is monobasic, so $n=1$. Equivalent weight $=36.5/1=36.5$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -2282,19 +2292,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "Find the equivalent weight of $\\ce{H2SO4}$ for complete neutralization. Molar mass $=98$.",
-      "optionsMd": [
+      "promptLatex": "Find the equivalent weight of $\\ce{H2SO4}$ for complete neutralization. Molar mass $=98$.",
+      "optionsLatex": [
         "$24.5$",
         "$49$",
         "$98$",
         "$196$"
       ],
-      "answer": "$49$",
-      "acceptedAnswers": [
+      "answerLatex": "$49$",
+      "acceptedAnswersLatex": [
         "$49$"
       ],
-      "explanationMd": "$\\ce{H2SO4}$ is dibasic for complete neutralization, so $n=2$. Equivalent weight $=98/2=49$.",
-      "hintsMd": [
+      "explanationLatex": "$\\ce{H2SO4}$ is dibasic for complete neutralization, so $n=2$. Equivalent weight $=98/2=49$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -2315,19 +2325,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "Find the equivalent weight of $\\ce{H3PO4}$ when all three acidic hydrogens are neutralized. Molar mass $=98$.",
-      "optionsMd": [
+      "promptLatex": "Find the equivalent weight of $\\ce{H3PO4}$ when all three acidic hydrogens are neutralized. Molar mass $=98$.",
+      "optionsLatex": [
         "$32.67$",
         "$49$",
         "$98$",
         "$294$"
       ],
-      "answer": "$32.67$",
-      "acceptedAnswers": [
+      "answerLatex": "$32.67$",
+      "acceptedAnswersLatex": [
         "$32.67$"
       ],
-      "explanationMd": "$\\ce{H3PO4}$ is tribasic for complete neutralization, so equivalent weight $=98/3=32.67$.",
-      "hintsMd": [
+      "explanationLatex": "$\\ce{H3PO4}$ is tribasic for complete neutralization, so equivalent weight $=98/3=32.67$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -2348,19 +2358,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "Find the equivalent weight of NaOH. Molar mass $=40$.",
-      "optionsMd": [
+      "promptLatex": "Find the equivalent weight of NaOH. Molar mass $=40$.",
+      "optionsLatex": [
         "$20$",
         "$40$",
         "$80$",
         "$10$"
       ],
-      "answer": "$40$",
-      "acceptedAnswers": [
+      "answerLatex": "$40$",
+      "acceptedAnswersLatex": [
         "$40$"
       ],
-      "explanationMd": "NaOH gives one $\\ce{OH-}$, so $n=1$. Equivalent weight $=40$.",
-      "hintsMd": [
+      "explanationLatex": "NaOH gives one $\\ce{OH-}$, so $n=1$. Equivalent weight $=40$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -2381,19 +2391,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "Find the equivalent weight of $\\ce{Ca(OH)2}$. Molar mass $=74$.",
-      "optionsMd": [
+      "promptLatex": "Find the equivalent weight of $\\ce{Ca(OH)2}$. Molar mass $=74$.",
+      "optionsLatex": [
         "$18.5$",
         "$37$",
         "$74$",
         "$148$"
       ],
-      "answer": "$37$",
-      "acceptedAnswers": [
+      "answerLatex": "$37$",
+      "acceptedAnswersLatex": [
         "$37$"
       ],
-      "explanationMd": "$\\ce{Ca(OH)2}$ gives two hydroxide ions, so $n=2$. Equivalent weight $=74/2=37$.",
-      "hintsMd": [
+      "explanationLatex": "$\\ce{Ca(OH)2}$ gives two hydroxide ions, so $n=2$. Equivalent weight $=74/2=37$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -2414,19 +2424,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "Find the equivalent weight of $\\ce{H2CO3}$ for complete neutralization. Molar mass $=62$.",
-      "optionsMd": [
+      "promptLatex": "Find the equivalent weight of $\\ce{H2CO3}$ for complete neutralization. Molar mass $=62$.",
+      "optionsLatex": [
         "$31$",
         "$62$",
         "$124$",
         "$15.5$"
       ],
-      "answer": "$31$",
-      "acceptedAnswers": [
+      "answerLatex": "$31$",
+      "acceptedAnswersLatex": [
         "$31$"
       ],
-      "explanationMd": "$\\ce{H2CO3}$ is dibasic, so equivalent weight $=62/2=31$.",
-      "hintsMd": [
+      "explanationLatex": "$\\ce{H2CO3}$ is dibasic, so equivalent weight $=62/2=31$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -2447,19 +2457,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "Find the equivalent weight of $\\ce{Al(OH)3}$. Molar mass $=78$.",
-      "optionsMd": [
+      "promptLatex": "Find the equivalent weight of $\\ce{Al(OH)3}$. Molar mass $=78$.",
+      "optionsLatex": [
         "$13$",
         "$26$",
         "$39$",
         "$78$"
       ],
-      "answer": "$26$",
-      "acceptedAnswers": [
+      "answerLatex": "$26$",
+      "acceptedAnswersLatex": [
         "$26$"
       ],
-      "explanationMd": "$\\ce{Al(OH)3}$ has 3 hydroxide groups, so $n=3$. Equivalent weight $=78/3=26$.",
-      "hintsMd": [
+      "explanationLatex": "$\\ce{Al(OH)3}$ has 3 hydroxide groups, so $n=3$. Equivalent weight $=78/3=26$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -2480,19 +2490,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "$\\ce{H3PO4}$ is neutralized only to $\\ce{NaH2PO4}$. If molar mass is $98$, what is its equivalent weight in this reaction?",
-      "optionsMd": [
+      "promptLatex": "$\\ce{H3PO4}$ is neutralized only to $\\ce{NaH2PO4}$. If molar mass is $98$, what is its equivalent weight in this reaction?",
+      "optionsLatex": [
         "$32.67$",
         "$49$",
         "$98$",
         "$196$"
       ],
-      "answer": "$98$",
-      "acceptedAnswers": [
+      "answerLatex": "$98$",
+      "acceptedAnswersLatex": [
         "$98$"
       ],
-      "explanationMd": "Only one acidic hydrogen is replaced, so $n=1$. Equivalent weight $=98/1=98$.",
-      "hintsMd": [
+      "explanationLatex": "Only one acidic hydrogen is replaced, so $n=1$. Equivalent weight $=98/1=98$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -2513,19 +2523,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "$\\ce{Na2CO3}$ can accept two $\\ce{H+}$ ions in acid-base reaction. Molar mass $=106$. Equivalent weight is:",
-      "optionsMd": [
+      "promptLatex": "$\\ce{Na2CO3}$ can accept two $\\ce{H+}$ ions in acid-base reaction. Molar mass $=106$. Equivalent weight is:",
+      "optionsLatex": [
         "$26.5$",
         "$53$",
         "$106$",
         "$212$"
       ],
-      "answer": "$53$",
-      "acceptedAnswers": [
+      "answerLatex": "$53$",
+      "acceptedAnswersLatex": [
         "$53$"
       ],
-      "explanationMd": "$n=2$, so equivalent weight $=106/2=53$.",
-      "hintsMd": [
+      "explanationLatex": "$n=2$, so equivalent weight $=106/2=53$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -2546,19 +2556,19 @@
       "difficulty": "easy",
       "difficultyLevel": 1,
       "questionType": "mcq",
-      "promptMd": "$\\ce{NH3}$ accepts one proton to form $\\ce{NH4+}$. Molar mass $=17$. Equivalent weight is:",
-      "optionsMd": [
+      "promptLatex": "$\\ce{NH3}$ accepts one proton to form $\\ce{NH4+}$. Molar mass $=17$. Equivalent weight is:",
+      "optionsLatex": [
         "$8.5$",
         "$17$",
         "$34$",
         "$51$"
       ],
-      "answer": "$17$",
-      "acceptedAnswers": [
+      "answerLatex": "$17$",
+      "acceptedAnswersLatex": [
         "$17$"
       ],
-      "explanationMd": "$\\ce{NH3}$ accepts one $\\ce{H+}$, so $n=1$. Equivalent weight $=17$.",
-      "hintsMd": [
+      "explanationLatex": "$\\ce{NH3}$ accepts one $\\ce{H+}$, so $n=1$. Equivalent weight $=17$.",
+      "hintsLatex": [
         "Provide Molecular Weight"
       ],
       "tags": [
@@ -2579,19 +2589,19 @@
       "difficulty": "difficult",
       "difficultyLevel": 3,
       "questionType": "mcq",
-      "promptMd": "Evaluate $12.11+18.0+1.013$ and report the answer with correct significant figures.",
-      "optionsMd": [
+      "promptLatex": "Evaluate $12.11+18.0+1.013$ and report the answer with correct significant figures.",
+      "optionsLatex": [
         "$31.123$",
         "$31.12$",
         "$31.1$",
         "$31$"
       ],
-      "answer": "$31.1$",
-      "acceptedAnswers": [
+      "answerLatex": "$31.1$",
+      "acceptedAnswersLatex": [
         "$31.1$"
       ],
-      "explanationMd": "For addition, round to the least number of decimal places. $18.0$ has one decimal place, so $31.123$ becomes $31.1$.",
-      "hintsMd": [
+      "explanationLatex": "For addition, round to the least number of decimal places. $18.0$ has one decimal place, so $31.123$ becomes $31.1$.",
+      "hintsLatex": [
         "Use significant figure and decimal-place rules."
       ],
       "tags": [
@@ -2613,19 +2623,19 @@
       "difficulty": "difficult",
       "difficultyLevel": 3,
       "questionType": "mcq",
-      "promptMd": "Evaluate $2.5\\times3.42$ with correct significant figures.",
-      "optionsMd": [
+      "promptLatex": "Evaluate $2.5\\times3.42$ with correct significant figures.",
+      "optionsLatex": [
         "$8.55$",
         "$8.6$",
         "$8.50$",
         "$9$"
       ],
-      "answer": "$8.6$",
-      "acceptedAnswers": [
+      "answerLatex": "$8.6$",
+      "acceptedAnswersLatex": [
         "$8.6$"
       ],
-      "explanationMd": "For multiplication, answer has the least number of significant figures. $2.5$ has 2 significant figures, so $8.55$ becomes $8.6$.",
-      "hintsMd": [
+      "explanationLatex": "For multiplication, answer has the least number of significant figures. $2.5$ has 2 significant figures, so $8.55$ becomes $8.6$.",
+      "hintsLatex": [
         "Use significant figure and decimal-place rules."
       ],
       "tags": [
@@ -2647,19 +2657,19 @@
       "difficulty": "difficult",
       "difficultyLevel": 3,
       "questionType": "mcq",
-      "promptMd": "How many significant figures are present in $0.004506$?",
-      "optionsMd": [
+      "promptLatex": "How many significant figures are present in $0.004506$?",
+      "optionsLatex": [
         "$2$",
         "$3$",
         "$4$",
         "$6$"
       ],
-      "answer": "$4$",
-      "acceptedAnswers": [
+      "answerLatex": "$4$",
+      "acceptedAnswersLatex": [
         "$4$"
       ],
-      "explanationMd": "Leading zeros are not significant. The significant digits are $4,5,0,6$, so there are 4 significant figures.",
-      "hintsMd": [
+      "explanationLatex": "Leading zeros are not significant. The significant digits are $4,5,0,6$, so there are 4 significant figures.",
+      "hintsLatex": [
         "Use significant figure and decimal-place rules."
       ],
       "tags": [
@@ -2681,19 +2691,19 @@
       "difficulty": "difficult",
       "difficultyLevel": 3,
       "questionType": "mcq",
-      "promptMd": "How many significant figures are present in $100.0$?",
-      "optionsMd": [
+      "promptLatex": "How many significant figures are present in $100.0$?",
+      "optionsLatex": [
         "$1$",
         "$2$",
         "$3$",
         "$4$"
       ],
-      "answer": "$4$",
-      "acceptedAnswers": [
+      "answerLatex": "$4$",
+      "acceptedAnswersLatex": [
         "$4$"
       ],
-      "explanationMd": "A decimal point makes trailing zeros significant. $100.0$ has 4 significant figures.",
-      "hintsMd": [
+      "explanationLatex": "A decimal point makes trailing zeros significant. $100.0$ has 4 significant figures.",
+      "hintsLatex": [
         "Use significant figure and decimal-place rules."
       ],
       "tags": [
@@ -2715,19 +2725,19 @@
       "difficulty": "difficult",
       "difficultyLevel": 3,
       "questionType": "mcq",
-      "promptMd": "Evaluate $1.20+3.456$ with correct significant figures.",
-      "optionsMd": [
+      "promptLatex": "Evaluate $1.20+3.456$ with correct significant figures.",
+      "optionsLatex": [
         "$4.656$",
         "$4.65$",
         "$4.66$",
         "$4.7$"
       ],
-      "answer": "$4.66$",
-      "acceptedAnswers": [
+      "answerLatex": "$4.66$",
+      "acceptedAnswersLatex": [
         "$4.66$"
       ],
-      "explanationMd": "For addition, round to the least number of decimal places. $1.20$ has two decimal places, so $4.656$ becomes $4.66$.",
-      "hintsMd": [
+      "explanationLatex": "For addition, round to the least number of decimal places. $1.20$ has two decimal places, so $4.656$ becomes $4.66$.",
+      "hintsLatex": [
         "Use significant figure and decimal-place rules."
       ],
       "tags": [
@@ -2749,19 +2759,19 @@
       "difficulty": "difficult",
       "difficultyLevel": 3,
       "questionType": "mcq",
-      "promptMd": "How many significant figures are present in $6.02\\times10^{23}$?",
-      "optionsMd": [
+      "promptLatex": "How many significant figures are present in $6.02\\times10^{23}$?",
+      "optionsLatex": [
         "$2$",
         "$3$",
         "$23$",
         "$24$"
       ],
-      "answer": "$3$",
-      "acceptedAnswers": [
+      "answerLatex": "$3$",
+      "acceptedAnswersLatex": [
         "$3$"
       ],
-      "explanationMd": "Only the coefficient determines significant figures. $6.02$ has 3 significant figures.",
-      "hintsMd": [
+      "explanationLatex": "Only the coefficient determines significant figures. $6.02$ has 3 significant figures.",
+      "hintsLatex": [
         "Use significant figure and decimal-place rules."
       ],
       "tags": [
@@ -2783,19 +2793,19 @@
       "difficulty": "difficult",
       "difficultyLevel": 3,
       "questionType": "mcq",
-      "promptMd": "Evaluate $25.0/5.00$ with correct significant figures.",
-      "optionsMd": [
+      "promptLatex": "Evaluate $25.0/5.00$ with correct significant figures.",
+      "optionsLatex": [
         "$5$",
         "$5.0$",
         "$5.00$",
         "$5.000$"
       ],
-      "answer": "$5.00$",
-      "acceptedAnswers": [
+      "answerLatex": "$5.00$",
+      "acceptedAnswersLatex": [
         "$5.00$"
       ],
-      "explanationMd": "Both $25.0$ and $5.00$ have 3 significant figures. The answer $5$ should be written as $5.00$.",
-      "hintsMd": [
+      "explanationLatex": "Both $25.0$ and $5.00$ have 3 significant figures. The answer $5$ should be written as $5.00$.",
+      "hintsLatex": [
         "Use significant figure and decimal-place rules."
       ],
       "tags": [
@@ -2817,19 +2827,19 @@
       "difficulty": "difficult",
       "difficultyLevel": 3,
       "questionType": "mcq",
-      "promptMd": "How many significant figures are present in $0.01020$?",
-      "optionsMd": [
+      "promptLatex": "How many significant figures are present in $0.01020$?",
+      "optionsLatex": [
         "$2$",
         "$3$",
         "$4$",
         "$5$"
       ],
-      "answer": "$4$",
-      "acceptedAnswers": [
+      "answerLatex": "$4$",
+      "acceptedAnswersLatex": [
         "$4$"
       ],
-      "explanationMd": "Leading zeros are not significant, but the zero between 2 and the final zero after decimal are significant. Digits: $1,0,2,0$.",
-      "hintsMd": [
+      "explanationLatex": "Leading zeros are not significant, but the zero between 2 and the final zero after decimal are significant. Digits: $1,0,2,0$.",
+      "hintsLatex": [
         "Use significant figure and decimal-place rules."
       ],
       "tags": [
@@ -2851,19 +2861,19 @@
       "difficulty": "difficult",
       "difficultyLevel": 3,
       "questionType": "mcq",
-      "promptMd": "How many significant figures are present in $1.200\\times10^3$?",
-      "optionsMd": [
+      "promptLatex": "How many significant figures are present in $1.200\\times10^3$?",
+      "optionsLatex": [
         "$2$",
         "$3$",
         "$4$",
         "$5$"
       ],
-      "answer": "$4$",
-      "acceptedAnswers": [
+      "answerLatex": "$4$",
+      "acceptedAnswersLatex": [
         "$4$"
       ],
-      "explanationMd": "The coefficient $1.200$ has 4 significant figures.",
-      "hintsMd": [
+      "explanationLatex": "The coefficient $1.200$ has 4 significant figures.",
+      "hintsLatex": [
         "Use significant figure and decimal-place rules."
       ],
       "tags": [
@@ -2885,19 +2895,19 @@
       "difficulty": "difficult",
       "difficultyLevel": 3,
       "questionType": "mcq",
-      "promptMd": "Round $5.678$ to 3 significant figures.",
-      "optionsMd": [
+      "promptLatex": "Round $5.678$ to 3 significant figures.",
+      "optionsLatex": [
         "$5.67$",
         "$5.68$",
         "$5.7$",
         "$5.678$"
       ],
-      "answer": "$5.68$",
-      "acceptedAnswers": [
+      "answerLatex": "$5.68$",
+      "acceptedAnswersLatex": [
         "$5.68$"
       ],
-      "explanationMd": "The first three significant digits are $5,6,7$. The next digit is 8, so $5.67$ rounds to $5.68$.",
-      "hintsMd": [
+      "explanationLatex": "The first three significant digits are $5,6,7$. The next digit is 8, so $5.67$ rounds to $5.68$.",
+      "hintsLatex": [
         "Use significant figure and decimal-place rules."
       ],
       "tags": [
