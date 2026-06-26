@@ -6,7 +6,7 @@
 
   <title>Clean Universal Quiz</title>
 
-  <link rel="stylesheet" href="../styles/quiz_style_light.css?v=4" />
+  <link rel="stylesheet" href="../styles/quiz_style_light.css?v=6" />
 
   <script>
     window.MathJax = {
@@ -17,6 +17,9 @@
       },
       loader: {
         load: ['[tex]/mhchem']
+      },
+      startup: {
+        typeset: false
       }
     };
   </script>
@@ -78,6 +81,7 @@
         </div>
 
         <div id="loadStatus" class="status-note">Loading question banks...</div>
+        <div id="mathStatus" class="status-note math-status" style="display:none;"></div>
 
         <div class="topic-list" id="topicList"></div>
 
@@ -200,18 +204,102 @@
       window.scrollTo(0, 0);
     }
 
-    function renderMdMath(markdownText, element, inline = false) {
-      if (window.marked) {
-        element.innerHTML = inline
-          ? marked.parseInline(markdownText || "")
-          : marked.parse(markdownText || "");
-      } else {
-        element.textContent = markdownText || "";
+    function setMathStatus(message, ok = false) {
+      const box = document.getElementById("mathStatus");
+      if (!box) return;
+
+      if (!message) {
+        box.style.display = "none";
+        return;
       }
 
-      if (window.MathJax) {
-        MathJax.typesetPromise([element]).catch(() => {});
+      box.style.display = "block";
+      box.className = ok ? "status-note ok math-status" : "status-note math-status";
+      box.innerHTML = message;
+    }
+
+    function checkMathJax() {
+      setTimeout(() => {
+        if (!window.MathJax || !window.MathJax.typesetPromise) {
+          setMathStatus(
+            "<strong>MathJax has not loaded.</strong><br>" +
+            "LaTeX will appear as raw text such as <code>$...$</code>. " +
+            "Check internet access, browser extensions, or whether the CDN is blocked."
+          );
+        } else {
+          setMathStatus("MathJax loaded successfully. LaTeX and chemistry formulae should render correctly.", true);
+          setTimeout(() => setMathStatus(""), 3500);
+        }
+      }, 2500);
+    }
+
+    function protectMathSegments(text) {
+      const math = [];
+      let protectedText = String(text || "");
+
+      function store(match) {
+        const token = `@@MATH_${math.length}@@`;
+        math.push(match);
+        return token;
       }
+
+      // Protect display math first, then inline math.
+      protectedText = protectedText.replace(/\$\$[\s\S]*?\$\$/g, store);
+      protectedText = protectedText.replace(/\\\[[\s\S]*?\\\]/g, store);
+      protectedText = protectedText.replace(/\\\([\s\S]*?\\\)/g, store);
+
+      // Inline $...$: avoids matching $$ because display math is already protected.
+      protectedText = protectedText.replace(/\$(?!\$)(?:\\.|[^$\\])+\$/g, store);
+
+      return { protectedText, math };
+    }
+
+    function restoreMathSegments(htmlText, math) {
+      let restored = htmlText;
+
+      math.forEach((segment, index) => {
+        restored = restored.replaceAll(`@@MATH_${index}@@`, segment);
+      });
+
+      return restored;
+    }
+
+    function markdownToHtmlWithMath(markdownText, inline = false) {
+      const { protectedText, math } = protectMathSegments(markdownText);
+
+      let htmlText;
+      if (window.marked) {
+        htmlText = inline
+          ? marked.parseInline(protectedText)
+          : marked.parse(protectedText);
+      } else {
+        htmlText = protectedText
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+      }
+
+      return restoreMathSegments(htmlText, math);
+    }
+
+    async function typesetMath(element) {
+      if (!window.MathJax || !window.MathJax.typesetPromise) return;
+
+      try {
+        if (window.MathJax.startup && window.MathJax.startup.promise) {
+          await window.MathJax.startup.promise;
+        }
+
+        MathJax.typesetClear([element]);
+        await MathJax.typesetPromise([element]);
+      } catch (error) {
+        console.warn("MathJax typesetting failed:", error);
+      }
+    }
+
+    function renderMdMath(markdownText, element, inline = false) {
+      element.innerHTML = markdownToHtmlWithMath(markdownText || "", inline);
+      typesetMath(element);
     }
 
     async function loadJson(path) {
@@ -563,6 +651,7 @@
       }
     });
 
+    checkMathJax();
     loadBanks();
   </script>
 </body>
