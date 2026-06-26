@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Units and Dimensions Quiz</title>
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #eef2ff, #f8fafc);
+      color: #1e293b;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: 30px auto;
+      background: white;
+      padding: 28px;
+      border-radius: 18px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    }
+
+    h1 {
+      text-align: center;
+      color: #1d4ed8;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #475569;
+      margin-bottom: 25px;
+    }
+
+    .progress {
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #334155;
+    }
+
+    .category {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #dbeafe;
+      color: #1e40af;
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+    }
+
+    .question {
+      font-size: 1.18rem;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    .hint-box {
+      display: none;
+      background: #fff7ed;
+      border-left: 5px solid #f97316;
+      padding: 12px 15px;
+      margin: 15px 0;
+      border-radius: 8px;
+    }
+
+    .options {
+      margin-top: 18px;
+    }
+
+    .option {
+      display: block;
+      padding: 13px 15px;
+      margin: 10px 0;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+      background: #f8fafc;
+    }
+
+    .option:hover {
+      border-color: #2563eb;
+      background: #eff6ff;
+    }
+
+    .option input {
+      margin-right: 10px;
+    }
+
+    .feedback {
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: 10px;
+      display: none;
+      line-height: 1.6;
+    }
+
+    .correct {
+      background: #dcfce7;
+      border-left: 5px solid #16a34a;
+    }
+
+    .wrong {
+      background: #fee2e2;
+      border-left: 5px solid #dc2626;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+      margin-top: 25px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 11px 18px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .hint-btn {
+      background: #f97316;
+      color: white;
+    }
+
+    .check-btn {
+      background: #2563eb;
+      color: white;
+    }
+
+    .next-btn {
+      background: #16a34a;
+      color: white;
+      display: none;
+    }
+
+    .restart-btn {
+      background: #475569;
+      color: white;
+    }
+
+    .result {
+      text-align: center;
+      font-size: 1.25rem;
+      line-height: 1.7;
+    }
+
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 0.95rem;
+    }
+
+    .summary-table th,
+    .summary-table td {
+      border: 1px solid #cbd5e1;
+      padding: 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .summary-table th {
+      background: #e0f2fe;
+    }
+
+    /* Cheat warning shown to student */
+    .cheat-warning {
+      display: none;
+      position: fixed;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: 650px;
+      width: calc(100% - 40px);
+      padding: 14px 18px;
+      border-radius: 12px;
+      background: #fee2e2;
+      border-left: 6px solid #dc2626;
+      color: #7f1d1d;
+      font-weight: 700;
+      z-index: 9998;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.2);
+    }
+
+    /* Secret teacher button */
+    .secret-cheat-btn {
+      position: fixed;
+      right: 8px;
+      bottom: 8px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: none;
+      background: #000;
+      opacity: 0.04;
+      cursor: pointer;
+      z-index: 9999;
+      padding: 0;
+    }
+
+    .secret-cheat-btn:hover {
+      opacity: 0.25;
+    }
+
+    /* Teacher cheat report panel */
+    .teacher-report {
+      display: none;
+      position: fixed;
+      right: 20px;
+      bottom: 45px;
+      width: 360px;
+      max-width: calc(100% - 40px);
+      max-height: 70vh;
+      overflow-y: auto;
+      background: #ffffff;
+      border: 2px solid #334155;
+      border-radius: 14px;
+      padding: 16px;
+      z-index: 9997;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+    }
+
+    .teacher-report h3 {
+      margin-top: 0;
+      color: #1e3a8a;
+    }
+
+    .teacher-report table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin-top: 10px;
+    }
+
+    .teacher-report th,
+    .teacher-report td {
+      border: 1px solid #cbd5e1;
+      padding: 6px;
+      text-align: left;
+    }
+
+    .teacher-report th {
+      background: #dbeafe;
+    }
+
+    .close-report-btn {
+      background: #dc2626;
+      color: white;
+      padding: 8px 12px;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin: 10px;
+        padding: 18px;
+      }
+
+      .question {
+        font-size: 1.05rem;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+
+      .secret-cheat-btn {
+        width: 22px;
+        height: 22px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="cheatWarning" class="cheat-warning"></div>
+
+  <div id="teacherReport" class="teacher-report"></div>
+
+  <button 
+    id="secretCheatBtn" 
+    class="secret-cheat-btn" 
+    onclick="toggleCheatReport()" 
+    title="Teacher only">
+  </button>
+
+  <div class="container">
+    <h1>Units and Dimensions Quiz</h1>
+    <div class="subtitle">
+      Total Marks: 15 &nbsp; | &nbsp; 1 mark per question &nbsp; | &nbsp; One question at a time
+    </div>
+
+    <div id="quizArea">
+      <div class="progress" id="progress"></div>
+      <div class="category" id="category"></div>
+      <div class="question" id="question"></div>
+
+      <button class="hint-btn" onclick="showHint()">Show Formula Hint</button>
+      <div class="hint-box" id="hint"></div>
+
+      <div class="options" id="options"></div>
+
+      <div class="feedback" id="feedback"></div>
+
+      <div class="buttons">
+        <button class="check-btn" id="checkBtn" onclick="checkAnswer()">Check Answer</button>
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+      </div>
+    </div>
+
+    <div id="resultArea" style="display:none;"></div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        category: "Type 1: Direct dimensional formula",
+        question: "Find the dimensions of pressure.",
+        hint: "\\( P = \\dfrac{F}{A} \\), where \\([F] = MLT^{-2}\\) and \\([A] = L^2\\).",
+        options: [
+          "\\([ML^{-1}T^{-2}]\\)",
+          "\\([MLT^{-2}]\\)",
+          "\\([ML^2T^{-2}]\\)",
+          "\\([M^{-1}L^3T^{-2}]\\)"
+        ],
+        answer: 0,
+        explanation: "\\(P = F/A = [MLT^{-2}]/[L^2] = [ML^{-1}T^{-2}]\\)."
+      },
+      {
+        category: "Type 1: Direct dimensional formula",
+        question: "Find the dimensions of universal gravitational constant \\(G\\).",
+        hint: "\\( F = \\dfrac{Gm_1m_2}{r^2} \\). Therefore, \\(G = \\dfrac{Fr^2}{m_1m_2}\\).",
+        options: [
+          "\\([M^{-1}L^3T^{-2}]\\)",
+          "\\([ML^3T^{-2}]\\)",
+          "\\([M^{-2}L^2T^{-2}]\\)",
+          "\\([ML^{-1}T^{-2}]\\)"
+        ],
+        answer: 0,
+        explanation: "\\(G = Fr^2/m^2 = [MLT^{-2}][L^2]/[M^2] = [M^{-1}L^3T^{-2}]\\)."
+      },
+      {
+        category: "Type 1: Direct dimensional formula",
+        question: "Find the dimensions of surface tension.",
+        hint: "\\( \\text{Surface tension} = \\dfrac{\\text{Force}}{\\text{Length}} \\).",
+        options: [
+          "\\([MT^{-2}]\\)",
+          "\\([MLT^{-2}]\\)",
+          "\\([ML^{-1}T^{-2}]\\)",
+          "\\([M^{-1}LT^{-2}]\\)"
+        ],
+        answer: 0,
+        explanation: "\\(S = F/L = [MLT^{-2}]/[L] = [MT^{-2}]\\)."
+      },
+      {
+        category: "Type 1: Direct dimensional formula",
+        question: "Find the dimensions of power.",
+        hint: "\\( P = \\dfrac{W}{t} \\), where work \\(W = F \\times s\\).",
+        options: [
+          "\\([ML^2T^{-3}]\\)",
+          "\\([MLT^{-2}]\\)",
+          "\\([ML^2T^{-2}]\\)",
+          "\\([M^2L^2T^{-3}]\\)"
+        ],
+        answer: 0,
+        explanation: "\\(W = Fs = [MLT^{-2}][L] = [ML^2T^{-2}]\\). Hence \\(P = W/t = [ML^2T^{-3}]\\)."
+      },
+
+      {
+        category: "Type 2: New fundamental quantities",
+        question: "If force \\(F\\), speed \\(S\\), and volume \\(V\\) are chosen as fundamental quantities, find the dimension of length \\(L\\).",
+        hint: "\\(V = L^3\\).",
+        options: [
+          "\\([L] = [V^{1/3}]\\)",
+          "\\([L] = [V^3]\\)",
+          "\\([L] = [FV^{-1}]\\)",
+          "\\([L] = [SV]\\)"
+        ],
+        answer: 0,
+        explanation: "Since \\(V = L^3\\), we get \\(L = V^{1/3}\\)."
+      },
+      {
+        category: "Type 2: New fundamental quantities",
+        question: "If force \\(F\\), speed \\(S\\), and volume \\(V\\) are chosen as fundamental quantities, find the dimension of time \\(T\\).",
+        hint: "\\(S = \\dfrac{L}{T}\\), and \\(L = V^{1/3}\\).",
+        options: [
+          "\\([T] = [V^{1/3}S^{-1}]\\)",
+          "\\([T] = [SV^{1/3}]\\)",
+          "\\([T] = [F^{-1}SV]\\)",
+          "\\([T] = [V^{-1/3}S]\\)"
+        ],
+        answer: 0,
+        explanation: "\\(S = L/T\\), so \\(T = L/S = V^{1/3}S^{-1}\\)."
+      },
+      {
+        category: "Type 2: New fundamental quantities",
+        question: "If force \\(F\\), speed \\(S\\), and volume \\(V\\) are chosen as fundamental quantities, find the dimension of mass \\(M\\).",
+        hint: "\\(F = MLT^{-2}\\), \\(L = V^{1/3}\\), and \\(T = V^{1/3}S^{-1}\\).",
+        options: [
+          "\\([M] = [FV^{1/3}S^{-2}]\\)",
+          "\\([M] = [FV^{-1/3}S^2]\\)",
+          "\\([M] = [F^{-1}V^{1/3}S^{-2}]\\)",
+          "\\([M] = [FV S^{-1}]\\)"
+        ],
+        answer: 0,
+        explanation: "\\(M = FL^{-1}T^2 = F(V^{-1/3})(V^{2/3}S^{-2}) = FV^{1/3}S^{-2}\\)."
+      },
+      {
+        category: "Type 2: New fundamental quantities",
+        question: "In the same system where \\(F\\), \\(S\\), and \\(V\\) are fundamental, find the dimension of energy.",
+        hint: "\\(E = F \\times L\\), and \\(L = V^{1/3}\\).",
+        options: [
+          "\\([E] = [FV^{1/3}]\\)",
+          "\\([E] = [FSV]\\)",
+          "\\([E] = [FV^{-1/3}]\\)",
+          "\\([E] = [F^{-1}V^{1/3}]\\)"
+        ],
+        answer: 0,
+        explanation: "\\(E = F \\times L = FV^{1/3}\\)."
+      },
+
+      {
+        category: "Type 3: Dimensional analysis of possible formula",
+        question: "The coefficient of viscosity of a gas is \\(\\eta\\). Given density \\(\\rho\\), mean molecular speed \\(c\\), and mean free path \\(\\lambda\\), which formula is dimensionally correct?",
+        hint: "\\([\\eta] = [ML^{-1}T^{-1}]\\), \\([\\rho] = [ML^{-3}]\\), \\([c] = [LT^{-1}]\\), \\([\\lambda] = [L]\\).",
+        options: [
+          "\\(\\eta = \\rho c \\lambda\\)",
+          "\\(\\eta = \\dfrac{\\rho c}{\\lambda}\\)",
+          "\\(\\eta = \\dfrac{\\rho \\lambda}{c}\\)",
+          "\\(\\eta = \\dfrac{c\\lambda}{\\rho}\\)"
+        ],
+        answer: 0,
+        explanation: "\\(\\rho c\\lambda = [ML^{-3}][LT^{-1}][L] = [ML^{-1}T^{-1}]\\)."
+      },
+      {
+        category: "Type 3: Dimensional analysis of possible formula",
+        question: "Given gas pressure \\(p\\), mean free path \\(\\lambda\\), and mean molecular speed \\(c\\), which expression can represent viscosity?",
+        hint: "\\([p] = [ML^{-1}T^{-2}]\\), \\([\\lambda] = [L]\\), \\([c] = [LT^{-1}]\\), and \\([\\eta] = [ML^{-1}T^{-1}]\\).",
+        options: [
+          "\\(\\eta = \\dfrac{p\\lambda}{c}\\)",
+          "\\(\\eta = \\dfrac{pc}{\\lambda}\\)",
+          "\\(\\eta = p\\lambda c\\)",
+          "\\(\\eta = \\dfrac{\\lambda}{pc}\\)"
+        ],
+        answer: 0,
+        explanation: "\\(p\\lambda/c = [ML^{-1}T^{-2}][L]/[LT^{-1}] = [ML^{-1}T^{-1}]\\)."
+      },
+      {
+        category: "Type 3: Dimensional analysis of possible formula",
+        question: "Given number density \\(n\\), molecular mass \\(m\\), molecular speed \\(c\\), and mean free path \\(\\lambda\\), which formula is dimensionally suitable for viscosity?",
+        hint: "\\([n] = [L^{-3}]\\), \\([m] = [M]\\), \\([c] = [LT^{-1}]\\), \\([\\lambda] = [L]\\).",
+        options: [
+          "\\(\\eta = nm c \\lambda\\)",
+          "\\(\\eta = \\dfrac{nc\\lambda}{m}\\)",
+          "\\(\\eta = \\dfrac{m\\lambda}{nc}\\)",
+          "\\(\\eta = \\dfrac{nmc}{\\lambda}\\)"
+        ],
+        answer: 0,
+        explanation: "\\(nmc\\lambda = [L^{-3}][M][LT^{-1}][L] = [ML^{-1}T^{-1}]\\)."
+      },
+      {
+        category: "Type 3: Dimensional analysis of possible formula",
+        question: "Given molecular mass \\(m\\), thermal energy \\(k_BT\\), and molecular diameter \\(d\\), which expression has the dimensions of viscosity?",
+        hint: "\\([m] = [M]\\), \\([k_BT] = [ML^2T^{-2}]\\), \\([d] = [L]\\), and \\([\\eta] = [ML^{-1}T^{-1}]\\).",
+        options: [
+          "\\(\\eta = \\dfrac{\\sqrt{m k_BT}}{d^2}\\)",
+          "\\(\\eta = \\dfrac{m k_BT}{d^2}\\)",
+          "\\(\\eta = \\sqrt{m k_BT}\\, d^2\\)",
+          "\\(\\eta = \\dfrac{d^2}{\\sqrt{m k_BT}}\\)"
+        ],
+        answer: 0,
+        explanation: "\\(\\sqrt{m k_BT} = \\sqrt{[M][ML^2T^{-2}]} = [MLT^{-1}]\\). Dividing by \\(d^2\\) gives \\([ML^{-1}T^{-1}]\\)."
+      },
+
+      {
+        category: "Type 4: Units given, find dimensions",
+        question: "A physical quantity has SI unit \\(N\\,s\\,m^{-2}\\). Find its dimensions.",
+        hint: "\\(N = kg\\,m\\,s^{-2}\\).",
+        options: [
+          "\\([ML^{-1}T^{-1}]\\)",
+          "\\([MLT^{-1}]\\)",
+          "\\([ML^{-2}T^{-2}]\\)",
+          "\\([M^{-1}LT^{-1}]\\)"
+        ],
+        answer: 0,
+        explanation: "\\(Nsm^{-2} = [MLT^{-2}][T][L^{-2}] = [ML^{-1}T^{-1}]\\)."
+      },
+      {
+        category: "Type 4: Units given, find dimensions",
+        question: "A physical quantity has SI unit \\(J\\,s\\). Find its dimensions.",
+        hint: "\\(J = N\\,m = kg\\,m^2s^{-2}\\).",
+        options: [
+          "\\([ML^2T^{-1}]\\)",
+          "\\([ML^2T^{-2}]\\)",
+          "\\([MLT^{-1}]\\)",
+          "\\([M^{-1}L^2T^{-1}]\\)"
+        ],
+        answer: 0,
+        explanation: "\\(Js = [ML^2T^{-2}][T] = [ML^2T^{-1}]\\)."
+      },
+      {
+        category: "Type 4: Units given, find dimensions",
+        question: "A physical quantity has SI unit \\(W\\,m^{-2}\\). Find its dimensions.",
+        hint: "\\(W = J/s = kg\\,m^2s^{-3}\\).",
+        options: [
+          "\\([MT^{-3}]\\)",
+          "\\([ML^2T^{-3}]\\)",
+          "\\([ML^{-2}T^{-3}]\\)",
+          "\\([M^{-1}T^3]\\)"
+        ],
+        answer: 0,
+        explanation: "\\(Wm^{-2} = [ML^2T^{-3}][L^{-2}] = [MT^{-3}]\\)."
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let userAnswers = Array(questions.length).fill(null);
+    let checked = false;
+    let quizActive = true;
+
+    // -------------------------------
+    // Cheat Counter Variables
+    // -------------------------------
+    let cheatCounter = 0;
+    let cheatLog = [];
+    let lastCheatTime = 0;
+
+    const CHEAT_COOLDOWN = 1500;
+    // This avoids double counting when tab change and window blur happen almost together.
+
+    function logCheat(reason) {
+      if (!quizActive) return;
+
+      const now = Date.now();
+
+      if (now - lastCheatTime < CHEAT_COOLDOWN) {
+        return;
+      }
+
+      lastCheatTime = now;
+      cheatCounter++;
+
+      const timeString = new Date().toLocaleTimeString();
+
+      cheatLog.push({
+        count: cheatCounter,
+        reason: reason,
+        time: timeString,
+        question: currentQuestion + 1
+      });
+
+      showCheatWarning(reason);
+    }
+
+    function showCheatWarning(reason) {
+      const warningBox = document.getElementById("cheatWarning");
+
+      warningBox.style.display = "block";
+      warningBox.innerHTML = `
+        Warning: You left the quiz screen.<br>
+        Incident logged: ${reason}
+      `;
+
+      setTimeout(() => {
+        warningBox.style.display = "none";
+      }, 3000);
+    }
+
+    // Detect tab change or browser minimization
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        logCheat("Tab changed or browser minimized");
+      }
+    });
+
+    // Detect change of active window
+    window.addEventListener("blur", () => {
+      logCheat("Quiz window lost focus");
+    });
+
+    function toggleCheatReport() {
+      const reportBox = document.getElementById("teacherReport");
+
+      if (reportBox.style.display === "block") {
+        reportBox.style.display = "none";
+        return;
+      }
+
+      let reportHTML = `
+        <h3>Teacher Cheat Report</h3>
+        <p><strong>Cheat Counter:</strong> ${cheatCounter}</p>
+      `;
+
+      if (cheatCounter === 0) {
+        reportHTML += `<p>No screen-switching incident detected.</p>`;
+      } else {
+        reportHTML += `
+          <table>
+            <tr>
+              <th>No.</th>
+              <th>Reason</th>
+              <th>Question</th>
+              <th>Time</th>
+            </tr>
+        `;
+
+        cheatLog.forEach(entry => {
+          reportHTML += `
+            <tr>
+              <td>${entry.count}</td>
+              <td>${entry.reason}</td>
+              <td>${entry.question}</td>
+              <td>${entry.time}</td>
+            </tr>
+          `;
+        });
+
+        reportHTML += `</table>`;
+      }
+
+      reportHTML += `
+        <button class="close-report-btn" onclick="toggleCheatReport()">Close Report</button>
+      `;
+
+      reportBox.innerHTML = reportHTML;
+      reportBox.style.display = "block";
+    }
+
+    function loadQuestion() {
+      checked = false;
+      const q = questions[currentQuestion];
+
+      document.getElementById("progress").innerHTML =
+        `Question ${currentQuestion + 1} of ${questions.length} &nbsp; | &nbsp; Marks: ${score}/${questions.length}`;
+
+      document.getElementById("category").innerHTML = q.category;
+      document.getElementById("question").innerHTML = q.question;
+      document.getElementById("hint").innerHTML = `<strong>Formula Hint:</strong> ${q.hint}`;
+      document.getElementById("hint").style.display = "none";
+
+      const optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+
+      q.options.forEach((option, index) => {
+        const label = document.createElement("label");
+        label.className = "option";
+        label.innerHTML = `
+          <input type="radio" name="option" value="${index}">
+          ${option}
+        `;
+        optionsDiv.appendChild(label);
+      });
+
+      document.getElementById("feedback").style.display = "none";
+      document.getElementById("feedback").className = "feedback";
+      document.getElementById("checkBtn").style.display = "inline-block";
+      document.getElementById("nextBtn").style.display = "none";
+
+      if (window.MathJax) {
+        MathJax.typesetPromise();
+      }
+    }
+
+    function showHint() {
+      document.getElementById("hint").style.display = "block";
+      if (window.MathJax) {
+        MathJax.typesetPromise();
+      }
+    }
+
+    function checkAnswer() {
+      if (checked) return;
+
+      const selected = document.querySelector('input[name="option"]:checked');
+      const feedback = document.getElementById("feedback");
+
+      if (!selected) {
+        feedback.style.display = "block";
+        feedback.className = "feedback wrong";
+        feedback.innerHTML = "Please select an option before checking.";
+        return;
+      }
+
+      checked = true;
+      const selectedAnswer = Number(selected.value);
+      userAnswers[currentQuestion] = selectedAnswer;
+
+      const q = questions[currentQuestion];
+
+      if (selectedAnswer === q.answer) {
+        score++;
+        feedback.className = "feedback correct";
+        feedback.innerHTML = `<strong>Correct.</strong><br>${q.explanation}`;
+      } else {
+        feedback.className = "feedback wrong";
+        feedback.innerHTML =
+          `<strong>Incorrect.</strong><br>
+          Correct answer: ${q.options[q.answer]}<br>
+          ${q.explanation}`;
+      }
+
+      feedback.style.display = "block";
+      document.getElementById("checkBtn").style.display = "none";
+      document.getElementById("nextBtn").style.display = "inline-block";
+
+      const radios = document.querySelectorAll('input[name="option"]');
+      radios.forEach(radio => radio.disabled = true);
+
+      if (window.MathJax) {
+        MathJax.typesetPromise();
+      }
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+
+      if (currentQuestion < questions.length) {
+        loadQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      quizActive = false;
+
+      document.getElementById("quizArea").style.display = "none";
+      const resultArea = document.getElementById("resultArea");
+      resultArea.style.display = "block";
+
+      let message = "";
+      const percentage = (score / questions.length) * 100;
+
+      if (percentage >= 85) {
+        message = "Excellent work. Your dimensional analysis is strong.";
+      } else if (percentage >= 65) {
+        message = "Good work. Revise the mistakes and practise a few more.";
+      } else if (percentage >= 40) {
+        message = "Fair attempt. Focus on formulas and base dimensions.";
+      } else {
+        message = "Revise the basics carefully: force, work, pressure, power, and viscosity.";
+      }
+
+      let summary = `
+        <div class="result">
+          <h2>Quiz Completed</h2>
+          <p><strong>Your Score: ${score} / ${questions.length}</strong></p>
+          <p>${message}</p>
+          <button class="restart-btn" onclick="restartQuiz()">Restart Quiz</button>
+        </div>
+
+        <table class="summary-table">
+          <tr>
+            <th>Q.No.</th>
+            <th>Topic</th>
+            <th>Correct Answer</th>
+            <th>Your Status</th>
+          </tr>
+      `;
+
+      questions.forEach((q, i) => {
+        const status = userAnswers[i] === q.answer ? "Correct" : "Incorrect";
+        summary += `
+          <tr>
+            <td>${i + 1}</td>
+            <td>${q.category}</td>
+            <td>${q.options[q.answer]}</td>
+            <td>${status}</td>
+          </tr>
+        `;
+      });
+
+      summary += `</table>`;
+      resultArea.innerHTML = summary;
+
+      if (window.MathJax) {
+        MathJax.typesetPromise();
+      }
+    }
+
+    function restartQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      userAnswers = Array(questions.length).fill(null);
+      checked = false;
+      quizActive = true;
+
+      cheatCounter = 0;
+      cheatLog = [];
+      lastCheatTime = 0;
+
+      document.getElementById("teacherReport").style.display = "none";
+      document.getElementById("cheatWarning").style.display = "none";
+
+      document.getElementById("quizArea").style.display = "block";
+      document.getElementById("resultArea").style.display = "none";
+
+      loadQuestion();
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>

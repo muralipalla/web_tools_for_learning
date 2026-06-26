@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "1.0",
+  "title": "Interactive Learning Lab Question Bank Index",
+  "description": "Central index of available JSON question banks.",
+  "banks": [
+    {
+      "id": "chapter1",
+      "title": "Chapter 1: Mole Concept and Significant Figures",
+      "subject": "Chemistry",
+      "file": "../assets/data/question_banks/chapter1.json",
+      "description": "Mole concept, empirical formula, limiting reagent, POAC, equivalents, concentration terms, and significant figures."
+    }
+  ]
+}
