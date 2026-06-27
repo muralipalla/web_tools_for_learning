@@ -28,7 +28,7 @@
       "topicId": "T1",
       "requestedQuestionCount": 10,
       "generatedQuestionCount": 10,
-      "hintPolicy": "Provide Atomic Weights",
+      "hintPolicy": "Provide Molecular Weight",
       "difficultyLevel": 1
     },
     {
@@ -38,7 +38,7 @@
       "topicId": "T2",
       "requestedQuestionCount": 10,
       "generatedQuestionCount": 10,
-      "hintPolicy": "Provide Atomic Weights",
+      "hintPolicy": "Provide Molecular Weight",
       "difficultyLevel": 1
     },
     {
@@ -58,7 +58,7 @@
       "topicId": "T4",
       "requestedQuestionCount": 10,
       "generatedQuestionCount": 10,
-      "hintPolicy": "Provide Atomic Weights",
+      "hintPolicy": "Provide Molecular Weight",
       "difficultyLevel": 1
     },
     {
@@ -68,7 +68,7 @@
       "topicId": "T5",
       "requestedQuestionCount": 10,
       "generatedQuestionCount": 10,
-      "hintPolicy": "Provide Atomic Weights",
+      "hintPolicy": "Provide Molecular Weight",
       "difficultyLevel": 1
     },
     {
@@ -78,7 +78,7 @@
       "topicId": "T6",
       "requestedQuestionCount": 10,
       "generatedQuestionCount": 10,
-      "hintPolicy": "Provide Atomic Weights",
+      "hintPolicy": "Provide Molecular Weight",
       "difficultyLevel": 1
     },
     {
@@ -88,7 +88,7 @@
       "topicId": "T7",
       "requestedQuestionCount": 10,
       "generatedQuestionCount": 10,
-      "hintPolicy": "Provide Atomic Weights",
+      "hintPolicy": "Povide Molecular Weight",
       "difficultyLevel": 1
     },
     {
@@ -98,7 +98,7 @@
       "topicId": "T8",
       "requestedQuestionCount": 10,
       "generatedQuestionCount": 10,
-      "hintPolicy": "Provide Atomic Weights",
+      "hintPolicy": "Provide Molecular Weight",
       "difficultyLevel": 1
     },
     {
@@ -137,7 +137,7 @@
       ],
       "explanationLatex": "$n=\\dfrac{m}{M}=\\dfrac{36}{18}=2.0~\\mathrm{mol}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{O}=16$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -170,7 +170,7 @@
       ],
       "explanationLatex": "$m=nM=0.50\\times44=22~\\mathrm{g}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{C}=12,\\ \\mathrm{O}=16$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -203,7 +203,7 @@
       ],
       "explanationLatex": "Number of atoms $=0.25N_A=0.25\\times6.02\\times10^{23}=1.505\\times10^{23}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{C}=12$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -236,7 +236,7 @@
       ],
       "explanationLatex": "$n=\\dfrac{9.8}{98}=0.10~\\mathrm{mol}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{O}=16,\\ \\mathrm{S}=32$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -269,7 +269,7 @@
       ],
       "explanationLatex": "$m=nM=0.20\\times100=20.0~\\mathrm{g}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{C}=12,\\ \\mathrm{O}=16,\\ \\mathrm{Ca}=40$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -302,7 +302,7 @@
       ],
       "explanationLatex": "$n=5.6/28=0.20~\\mathrm{mol}$. Molecules $=0.20N_A=1.204\\times10^{23}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{N}=14$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -335,7 +335,7 @@
       ],
       "explanationLatex": "Each molecule of $\\ce{CO2}$ contains 2 oxygen atoms. Moles of O atoms $=2\\times0.50=1.00~\\mathrm{mol}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{C}=12,\\ \\mathrm{O}=16$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -368,7 +368,7 @@
       ],
       "explanationLatex": "$3.01\\times10^{23}$ molecules $=0.50~\\mathrm{mol}$. Hence mass $=0.50\\times17=8.5~\\mathrm{g}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{N}=14$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -401,7 +401,7 @@
       ],
       "explanationLatex": "$\\ce{NaCl -> Na+ + Cl-}$. One formula unit gives two ions. Hence $1.0~\\mathrm{mol}$ gives $2.0~\\mathrm{mol}$ ions.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{Na}=23,\\ \\mathrm{Cl}=35.5$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -434,7 +434,7 @@
       ],
       "explanationLatex": "$m=nM=0.25\\times342=85.5~\\mathrm{g}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{O}=16,\\ \\mathrm{Al}=27,\\ \\mathrm{S}=32$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -467,7 +467,7 @@
       ],
       "explanationLatex": "$n=\\dfrac{PV}{RT}=\\dfrac{1.00\\times8.21}{0.0821\\times300}=0.333~\\mathrm{mol}$.",
       "hintsLatex": [
-        "No atomic weights are needed for this question."
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -500,7 +500,7 @@
       ],
       "explanationLatex": "$n=PV/RT=(2.00\\times4.10)/(0.0821\\times300)=0.333~\\mathrm{mol}$. Mass $=0.333\\times28=9.33~\\mathrm{g}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{N}=14$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -533,7 +533,7 @@
       ],
       "explanationLatex": "$n=3.2/32=0.10~\\mathrm{mol}$. $V=nRT/P=0.10\\times0.0821\\times300=2.46~\\mathrm{L}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{O}=16$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -566,7 +566,7 @@
       ],
       "explanationLatex": "$n=11/44=0.25~\\mathrm{mol}$. $V=nRT/P=(0.25\\times0.0821\\times300)/1.20=5.13~\\mathrm{L}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{C}=12,\\ \\mathrm{O}=16$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -599,7 +599,7 @@
       ],
       "explanationLatex": "$n=PV/RT=(0.50\\times5.00)/(0.0821\\times250)=0.122~\\mathrm{mol}$.",
       "hintsLatex": [
-        "No atomic weights are needed for this question."
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -632,7 +632,7 @@
       ],
       "explanationLatex": "$V=nRT/P=(1.00\\times0.0821\\times273)/2.00\\approx11.2~\\mathrm{L}$.",
       "hintsLatex": [
-        "No atomic weights are needed for this question."
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -665,7 +665,7 @@
       ],
       "explanationLatex": "$n=PV/RT=1.00\\times24.6/(0.0821\\times300)\\approx1.00~\\mathrm{mol}$.",
       "hintsLatex": [
-        "No atomic weights are needed for this question."
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -698,7 +698,7 @@
       ],
       "explanationLatex": "$n=PV/RT=12.3/(0.0821\\times300)=0.50~\\mathrm{mol}$. Mass $=0.50\\times32=16.0~\\mathrm{g}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{O}=16$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -731,7 +731,7 @@
       ],
       "explanationLatex": "$V=nRT/P=(0.20\\times0.0821\\times300)/0.82\\approx6.0~\\mathrm{L}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{N}=14$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -764,7 +764,7 @@
       ],
       "explanationLatex": "$P=nRT/V=(0.50\\times0.0821\\times300)/10.0=1.23~\\mathrm{atm}$.",
       "hintsLatex": [
-        "No atomic weights are needed for this question."
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -952,7 +952,7 @@
       ],
       "explanationLatex": "$1~\\mathrm{mol}$ $\\ce{O2}$ needs $2~\\mathrm{mol}$ $\\ce{H2}$, but $3~\\mathrm{mol}$ $\\ce{H2}$ is available. Oxygen is limiting.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{O}=16$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -985,7 +985,7 @@
       ],
       "explanationLatex": "$3~\\mathrm{mol}$ $\\ce{H2}$ produces $2~\\mathrm{mol}$ $\\ce{NH3}$. Hence $\\ce{H2}$ is limiting and product is $2~\\mathrm{mol}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{N}=14$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1018,7 +1018,7 @@
       ],
       "explanationLatex": "$0.80~\\mathrm{mol}$ $\\ce{HCl}$ can react with $0.40~\\mathrm{mol}$ $\\ce{CaCO3}$, so $\\ce{HCl}$ is limiting. $\\ce{CO2}$ formed $=0.40~\\mathrm{mol}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{C}=12,\\ \\mathrm{O}=16,\\ \\mathrm{Cl}=35.5,\\ \\mathrm{Ca}=40$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1051,7 +1051,7 @@
       ],
       "explanationLatex": "$3~\\mathrm{mol}$ $\\ce{O2}$ give $2~\\mathrm{mol}$ $\\ce{Fe2O3}$. Therefore $1~\\mathrm{mol}$ $\\ce{O2}$ gives $2/3=0.667~\\mathrm{mol}$ product. Oxygen is limiting.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{O}=16,\\ \\mathrm{Fe}=55.85$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1084,7 +1084,7 @@
       ],
       "explanationLatex": "$2~\\mathrm{mol}$ $\\ce{O2}$ produce $1~\\mathrm{mol}$ $\\ce{CO2}$. Hence $1.5~\\mathrm{mol}$ $\\ce{O2}$ produces $0.75~\\mathrm{mol}$ $\\ce{CO2}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{C}=12,\\ \\mathrm{O}=16$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1117,7 +1117,7 @@
       ],
       "explanationLatex": "$1.0~\\mathrm{mol}$ Al needs $1.5~\\mathrm{mol}$ $\\ce{Cl2}$; $2.0~\\mathrm{mol}$ $\\ce{Cl2}$ is available. Al is limiting.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{Al}=27,\\ \\mathrm{Cl}=35.5$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1150,7 +1150,7 @@
       ],
       "explanationLatex": "The mole ratio is $1:1$. $\\ce{AgNO3}$ is limiting, so $0.20~\\mathrm{mol}$ $\\ce{AgCl}$ forms.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{N}=14,\\ \\mathrm{O}=16,\\ \\mathrm{Na}=23,\\ \\mathrm{Cl}=35.5,\\ \\mathrm{Ag}=108$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1183,7 +1183,7 @@
       ],
       "explanationLatex": "$0.50~\\mathrm{mol}$ Na needs $0.25~\\mathrm{mol}$ $\\ce{Cl2}$. Initial $\\ce{Cl2}=0.40~\\mathrm{mol}$, so remaining $=0.15~\\mathrm{mol}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{Na}=23,\\ \\mathrm{Cl}=35.5$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1216,7 +1216,7 @@
       ],
       "explanationLatex": "$2~\\mathrm{mol}$ HCl produce $1~\\mathrm{mol}$ $\\ce{H2}$. Hence $0.40~\\mathrm{mol}$ HCl produces $0.20~\\mathrm{mol}$ $\\ce{H2}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{Cl}=35.5,\\ \\mathrm{Zn}=65.4$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1249,7 +1249,7 @@
       ],
       "explanationLatex": "$0.15~\\mathrm{mol}$ HCl is limiting. Since $2~\\mathrm{mol}$ HCl produce $1~\\mathrm{mol}$ $\\ce{H2}$, product $=0.075~\\mathrm{mol}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{Mg}=24.3,\\ \\mathrm{Cl}=35.5$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1282,7 +1282,7 @@
       ],
       "explanationLatex": "Mass fraction $=\\dfrac{m_{\\text{solute}}}{m_{\\text{solution}}}=\\dfrac{10}{100}=0.10$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{O}=16,\\ \\mathrm{Na}=23,\\ \\mathrm{Cl}=35.5$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1315,7 +1315,7 @@
       ],
       "explanationLatex": "$X_{\\text{ethanol}}=\\dfrac{1}{1+4}=0.20$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{C}=12,\\ \\mathrm{O}=16$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1348,7 +1348,7 @@
       ],
       "explanationLatex": "$M=\\dfrac{n}{V}=\\dfrac{0.50}{2.0}=0.25~\\mathrm{M}$.",
       "hintsLatex": [
-        "No atomic weights are needed for this question."
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1381,7 +1381,7 @@
       ],
       "explanationLatex": "$n=MV=0.20\\times0.250=0.050~\\mathrm{mol}$.",
       "hintsLatex": [
-        "No atomic weights are needed for this question."
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1414,7 +1414,7 @@
       ],
       "explanationLatex": "Molality $m=\\dfrac{n_{\\text{solute}}}{\\text{kg solvent}}=\\dfrac{0.50}{2.0}=0.25~\\mathrm{m}$.",
       "hintsLatex": [
-        "No atomic weights are needed for this question."
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1447,7 +1447,7 @@
       ],
       "explanationLatex": "Mass percent $=\\dfrac{18}{200}\\times100=9.0\\%$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{C}=12,\\ \\mathrm{O}=16$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1480,7 +1480,7 @@
       ],
       "explanationLatex": "$X_{\\ce{NaCl}}=\\dfrac{1}{1+9}=0.10$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{O}=16,\\ \\mathrm{Na}=23,\\ \\mathrm{Cl}=35.5$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1513,7 +1513,7 @@
       ],
       "explanationLatex": "Moles $=4.9/98=0.050~\\mathrm{mol}$. Volume $=0.500~\\mathrm{L}$. $M=0.050/0.500=0.10~\\mathrm{M}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{O}=16,\\ \\mathrm{S}=32$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1546,7 +1546,7 @@
       ],
       "explanationLatex": "Moles of urea $=6.0/60=0.10~\\mathrm{mol}$. Solvent mass $=0.500~\\mathrm{kg}$. Molality $=0.10/0.500=0.20~\\mathrm{m}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{C}=12,\\ \\mathrm{N}=14,\\ \\mathrm{O}=16$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1579,7 +1579,7 @@
       ],
       "explanationLatex": "Moles $=MV=0.50\\times0.250=0.125~\\mathrm{mol}$. Mass $=0.125\\times40=5.0~\\mathrm{g}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{O}=16,\\ \\mathrm{Na}=23$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1612,7 +1612,7 @@
       ],
       "explanationLatex": "The ratio $\\ce{CaCO3:CO2}=1:1$. Hence $0.50~\\mathrm{mol}$ $\\ce{CO2}$ is formed.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{C}=12,\\ \\mathrm{O}=16,\\ \\mathrm{Ca}=40$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1645,7 +1645,7 @@
       ],
       "explanationLatex": "$1~\\mathrm{mol}$ $\\ce{N2}$ contains $2~\\mathrm{mol}$ N atoms. Each $\\ce{NH3}$ contains one N atom, so $2~\\mathrm{mol}$ $\\ce{NH3}$ is needed.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{N}=14$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1678,7 +1678,7 @@
       ],
       "explanationLatex": "Each $\\ce{Fe2O3}$ unit contains 2 Fe atoms. Moles of Fe atoms $=2\\times0.20=0.40~\\mathrm{mol}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{O}=16,\\ \\mathrm{Fe}=55.85$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1711,7 +1711,7 @@
       ],
       "explanationLatex": "$2~\\mathrm{mol}$ $\\ce{KClO3}$ give $3~\\mathrm{mol}$ $\\ce{O2}$. Product $=0.40\\times3/2=0.60~\\mathrm{mol}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{O}=16,\\ \\mathrm{Cl}=35.5,\\ \\mathrm{K}=39$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1744,7 +1744,7 @@
       ],
       "explanationLatex": "$1~\\mathrm{mol}$ $\\ce{P4}$ contains $4~\\mathrm{mol}$ P atoms. Each $\\ce{H3PO4}$ has one P atom, so $4~\\mathrm{mol}$ acid forms.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{O}=16,\\ \\mathrm{P}=31$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1777,7 +1777,7 @@
       ],
       "explanationLatex": "Each $\\ce{Na2CO3}$ unit contains two sodium ions. Moles of $\\ce{Na+}=2\\times0.50=1.00~\\mathrm{mol}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{C}=12,\\ \\mathrm{O}=16,\\ \\mathrm{Na}=23$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1810,7 +1810,7 @@
       ],
       "explanationLatex": "Each formula unit has three sulfate groups. Moles of sulfate groups $=3\\times0.10=0.30~\\mathrm{mol}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{O}=16,\\ \\mathrm{Al}=27,\\ \\mathrm{S}=32$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1843,7 +1843,7 @@
       ],
       "explanationLatex": "$1~\\mathrm{mol}$ glucose gives $6~\\mathrm{mol}$ $\\ce{CO2}$. Hence $0.50~\\mathrm{mol}$ gives $3.0~\\mathrm{mol}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{C}=12,\\ \\mathrm{O}=16$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1876,7 +1876,7 @@
       ],
       "explanationLatex": "$\\ce{NH4NO3}$ contains 2 nitrogen atoms per formula unit. Moles of N atoms $=2\\times0.20=0.40~\\mathrm{mol}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{N}=14,\\ \\mathrm{O}=16$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1909,7 +1909,7 @@
       ],
       "explanationLatex": "$\\ce{Al2(SO4)3}$ contains 3 sulfur atoms per formula unit. Moles of S atoms $=3\\times0.25=0.75~\\mathrm{mol}$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{O}=16,\\ \\mathrm{Al}=27,\\ \\mathrm{S}=32$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1942,7 +1942,7 @@
       ],
       "explanationLatex": "The change is from $+2$ to $+3$, so $n=1$. Equivalent weight $=\\dfrac{55.85}{1}=55.85$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{Fe}=55.85$"
+        "Povide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -1975,7 +1975,7 @@
       ],
       "explanationLatex": "Change in oxidation number $=5$, so equivalent weight $=55/5=11$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{O}=16,\\ \\mathrm{Mn}=55$"
+        "Povide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -2008,7 +2008,7 @@
       ],
       "explanationLatex": "For each Cr atom, $n=3$. Equivalent weight $=52/3=17.33$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{O}=16,\\ \\mathrm{Cr}=52$"
+        "Povide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -2041,7 +2041,7 @@
       ],
       "explanationLatex": "$\\ce{Cl2 + 2e- -> 2Cl-}$. Molecular mass $=70.9$, $n=2$. Equivalent weight $=70.9/2=35.45$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{Cl}=35.5$"
+        "Povide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -2074,7 +2074,7 @@
       ],
       "explanationLatex": "$n=2$, so equivalent weight $=65.4/2=32.7$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{Zn}=65.4$"
+        "Povide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -2107,7 +2107,7 @@
       ],
       "explanationLatex": "$n=3$, hence equivalent weight $=27/3=9$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{Al}=27$"
+        "Povide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -2140,7 +2140,7 @@
       ],
       "explanationLatex": "Molecular mass of $\\ce{O2}=32$ and $n=4$. Equivalent weight $=32/4=8$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{O}=16$"
+        "Povide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -2173,7 +2173,7 @@
       ],
       "explanationLatex": "Molecular mass of $\\ce{H2}=2$ and $n=2$. Equivalent weight $=2/2=1$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1$"
+        "Povide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -2206,7 +2206,7 @@
       ],
       "explanationLatex": "Oxidation number changes by 1, so $n=1$. Equivalent weight $=63.5$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{Cu}=63.5$"
+        "Povide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -2239,7 +2239,7 @@
       ],
       "explanationLatex": "$n=2$, so equivalent weight $=118.7/2=59.35$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{Sn}=118.7$"
+        "Povide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -2272,7 +2272,7 @@
       ],
       "explanationLatex": "HCl is monobasic, so $n=1$. Equivalent weight $=36.5/1=36.5$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{Cl}=35.5$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -2305,7 +2305,7 @@
       ],
       "explanationLatex": "$\\ce{H2SO4}$ is dibasic for complete neutralization, so $n=2$. Equivalent weight $=98/2=49$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{O}=16,\\ \\mathrm{S}=32$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -2338,7 +2338,7 @@
       ],
       "explanationLatex": "$\\ce{H3PO4}$ is tribasic for complete neutralization, so equivalent weight $=98/3=32.67$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{O}=16,\\ \\mathrm{P}=31$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -2371,7 +2371,7 @@
       ],
       "explanationLatex": "NaOH gives one $\\ce{OH-}$, so $n=1$. Equivalent weight $=40$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{O}=16,\\ \\mathrm{Na}=23$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -2404,7 +2404,7 @@
       ],
       "explanationLatex": "$\\ce{Ca(OH)2}$ gives two hydroxide ions, so $n=2$. Equivalent weight $=74/2=37$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{O}=16,\\ \\mathrm{Ca}=40$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -2437,7 +2437,7 @@
       ],
       "explanationLatex": "$\\ce{H2CO3}$ is dibasic, so equivalent weight $=62/2=31$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{C}=12,\\ \\mathrm{O}=16$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -2470,7 +2470,7 @@
       ],
       "explanationLatex": "$\\ce{Al(OH)3}$ has 3 hydroxide groups, so $n=3$. Equivalent weight $=78/3=26$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{O}=16,\\ \\mathrm{Al}=27$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -2503,7 +2503,7 @@
       ],
       "explanationLatex": "Only one acidic hydrogen is replaced, so $n=1$. Equivalent weight $=98/1=98$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{O}=16,\\ \\mathrm{Na}=23,\\ \\mathrm{P}=31$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -2536,7 +2536,7 @@
       ],
       "explanationLatex": "$n=2$, so equivalent weight $=106/2=53$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{C}=12,\\ \\mathrm{O}=16,\\ \\mathrm{Na}=23$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
@@ -2569,7 +2569,7 @@
       ],
       "explanationLatex": "$\\ce{NH3}$ accepts one $\\ce{H+}$, so $n=1$. Equivalent weight $=17$.",
       "hintsLatex": [
-        "Atomic weights: $\\mathrm{H}=1,\\ \\mathrm{N}=14$"
+        "Provide Molecular Weight"
       ],
       "tags": [
         "mole-concept",
