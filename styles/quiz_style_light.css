@@ -394,8 +394,6 @@ button:disabled {
 }
 
 mjx-container {
-  overflow-x: auto;
-  overflow-y: hidden;
   max-width: 100%;
 }
 
@@ -404,6 +402,16 @@ mjx-container {
 .summary-table mjx-container {
   display: inline-block;
   vertical-align: middle;
+  overflow: visible !important;
+}
+
+.question mjx-container[display="true"],
+.hint-box mjx-container[display="true"],
+.feedback mjx-container[display="true"] {
+  display: block;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
 }
 
 @media (max-width: 600px) {
