@@ -7412,6 +7412,13 @@
       return await response.json();
     }
 
+    function getBankQuestions(bankData) {
+      if (Array.isArray(bankData)) return bankData;
+      if (Array.isArray(bankData?.questions)) return bankData.questions;
+      if (Array.isArray(bankData?.value)) return bankData.value;
+      return [];
+    }
+
     async function loadBanks() {
       setStatus("loadStatus", "Loading question banks...");
 
@@ -7420,8 +7427,7 @@
 
         const loaded = await Promise.all(bankIndex.banks.map(async bank => {
           const bankData = await loadJson(bank.file);
-          const questions = Array.isArray(bankData) ? bankData : (bankData.questions || []);
-          return questions.map(q => ({
+          return getBankQuestions(bankData).map(q => ({
             ...q,
             bankId: bank.id,
             bankTitle: bank.title,
@@ -7437,8 +7443,7 @@
         const loaded = bankIndex.banks.map(bank => {
           const bankData = EMBEDDED_BANKS[bank.id];
           if (!bankData) return [];
-          const questions = Array.isArray(bankData) ? bankData : (bankData.questions || []);
-          return questions.map(q => ({
+          return getBankQuestions(bankData).map(q => ({
             ...q,
             bankId: bank.id,
             bankTitle: bank.title,
