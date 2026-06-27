@@ -5,11 +5,11 @@
   "banks": [
     {
       "id": "chapter1",
-      "title": "Chapter 1: Mole Concept and Significant Figures",
+      "title": "Chapter 1: Mole Concept",
       "subject": "Chemistry",
       "format": "latex",
       "file": "../assets/data/question_banks/chapter1.json",
-      "description": "Mole concept, empirical formula, limiting reagent, POAC, equivalents, concentration terms, and significant figures."
+      "description": "Mole concept, empirical formula, limiting reagent, POAC, equivalents, concentration terms, electrolysis, redox, n-factor, and titrations."
     }
   ]
 }
