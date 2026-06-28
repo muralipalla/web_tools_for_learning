@@ -101,13 +101,13 @@ h2 {
 }
 
 .viewer-card {
-  min-height: 72vh;
+  min-height: 102vh;
   display: flex;
   flex-direction: column;
 }
 
 #viewer {
-  min-height: 64vh;
+  min-height: 88vh;
   flex: 1;
   position: relative;
 }
