@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hydrogen Orbital Probability Visualizer</title>
+  <link rel="stylesheet" href="./css/styles.css" />
+
+  <!-- Version-pinned Three.js imports. Keep core and addons on the same version. -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>Hydrogen Orbital Probability Visualizer</h1>
+      <p>Interactive visualization of \(|\psi_{n,l,m}(r,\theta,\phi)|^2\) using Three.js.</p>
+    </div>
+    <div class="badge">HTML + Three.js</div>
+  </header>
+
+  <main class="layout">
+    <aside class="panel controls-panel">
+      <section>
+        <h2>Quantum numbers</h2>
+
+        <label class="control-row">
+          <span>n</span>
+          <input id="nSlider" type="range" min="1" max="6" step="1" value="3" />
+          <output id="nValue">3</output>
+        </label>
+
+        <label class="control-row">
+          <span>l</span>
+          <input id="lSlider" type="range" min="0" max="2" step="1" value="1" />
+          <output id="lValue">1</output>
+        </label>
+
+        <label class="control-row">
+          <span>m</span>
+          <input id="mSlider" type="range" min="-1" max="1" step="1" value="0" />
+          <output id="mValue">0</output>
+        </label>
+
+        <p class="hint">Allowed values: \(n = 1,2,3,\ldots\), \(l=0\ldots n-1\), \(m=-l\ldots +l\).</p>
+      </section>
+
+      <section>
+        <h2>Visualization</h2>
+
+        <label class="field-row">
+          <span>Mode</span>
+          <select id="modeSelect">
+            <option value="both" selected>Cloud + surface</option>
+            <option value="cloud">Probability cloud only</option>
+            <option value="surface">Orbital surface only</option>
+          </select>
+        </label>
+
+        <label class="field-row">
+          <span>Cloud points</span>
+          <select id="pointCountSelect">
+            <option value="8000">8,000 fast</option>
+            <option value="18000" selected>18,000 balanced</option>
+            <option value="35000">35,000 detailed</option>
+          </select>
+        </label>
+
+        <label class="control-row">
+          <span>Cloud size</span>
+          <input id="pointSizeSlider" type="range" min="0.015" max="0.12" step="0.005" value="0.045" />
+          <output id="pointSizeValue">0.045</output>
+        </label>
+
+        <label class="control-row">
+          <span>Opacity</span>
+          <input id="opacitySlider" type="range" min="0.08" max="0.95" step="0.01" value="0.58" />
+          <output id="opacityValue">0.58</output>
+        </label>
+
+        <label class="control-row">
+          <span>Scale</span>
+          <input id="scaleSlider" type="range" min="2.5" max="9.5" step="0.1" value="5.8" />
+          <output id="scaleValue">5.8</output>
+        </label>
+
+        <div class="button-row">
+          <button id="regenerateButton">Regenerate orbital</button>
+          <button id="cameraButton" type="button">Reset camera</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Orientation</h2>
+
+        <label class="control-row">
+          <span>X</span>
+          <input id="rotXSlider" type="range" min="-180" max="180" step="1" value="0" />
+          <output id="rotXValue">0°</output>
+        </label>
+
+        <label class="control-row">
+          <span>Y</span>
+          <input id="rotYSlider" type="range" min="-180" max="180" step="1" value="0" />
+          <output id="rotYValue">0°</output>
+        </label>
+
+        <label class="control-row">
+          <span>Z</span>
+          <input id="rotZSlider" type="range" min="-180" max="180" step="1" value="0" />
+          <output id="rotZValue">0°</output>
+        </label>
+
+        <div class="check-grid">
+          <label><input id="autoRotateCheck" type="checkbox" /> Auto rotate</label>
+          <label><input id="axesCheck" type="checkbox" checked /> Axes</label>
+          <label><input id="gridCheck" type="checkbox" checked /> Grid</label>
+        </div>
+
+        <div class="button-row">
+          <button id="orientationButton" type="button">Reset orientation</button>
+          <button id="snapshotButton" type="button">Save PNG</button>
+        </div>
+      </section>
+    </aside>
+
+    <section class="viewer-card">
+      <div id="viewer"></div>
+      <div class="viewer-footer">
+        <div>
+          <strong id="orbitalLabel">3p, m = 0</strong>
+          <span id="statusText">Preparing orbital…</span>
+        </div>
+        <div class="legend">
+          <span class="chip positive"></span> positive phase
+          <span class="chip negative"></span> negative phase
+          <span class="chip density"></span> probability density
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel info-panel">
+      <section>
+        <h2>Formula used</h2>
+        <div class="formula">
+          <p>\[\psi_{n,l,m}(r,\theta,\phi)=R_{n,l}(r)Y_l^m(\theta,\phi)\]</p>
+          <p>\[\rho = \frac{2r}{n a_0},\quad a_0=1\text{ in this demo}\]</p>
+          <p>Cloud points are sampled from \(|\psi|^2\) in 3D volume.</p>
+        </div>
+        <p class="note">The surface is a teaching-friendly angular envelope. The cloud is the better representation of full probability density and radial nodes.</p>
+      </section>
+
+      <section>
+        <h2>Radial distribution</h2>
+        <canvas id="radialPlot" width="480" height="230"></canvas>
+        <p class="caption">Plot of \(r^2 |R_{n,l}(r)|^2\), normalized to its own maximum.</p>
+      </section>
+
+      <section>
+        <h2>Angular distribution</h2>
+        <canvas id="angularPlot" width="480" height="220"></canvas>
+        <p class="caption">Heatmap of \(|Y_l^m(\theta,\phi)|^2\). Horizontal: \(\phi\), vertical: \(\theta\).</p>
+      </section>
+    </aside>
+  </main>
+
+  <footer class="site-footer">
+    <p>Use mouse drag to rotate camera, scroll to zoom, right-drag to pan. Use orientation sliders to rotate the orbital itself.</p>
+  </footer>
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
