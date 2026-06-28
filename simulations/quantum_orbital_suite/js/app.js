@@ -44,7 +44,7 @@ const dom = {
 };
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x0e1420);
+scene.background = new THREE.Color(0x000000);
 
 const camera = new THREE.PerspectiveCamera(48, 1, 0.05, 200);
 camera.position.set(7.5, 5.2, 9.5);
