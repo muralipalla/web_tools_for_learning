@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title> General Chemistry Quiz </title>
-  <link rel="stylesheet" href="../styles/quiz_style_light.css?v=12" />
+  <link rel="stylesheet" href="../styles/quiz_style_light.css?v=13" />
 
   <script>
     window.MathJax = {
@@ -7987,6 +7987,7 @@
 
       hintBox.style.display = "none";
       hintBtn.style.display = hintsEnabledForAttempt ? "inline-block" : "none";
+      hintBtn.textContent = "Show Hint";
 
       const optionsDiv = document.getElementById("options");
       optionsDiv.innerHTML = "";
@@ -8044,8 +8045,19 @@
 
     async function showHint() {
       if (!hintsEnabledForAttempt) return;
-      document.getElementById("hint").style.display = "block";
-      await typesetElement(document.getElementById("hint"));
+
+      const hintBox = document.getElementById("hint");
+      const hintBtn = document.getElementById("hintBtn");
+      const isVisible = hintBox.style.display === "block";
+
+      if (isVisible) {
+        hintBox.style.display = "none";
+        hintBtn.textContent = "Show Hint";
+      } else {
+        hintBox.style.display = "block";
+        hintBtn.textContent = "Hide Hint";
+        await typesetElement(hintBox);
+      }
     }
 
     function getCorrectAnswerFor(q) {
