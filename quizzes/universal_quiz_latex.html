@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title> General Chemistry Quiz </title>
-  <link rel="stylesheet" href="../styles/quiz_style_light.css?v=10" />
+  <link rel="stylesheet" href="../styles/quiz_style_light.css?v=12" />
 
   <script>
     window.MathJax = {
@@ -22,6 +22,287 @@
       }
     };
   </script>
+
+  <style>
+    .quiz-options-panel {
+      background: #f8fafc;
+      border: 2px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 13px 15px;
+      margin: 14px 0 18px;
+      color: #334155;
+      line-height: 1.55;
+    }
+
+    .quiz-options-panel h3 {
+      margin: 0 0 8px;
+      color: #1e3a8a;
+      font-size: 1rem;
+    }
+
+    .quiz-option-line {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+      font-weight: 600;
+    }
+
+    .quiz-option-line input {
+      transform: scale(1.15);
+    }
+
+    .student-tools {
+      margin: 16px 0 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .tool-card {
+      border: 2px solid #cbd5e1;
+      border-radius: 12px;
+      background: #f8fafc;
+      padding: 12px;
+    }
+
+    .tool-card h3 {
+      margin: 0 0 8px;
+      color: #1e3a8a;
+      font-size: 1rem;
+    }
+
+    .tool-card p {
+      margin: 5px 0 10px;
+      color: #475569;
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .tool-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .tool-row input {
+      flex: 1 1 90px;
+      min-width: 0;
+      padding: 9px 10px;
+      border: 1px solid #94a3b8;
+      border-radius: 9px;
+      font-size: 0.95rem;
+    }
+
+    .tool-row button {
+      padding: 9px 12px;
+      border-radius: 9px;
+      background: #2563eb;
+      color: white;
+      font-size: 0.9rem;
+    }
+
+    .tool-result {
+      margin-top: 9px;
+      padding: 9px 10px;
+      border-radius: 9px;
+      background: #ffffff;
+      border: 1px solid #dbeafe;
+      color: #1e293b;
+      min-height: 38px;
+      line-height: 1.45;
+      font-size: 0.94rem;
+    }
+
+    .tool-result.error {
+      background: #fee2e2;
+      border-color: #fecaca;
+      color: #7f1d1d;
+    }
+
+    .tool-result.ok {
+      background: #dcfce7;
+      border-color: #bbf7d0;
+      color: #14532d;
+    }
+
+    .tools-toggle-btn {
+      background: #0f766e;
+      color: white;
+      margin: 8px 0 0;
+    }
+
+    .student-tools.collapsed {
+      display: none;
+    }
+
+    @media (max-width: 700px) {
+      .student-tools {
+        grid-template-columns: 1fr;
+      }
+    }
+  
+    .exam-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 220px;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .question-panel {
+      min-width: 0;
+    }
+
+    .palette-panel {
+      position: sticky;
+      top: 12px;
+      border: 2px solid #cbd5e1;
+      border-radius: 14px;
+      background: #f8fafc;
+      padding: 12px;
+    }
+
+    .palette-panel h3 {
+      margin: 0 0 10px;
+      color: #1e3a8a;
+      font-size: 1rem;
+    }
+
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 7px;
+    }
+
+    .qnav-btn {
+      padding: 8px 0;
+      border-radius: 9px;
+      background: #e2e8f0;
+      color: #1e293b;
+      border: 1px solid #cbd5e1;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .qnav-btn:hover {
+      background: #dbeafe;
+      border-color: #2563eb;
+    }
+
+    .qnav-btn.current {
+      outline: 3px solid #2563eb;
+      outline-offset: 1px;
+    }
+
+    .qnav-btn.not-visited {
+      background: #e2e8f0;
+      color: #334155;
+    }
+
+    .qnav-btn.not-attempted {
+      background: #fee2e2;
+      color: #7f1d1d;
+      border-color: #fecaca;
+    }
+
+    .qnav-btn.attempted {
+      background: #dcfce7;
+      color: #14532d;
+      border-color: #bbf7d0;
+    }
+
+    .qnav-btn.marked {
+      background: #fef3c7;
+      color: #78350f;
+      border-color: #fde68a;
+    }
+
+    .qnav-btn.attempted.marked {
+      background: linear-gradient(135deg, #dcfce7 0%, #dcfce7 52%, #fef3c7 52%, #fef3c7 100%);
+      color: #1e293b;
+    }
+
+    .palette-legend {
+      display: grid;
+      gap: 6px;
+      margin-top: 12px;
+      font-size: 0.82rem;
+      color: #475569;
+    }
+
+    .legend-dot {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 4px;
+      margin-right: 6px;
+      vertical-align: -1px;
+      border: 1px solid #cbd5e1;
+    }
+
+    .nav-status-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin: 12px 0 16px;
+    }
+
+    .nav-status-pill {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 8px;
+      text-align: center;
+      color: #334155;
+      font-size: 0.86rem;
+    }
+
+    .nav-status-pill b {
+      display: block;
+      color: #1e293b;
+      font-size: 1.1rem;
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+
+    .mark-btn {
+      background: #f59e0b;
+      color: #111827;
+    }
+
+    .finish-btn {
+      background: #7c3aed;
+      color: white;
+    }
+
+    @media (max-width: 850px) {
+      .exam-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .palette-panel {
+        position: static;
+      }
+
+      .palette-grid {
+        grid-template-columns: repeat(8, 1fr);
+      }
+
+      .nav-status-strip {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .palette-grid {
+        grid-template-columns: repeat(5, 1fr);
+      }
+    }
+
+  </style>
+
 </head>
 
 <body>
@@ -41,6 +322,17 @@
       <div class="setup-note">
         Select the number of questions from each topic. The answer is not checked until the student clicks
         <strong>Check Answer</strong>.
+      </div>
+
+      <div class="quiz-options-panel">
+        <h3>Quiz options</h3>
+        <div class="quiz-option-line">
+          <input type="checkbox" id="enableHints" checked>
+          <label for="enableHints" style="margin:0;">Allow students to use hints during this quiz</label>
+        </div>
+        <div class="small">
+          Uncheck this while creating the quiz if you want the hint button to be hidden for the whole attempt.
+        </div>
       </div>
 
       <div id="loadStatus" class="status-note">Loading question banks...</div>
@@ -65,21 +357,74 @@
     </div>
 
     <div id="quizArea" style="display:none;">
-      <div class="progress" id="progress"></div>
-      <div class="category" id="category"></div>
-      <div class="question" id="question"></div>
+      <div class="exam-layout">
+        <div class="question-panel">
+          <div class="progress" id="progress"></div>
 
-      <button class="hint-btn" id="hintBtn">Show Hint</button>
-      <div class="hint-box" id="hint"></div>
+          <div class="nav-status-strip">
+            <div class="nav-status-pill"><b id="attemptedCount">0</b>Attempted</div>
+            <div class="nav-status-pill"><b id="notAttemptedCount">0</b>Not attempted</div>
+            <div class="nav-status-pill"><b id="markedCount">0</b>Marked later</div>
+            <div class="nav-status-pill"><b id="notVisitedCount">0</b>Not visited</div>
+          </div>
 
-      <div class="options" id="options"></div>
+          <div class="category" id="category"></div>
+          <div class="question" id="question"></div>
 
-      <div class="feedback" id="feedback"></div>
+          <button class="hint-btn" id="hintBtn">Show Hint</button>
+          <div class="hint-box" id="hint"></div>
 
-      <div class="buttons">
-        <button class="restart-btn" id="restartBtn">Restart / New Selection</button>
-        <button class="check-btn" id="checkBtn">Check Answer</button>
-        <button class="next-btn" id="nextBtn">Next Question</button>
+          <button class="tools-toggle-btn" id="toolsToggleBtn" type="button">Show Student Tools</button>
+
+          <div class="student-tools collapsed" id="studentTools">
+            <div class="tool-card">
+              <h3>Atomic Weight Lookup</h3>
+              <p>Type an element symbol, e.g. H, C, O, Na, Cl, Fe.</p>
+              <div class="tool-row">
+                <input id="atomicSymbolInput" type="text" maxlength="3" placeholder="Symbol">
+                <button id="atomicLookupBtn" type="button">Lookup</button>
+              </div>
+              <div class="tool-result" id="atomicLookupResult">Atomic weight appears here.</div>
+            </div>
+
+            <div class="tool-card">
+              <h3>Integer Multiplication</h3>
+              <p>Only integers are accepted. Decimals and expressions are rejected.</p>
+              <div class="tool-row">
+                <input id="multA" type="text" inputmode="numeric" placeholder="Integer 1">
+                <span>×</span>
+                <input id="multB" type="text" inputmode="numeric" placeholder="Integer 2">
+                <button id="multiplyBtn" type="button">Multiply</button>
+              </div>
+              <div class="tool-result" id="multiplyResult">Product appears here.</div>
+            </div>
+          </div>
+
+          <div class="options" id="options"></div>
+
+          <div class="feedback" id="feedback"></div>
+
+          <div class="buttons">
+            <button class="restart-btn" id="restartBtn">Restart / New Selection</button>
+            <button class="secondary-btn" id="prevBtn">Previous</button>
+            <button class="mark-btn" id="markBtn">Mark for Later</button>
+            <button class="check-btn" id="checkBtn">Check Answer</button>
+            <button class="next-btn" id="nextBtn">Next Question</button>
+            <button class="finish-btn" id="finishBtn">Finish Quiz</button>
+          </div>
+        </div>
+
+        <aside class="palette-panel">
+          <h3>Question Palette</h3>
+          <div class="palette-grid" id="questionPalette"></div>
+
+          <div class="palette-legend">
+            <div><span class="legend-dot" style="background:#dcfce7;"></span>Attempted</div>
+            <div><span class="legend-dot" style="background:#fee2e2;"></span>Visited, not attempted</div>
+            <div><span class="legend-dot" style="background:#fef3c7;"></span>Marked for later</div>
+            <div><span class="legend-dot" style="background:#e2e8f0;"></span>Not visited</div>
+          </div>
+        </aside>
       </div>
     </div>
 
@@ -7308,6 +7653,10 @@
     let quizActive = false;
     let mathJaxReady = false;
     let lastSelection = [];
+    let hintsEnabledForAttempt = true;
+    let questionVisited = [];
+    let questionChecked = [];
+    let markedForLater = [];
 
     let cheatCounter = 0;
     let cheatLog = [];
@@ -7589,6 +7938,9 @@
       currentQuestion = 0;
       score = 0;
       userAnswers = Array(currentQuiz.length).fill(null);
+      questionVisited = Array(currentQuiz.length).fill(false);
+      questionChecked = Array(currentQuiz.length).fill(false);
+      markedForLater = Array(currentQuiz.length).fill(false);
       checked = false;
       quizActive = true;
       lastSelection = selectedItems;
@@ -7597,6 +7949,8 @@
 
     async function startQuiz() {
       await ensureMathJax();
+
+      hintsEnabledForAttempt = document.getElementById("enableHints").checked;
 
       if (!createQuiz()) return;
 
@@ -7609,11 +7963,13 @@
     }
 
     async function loadQuestion() {
-      checked = false;
+      checked = questionChecked[currentQuestion] || false;
+      questionVisited[currentQuestion] = true;
+
       const q = currentQuiz[currentQuestion];
 
       document.getElementById("progress").innerHTML =
-        `Question ${currentQuestion + 1} of ${currentQuiz.length} &nbsp; | &nbsp; Marks: ${score}/${currentQuestion}`;
+        `Question ${currentQuestion + 1} of ${currentQuiz.length} &nbsp; | &nbsp; Marks: ${scoreQuestionStatus().correct}/${currentQuiz.length}`;
 
       document.getElementById("category").innerHTML =
         `${escapeHtml(q.topicId || "")} · ${escapeHtml(q.topic || "")}`;
@@ -7622,16 +7978,23 @@
 
       const hints = q.hintsLatex || q.hintsMd || q.hints || [];
       const hintBox = document.getElementById("hint");
+      const hintBtn = document.getElementById("hintBtn");
+
       await renderLatexText(
         hints.length ? `<strong>Hint:</strong> ${hints[0]}` : "<strong>Hint:</strong> No hint available.",
         hintBox
       );
+
       hintBox.style.display = "none";
+      hintBtn.style.display = hintsEnabledForAttempt ? "inline-block" : "none";
 
       const optionsDiv = document.getElementById("options");
       optionsDiv.innerHTML = "";
 
-      const opts = shuffle(q.optionsLatex || q.optionsMd || q.options || []);
+      const originalOptions = q.optionsLatex || q.optionsMd || q.options || [];
+      const opts = q.shuffledOptionsForAttempt || shuffle(originalOptions);
+      q.shuffledOptionsForAttempt = opts;
+
       opts.forEach((option, index) => {
         const label = document.createElement("label");
         label.className = "option";
@@ -7640,6 +8003,21 @@
         radio.type = "radio";
         radio.name = "option";
         radio.value = option;
+
+        if (userAnswers[currentQuestion] === option) {
+          radio.checked = true;
+        }
+
+        if (questionChecked[currentQuestion]) {
+          radio.disabled = true;
+          label.classList.add("disabled");
+        }
+
+        radio.addEventListener("change", () => {
+          if (questionChecked[currentQuestion]) return;
+          userAnswers[currentQuestion] = radio.value;
+          updateNavigationStatus();
+        });
 
         const span = document.createElement("span");
         span.className = "option-text";
@@ -7651,43 +8029,59 @@
         renderLatexText(option, span);
       });
 
-      document.getElementById("feedback").style.display = "none";
-      document.getElementById("feedback").className = "feedback";
-      document.getElementById("feedback").innerHTML = "";
-      document.getElementById("checkBtn").style.display = "inline-block";
-      document.getElementById("nextBtn").style.display = "none";
-      document.getElementById("nextBtn").textContent = currentQuestion === currentQuiz.length - 1 ? "Finish Quiz" : "Next Question";
+      const feedback = document.getElementById("feedback");
+      feedback.style.display = "none";
+      feedback.className = "feedback";
+      feedback.innerHTML = "";
+
+      if (questionChecked[currentQuestion]) {
+        await showStoredFeedback();
+      }
+
+      updateQuestionButtons();
+      updateNavigationStatus();
     }
 
     async function showHint() {
+      if (!hintsEnabledForAttempt) return;
       document.getElementById("hint").style.display = "block";
       await typesetElement(document.getElementById("hint"));
     }
 
-    async function checkAnswer() {
-      if (checked) return;
+    function getCorrectAnswerFor(q) {
+      return q.answerLatex || q.answer || "";
+    }
 
-      const selected = document.querySelector('input[name="option"]:checked');
-      const feedback = document.getElementById("feedback");
+    function getAcceptedAnswersFor(q) {
+      const correctAnswer = getCorrectAnswerFor(q);
+      return q.acceptedAnswersLatex || q.acceptedAnswers || [correctAnswer];
+    }
 
-      if (!selected) {
-        feedback.style.display = "block";
-        feedback.className = "feedback wrong";
-        feedback.innerHTML = "Please select an option before checking.";
-        return;
-      }
+    function isAnswerCorrect(q, answer) {
+      if (answer === null || answer === undefined) return false;
+      return getAcceptedAnswersFor(q).includes(answer);
+    }
 
-      checked = true;
+    function scoreQuestionStatus() {
+      let attempted = 0;
+      let correct = 0;
 
-      const selectedAnswer = selected.value;
-      userAnswers[currentQuestion] = selectedAnswer;
+      currentQuiz.forEach((q, i) => {
+        if (userAnswers[i] !== null && userAnswers[i] !== undefined) {
+          attempted++;
+          if (isAnswerCorrect(q, userAnswers[i])) correct++;
+        }
+      });
 
+      return { attempted, correct };
+    }
+
+    async function showStoredFeedback() {
       const q = currentQuiz[currentQuestion];
-      const correctAnswer = q.answerLatex || q.answer || "";
-      const accepted = q.acceptedAnswersLatex || q.acceptedAnswers || [correctAnswer];
-      const isCorrect = selectedAnswer === correctAnswer || accepted.includes(selectedAnswer);
-
-      if (isCorrect) score++;
+      const selectedAnswer = userAnswers[currentQuestion];
+      const correctAnswer = getCorrectAnswerFor(q);
+      const isCorrect = isAnswerCorrect(q, selectedAnswer);
+      const feedback = document.getElementById("feedback");
 
       document.querySelectorAll(".option").forEach(label => {
         label.classList.add("disabled");
@@ -7712,33 +8106,140 @@
       }
 
       feedback.style.display = "block";
-      document.getElementById("checkBtn").style.display = "none";
-      document.getElementById("nextBtn").style.display = "inline-block";
+    }
 
-      document.getElementById("progress").innerHTML =
-        `Question ${currentQuestion + 1} of ${currentQuiz.length} &nbsp; | &nbsp; Marks: ${score}/${currentQuestion + 1}`;
+    async function checkAnswer() {
+      if (questionChecked[currentQuestion]) return;
+
+      const selected = document.querySelector('input[name="option"]:checked');
+      const feedback = document.getElementById("feedback");
+
+      if (!selected) {
+        feedback.style.display = "block";
+        feedback.className = "feedback wrong";
+        feedback.innerHTML = "Please select an option before checking.";
+        return;
+      }
+
+      userAnswers[currentQuestion] = selected.value;
+      questionChecked[currentQuestion] = true;
+      checked = true;
+
+      await showStoredFeedback();
+
+      updateQuestionButtons();
+      updateNavigationStatus();
+    }
+
+    async function goToQuestion(index) {
+      if (index < 0 || index >= currentQuiz.length) return;
+      currentQuestion = index;
+      await loadQuestion();
+    }
+
+    async function previousQuestion() {
+      if (currentQuestion > 0) {
+        currentQuestion--;
+        await loadQuestion();
+      }
     }
 
     async function nextQuestion() {
-      if (!checked) return;
-
-      currentQuestion++;
-
-      if (currentQuestion < currentQuiz.length) {
+      if (currentQuestion < currentQuiz.length - 1) {
+        currentQuestion++;
         await loadQuestion();
       } else {
         await showResult();
       }
     }
 
+    function toggleMarkForLater() {
+      markedForLater[currentQuestion] = !markedForLater[currentQuestion];
+      updateQuestionButtons();
+      updateNavigationStatus();
+    }
+
+    function updateQuestionButtons() {
+      const checkedNow = questionChecked[currentQuestion] || false;
+      const markedNow = markedForLater[currentQuestion] || false;
+
+      document.getElementById("prevBtn").disabled = currentQuestion === 0;
+      document.getElementById("nextBtn").style.display = "inline-block";
+      document.getElementById("nextBtn").textContent = currentQuestion === currentQuiz.length - 1 ? "Last Question" : "Next Question";
+      document.getElementById("nextBtn").disabled = currentQuestion === currentQuiz.length - 1;
+      document.getElementById("checkBtn").style.display = checkedNow ? "none" : "inline-block";
+      document.getElementById("markBtn").textContent = markedNow ? "Unmark" : "Mark for Later";
+    }
+
+    function updateNavigationStatus() {
+      const palette = document.getElementById("questionPalette");
+      if (!palette) return;
+
+      palette.innerHTML = "";
+
+      let attempted = 0;
+      let notAttempted = 0;
+      let notVisited = 0;
+      let marked = 0;
+
+      currentQuiz.forEach((q, i) => {
+        const hasAnswer = userAnswers[i] !== null && userAnswers[i] !== undefined;
+        const visited = questionVisited[i];
+        const isMarked = markedForLater[i];
+
+        if (hasAnswer) attempted++;
+        if (!visited) notVisited++;
+        if (visited && !hasAnswer) notAttempted++;
+        if (isMarked) marked++;
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "qnav-btn ";
+
+        if (!visited) btn.className += "not-visited ";
+        else if (hasAnswer) btn.className += "attempted ";
+        else btn.className += "not-attempted ";
+
+        if (isMarked) btn.className += "marked ";
+        if (i === currentQuestion) btn.className += "current ";
+
+        btn.textContent = i + 1;
+        btn.title = `Question ${i + 1}`;
+        btn.addEventListener("click", () => goToQuestion(i));
+        palette.appendChild(btn);
+      });
+
+      document.getElementById("attemptedCount").textContent = attempted;
+      document.getElementById("notAttemptedCount").textContent = notAttempted;
+      document.getElementById("markedCount").textContent = marked;
+      document.getElementById("notVisitedCount").textContent = notVisited;
+
+      const status = scoreQuestionStatus();
+      document.getElementById("progress").innerHTML =
+        `Question ${currentQuestion + 1} of ${currentQuiz.length} &nbsp; | &nbsp; Attempted: ${status.attempted}/${currentQuiz.length}`;
+    }
+
     async function showResult() {
+      const unattempted = userAnswers.filter(answer => answer === null || answer === undefined).length;
+      const marked = markedForLater.filter(Boolean).length;
+
+      if (unattempted > 0 || marked > 0) {
+        const proceed = confirm(
+          `You have ${unattempted} unattempted question(s) and ${marked} question(s) marked for later. Finish the quiz now?`
+        );
+        if (!proceed) return;
+      }
+
       quizActive = false;
 
       document.getElementById("quizArea").style.display = "none";
       const resultArea = document.getElementById("resultArea");
       resultArea.style.display = "block";
 
-      const percentage = Math.round((score / currentQuiz.length) * 100);
+      const statusObj = scoreQuestionStatus();
+      const finalScore = statusObj.correct;
+      const percentage = Math.round((finalScore / currentQuiz.length) * 100);
+
       let message = "Good practice. Review the mistakes and try another set.";
 
       if (percentage >= 85) {
@@ -7754,7 +8255,8 @@
       let summary = `
         <div class="result">
           <h2>Quiz Completed</h2>
-          <p><strong>Your Score: ${score} / ${currentQuiz.length}</strong> (${percentage}%)</p>
+          <p><strong>Your Score: ${finalScore} / ${currentQuiz.length}</strong> (${percentage}%)</p>
+          <p>Attempted: ${statusObj.attempted} / ${currentQuiz.length} &nbsp; | &nbsp; Marked for later: ${marked}</p>
           <p>${message}</p>
           <button class="restart-btn" onclick="restartToSelection()">New Selection</button>
           <button class="setup-btn" onclick="restartSameSelection()">Repeat Same Selection</button>
@@ -7765,21 +8267,26 @@
             <th>Q.No.</th>
             <th>Topic</th>
             <th>Correct Answer</th>
+            <th>Your Answer</th>
             <th>Your Status</th>
+            <th>Marked?</th>
           </tr>
       `;
 
       currentQuiz.forEach((q, i) => {
-        const correctAnswer = q.answerLatex || q.answer || "";
-        const accepted = q.acceptedAnswersLatex || q.acceptedAnswers || [correctAnswer];
-        const status = accepted.includes(userAnswers[i]) ? "Correct" : "Incorrect";
+        const correctAnswer = getCorrectAnswerFor(q);
+        const userAnswer = userAnswers[i];
+        const hasAnswer = userAnswer !== null && userAnswer !== undefined;
+        const status = hasAnswer ? (isAnswerCorrect(q, userAnswer) ? "Correct" : "Incorrect") : "Unattempted";
 
         summary += `
           <tr>
             <td>${i + 1}</td>
             <td>${escapeHtml(q.topic || "")}</td>
             <td class="ans-cell">${correctAnswer}</td>
+            <td class="ans-cell">${hasAnswer ? userAnswer : "—"}</td>
             <td>${status}</td>
+            <td>${markedForLater[i] ? "Yes" : "No"}</td>
           </tr>
         `;
       });
@@ -7920,6 +8427,95 @@
       reportBox.style.display = "block";
     }
 
+
+    const ATOMIC_WEIGHTS = {
+      H: 1.008, He: 4.0026, Li: 6.94, Be: 9.0122, B: 10.81, C: 12.011, N: 14.007, O: 15.999,
+      F: 18.998, Ne: 20.180, Na: 22.990, Mg: 24.305, Al: 26.982, Si: 28.085, P: 30.974, S: 32.06,
+      Cl: 35.45, Ar: 39.948, K: 39.098, Ca: 40.078, Sc: 44.956, Ti: 47.867, V: 50.942, Cr: 51.996,
+      Mn: 54.938, Fe: 55.845, Co: 58.933, Ni: 58.693, Cu: 63.546, Zn: 65.38, Ga: 69.723, Ge: 72.630,
+      As: 74.922, Se: 78.971, Br: 79.904, Kr: 83.798, Rb: 85.468, Sr: 87.62, Y: 88.906, Zr: 91.224,
+      Nb: 92.906, Mo: 95.95, Tc: 98, Ru: 101.07, Rh: 102.91, Pd: 106.42, Ag: 107.87, Cd: 112.41,
+      In: 114.82, Sn: 118.71, Sb: 121.76, Te: 127.60, I: 126.90, Xe: 131.29, Cs: 132.91, Ba: 137.33,
+      La: 138.91, Ce: 140.12, Pr: 140.91, Nd: 144.24, Pm: 145, Sm: 150.36, Eu: 151.96, Gd: 157.25,
+      Tb: 158.93, Dy: 162.50, Ho: 164.93, Er: 167.26, Tm: 168.93, Yb: 173.05, Lu: 174.97, Hf: 178.49,
+      Ta: 180.95, W: 183.84, Re: 186.21, Os: 190.23, Ir: 192.22, Pt: 195.08, Au: 196.97, Hg: 200.59,
+      Tl: 204.38, Pb: 207.2, Bi: 208.98, Po: 209, At: 210, Rn: 222, Fr: 223, Ra: 226, Ac: 227,
+      Th: 232.04, Pa: 231.04, U: 238.03, Np: 237, Pu: 244, Am: 243, Cm: 247, Bk: 247, Cf: 251,
+      Es: 252, Fm: 257, Md: 258, No: 259, Lr: 266, Rf: 267, Db: 268, Sg: 269, Bh: 270, Hs: 277,
+      Mt: 278, Ds: 281, Rg: 282, Cn: 285, Nh: 286, Fl: 289, Mc: 290, Lv: 293, Ts: 294, Og: 294
+    };
+
+    const ELEMENT_NAMES = {
+      H: "Hydrogen", He: "Helium", Li: "Lithium", Be: "Beryllium", B: "Boron", C: "Carbon", N: "Nitrogen", O: "Oxygen",
+      F: "Fluorine", Ne: "Neon", Na: "Sodium", Mg: "Magnesium", Al: "Aluminium", Si: "Silicon", P: "Phosphorus", S: "Sulfur",
+      Cl: "Chlorine", Ar: "Argon", K: "Potassium", Ca: "Calcium", Fe: "Iron", Cu: "Copper", Zn: "Zinc", Ag: "Silver",
+      Sn: "Tin", I: "Iodine", Ba: "Barium", Pt: "Platinum", Au: "Gold", Hg: "Mercury", Pb: "Lead", U: "Uranium"
+    };
+
+    function normalizeSymbol(raw) {
+      const s = String(raw || "").trim();
+      if (!s) return "";
+      return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+    }
+
+    function setToolResult(id, message, kind = "") {
+      const box = document.getElementById(id);
+      box.className = "tool-result" + (kind ? " " + kind : "");
+      box.innerHTML = message;
+    }
+
+    function lookupAtomicWeight() {
+      const symbol = normalizeSymbol(document.getElementById("atomicSymbolInput").value);
+      if (!symbol) {
+        setToolResult("atomicLookupResult", "Type an element symbol first, e.g. O or Fe.", "error");
+        return;
+      }
+
+      if (!(symbol in ATOMIC_WEIGHTS)) {
+        setToolResult("atomicLookupResult", `Element symbol <strong>${escapeHtml(symbol)}</strong> was not found.`, "error");
+        return;
+      }
+
+      const name = ELEMENT_NAMES[symbol] || symbol;
+      setToolResult(
+        "atomicLookupResult",
+        `<strong>${escapeHtml(symbol)}</strong> (${escapeHtml(name)}): atomic weight ≈ <strong>${ATOMIC_WEIGHTS[symbol]}</strong> g mol<sup>−1</sup>`,
+        "ok"
+      );
+    }
+
+    function multiplyIntegersOnly() {
+      const aRaw = document.getElementById("multA").value.trim();
+      const bRaw = document.getElementById("multB").value.trim();
+      const intPattern = /^-?\d+$/;
+
+      if (!intPattern.test(aRaw) || !intPattern.test(bRaw)) {
+        setToolResult("multiplyResult", "Only integers are allowed. Examples: 12, -5, 250.", "error");
+        return;
+      }
+
+      try {
+        const a = BigInt(aRaw);
+        const b = BigInt(bRaw);
+        const product = a * b;
+        setToolResult(
+          "multiplyResult",
+          `<strong>${escapeHtml(aRaw)}</strong> × <strong>${escapeHtml(bRaw)}</strong> = <strong>${product.toString()}</strong>`,
+          "ok"
+        );
+      } catch (error) {
+        setToolResult("multiplyResult", "The entered integers are too large for this browser.", "error");
+      }
+    }
+
+    function toggleStudentTools() {
+      const tools = document.getElementById("studentTools");
+      const btn = document.getElementById("toolsToggleBtn");
+      const collapsed = tools.classList.toggle("collapsed");
+      btn.textContent = collapsed ? "Show Student Tools" : "Hide Student Tools";
+    }
+
+
     document.getElementById("reloadBtn").addEventListener("click", loadBanks);
     document.getElementById("setFiveBtn").addEventListener("click", () => setCounts("five"));
     document.getElementById("useAllBtn").addEventListener("click", () => setCounts("all"));
@@ -7927,18 +8523,48 @@
     document.getElementById("startQuizBtn").addEventListener("click", startQuiz);
     document.getElementById("hintBtn").addEventListener("click", showHint);
     document.getElementById("checkBtn").addEventListener("click", checkAnswer);
+    document.getElementById("prevBtn").addEventListener("click", previousQuestion);
     document.getElementById("nextBtn").addEventListener("click", nextQuestion);
+    document.getElementById("markBtn").addEventListener("click", toggleMarkForLater);
+    document.getElementById("finishBtn").addEventListener("click", showResult);
     document.getElementById("restartBtn").addEventListener("click", restartToSelection);
+    document.getElementById("toolsToggleBtn").addEventListener("click", toggleStudentTools);
+    document.getElementById("atomicLookupBtn").addEventListener("click", lookupAtomicWeight);
+    document.getElementById("atomicSymbolInput").addEventListener("keydown", event => {
+      if (event.key === "Enter") lookupAtomicWeight();
+    });
+    document.getElementById("multiplyBtn").addEventListener("click", multiplyIntegersOnly);
+    document.getElementById("multA").addEventListener("keydown", event => {
+      if (event.key === "Enter") multiplyIntegersOnly();
+    });
+    document.getElementById("multB").addEventListener("keydown", event => {
+      if (event.key === "Enter") multiplyIntegersOnly();
+    });
 
     document.addEventListener("keydown", event => {
       if (!quizActive) return;
 
+      const tag = document.activeElement?.tagName?.toLowerCase();
+      if (tag === "input" || tag === "select" || tag === "textarea") return;
+
       if (event.key === "Enter") {
-        if (!checked) {
+        if (!questionChecked[currentQuestion]) {
           checkAnswer();
-        } else {
+        } else if (currentQuestion < currentQuiz.length - 1) {
           nextQuestion();
         }
+      }
+
+      if (event.key === "ArrowLeft") {
+        previousQuestion();
+      }
+
+      if (event.key === "ArrowRight") {
+        nextQuestion();
+      }
+
+      if (event.key.toLowerCase() === "m") {
+        toggleMarkForLater();
       }
     });
 
