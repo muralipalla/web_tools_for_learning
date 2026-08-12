@@ -1,6 +1,6 @@
-# Interactive Learning Lab
+# Palladium
 
-Interactive learning tools with quizzes, simulations, user accounts, and optional cloud progress through Supabase.
+An interactive learning lab with quizzes, simulations, user accounts, and optional cloud progress through Supabase.
 
 ## Supabase setup
 

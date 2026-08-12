@@ -1,4 +1,4 @@
--- Interactive Learning Lab: user accounts and learning progress.
+-- Palladium: user accounts and learning progress.
 -- Run this in the Supabase SQL Editor for a new project.
 
 create extension if not exists pgcrypto;
