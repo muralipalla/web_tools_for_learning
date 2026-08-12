@@ -11,7 +11,7 @@
     "general-chemistry-v1": "Custom Chemistry Quiz", "ionic-formula-v1": "Ionic Formula Quiz",
     "multiplication-practice-v1": "Multiplication Practice", "oxidation-numbers-v1": "Oxidation Numbers",
     "trig-angles-v1": "Trigonometric Angles", "units-and-dimensions-v1": "Units and Dimensions",
-    "vocabulary-daily-v1": "Vocabulary Trainer"
+    "vocabulary-daily-v1": "Daily Vocabulary", "gre-vocabulary-v1": "Advanced Vocabulary"
   };
 
   function cell(text, className = "") {

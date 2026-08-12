@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Master 300 challenging words with adaptive meaning, synonym, antonym, and context practice in Palladium's advanced vocabulary trainer.">
+  <meta name="theme-color" content="#06162f">
+  <title>Advanced Vocabulary | Palladium</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/advanced-vocabulary.css">
+</head>
+
+<body class="advanced-vocab-page">
+  <header class="advanced-header">
+    <nav class="advanced-nav" aria-label="Advanced vocabulary navigation">
+      <a class="brand palladium-brand" href="../index.html" aria-label="Palladium learning lab — Home">
+        <span class="palladium-mark" aria-hidden="true">
+          <span class="palladium-number">46</span>
+          <span class="palladium-symbol">Pd</span>
+        </span>
+        <span class="palladium-wordmark" aria-hidden="true">
+          <span class="palladium-name"><span class="palladium-palla">Palla</span><span class="palladium-dium">dium</span></span>
+          <span class="palladium-tagline">EXPLORE · PRACTICE · LEVEL UP</span>
+        </span>
+      </a>
+      <div class="advanced-nav-links">
+        <a href="../index.html#english">English tools</a>
+        <a href="vocabulary_daily_practice_quiz_v1.html">Daily trainer</a>
+        <a href="../account.html">Account</a>
+      </div>
+    </nav>
+
+    <section class="advanced-hero" aria-labelledby="advanced-title">
+      <div>
+        <p class="advanced-eyebrow">Advanced Vocabulary · 300-word bank · Adaptive review</p>
+        <h1 id="advanced-title">Build a vocabulary that<br><span> changes how you think.</span></h1>
+        <p class="advanced-intro">
+          Train with demanding words in context, learn precise shades of meaning, and let
+          missed answers return until they stick.
+        </p>
+      </div>
+      <div class="hero-stat-grid" aria-label="Trainer highlights">
+        <div><strong id="heroWordCount">300</strong><span>challenging words</span></div>
+        <div><strong>4</strong><span>challenge styles</span></div>
+        <div><strong>3×</strong><span>correct to master</span></div>
+      </div>
+    </section>
+  </header>
+
+  <main class="trainer-shell">
+    <noscript><p class="noscript-notice">This trainer needs JavaScript to create questions and save your progress. Please enable JavaScript and reload the page.</p></noscript>
+    <section class="trainer-main-card" aria-label="Vocabulary trainer">
+      <div class="trainer-tabs" role="tablist" aria-label="Trainer sections">
+        <button id="practiceTab" class="trainer-tab active" type="button" role="tab" aria-selected="true" aria-controls="practiceScreen" data-screen="practice">Practice</button>
+        <button id="bankTab" class="trainer-tab" type="button" role="tab" aria-selected="false" aria-controls="bankScreen" data-screen="bank">Word bank</button>
+        <button id="progressTab" class="trainer-tab" type="button" role="tab" aria-selected="false" aria-controls="progressScreen" data-screen="progress">Progress</button>
+      </div>
+
+      <section id="practiceScreen" class="trainer-screen" role="tabpanel" aria-labelledby="practiceTab">
+        <div id="setupPanel" class="setup-panel">
+          <div class="section-heading">
+            <p class="section-kicker">Choose your challenge</p>
+            <h2>What do you want to sharpen?</h2>
+            <p>Mixed Challenge gives the strongest all-round workout. Your weaker words receive priority automatically.</p>
+          </div>
+
+          <div class="mode-grid" role="radiogroup" aria-label="Practice mode">
+            <button class="mode-card selected" type="button" role="radio" aria-checked="true" data-mode="mixed">
+              <span class="mode-icon" aria-hidden="true">✦</span>
+              <strong>Mixed Challenge</strong>
+              <small>Meaning, context, synonyms, and antonyms</small>
+            </button>
+            <button class="mode-card" type="button" role="radio" aria-checked="false" data-mode="meaning">
+              <span class="mode-icon" aria-hidden="true">≡</span>
+              <strong>Meaning Match</strong>
+              <small>Match each word to its precise definition</small>
+            </button>
+            <button class="mode-card" type="button" role="radio" aria-checked="false" data-mode="context">
+              <span class="mode-icon" aria-hidden="true">“ ”</span>
+              <strong>Context Lab</strong>
+              <small>Complete sophisticated sentences</small>
+            </button>
+            <button class="mode-card" type="button" role="radio" aria-checked="false" data-mode="synonym">
+              <span class="mode-icon" aria-hidden="true">↔</span>
+              <strong>Word Relations</strong>
+              <small>Test synonyms and antonyms</small>
+            </button>
+          </div>
+
+          <div class="session-settings">
+            <label>
+              <span>Session length</span>
+              <select id="sessionLength">
+                <option value="10">Quick · 10 questions</option>
+                <option value="20" selected>Focused · 20 questions</option>
+                <option value="30">Deep · 30 questions</option>
+              </select>
+            </label>
+            <label>
+              <span>Difficulty</span>
+              <select id="difficultyFilter">
+                <option value="all" selected>All difficulty levels</option>
+                <option value="1">Challenging</option>
+                <option value="2">Demanding</option>
+                <option value="3">Elite</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="setup-actions">
+            <button id="startSessionButton" class="primary-trainer-button" type="button">Start mixed challenge <span aria-hidden="true">→</span></button>
+            <button id="reviewSessionButton" class="secondary-trainer-button" type="button">Review weak words <span id="reviewButtonCount">0</span></button>
+            <button id="continueOfflineButton" class="text-button" type="button" hidden>Continue offline</button>
+          </div>
+          <p id="setupMessage" class="setup-message" role="status"></p>
+        </div>
+
+        <div id="questionPanel" class="question-panel" hidden>
+          <div class="question-toolbar">
+            <div>
+              <span id="questionType" class="question-type">Meaning match</span>
+              <span id="questionDifficulty" class="difficulty-chip">Demanding</span>
+            </div>
+            <button id="endSessionButton" class="text-button" type="button">End session</button>
+          </div>
+
+          <div class="live-score-row" aria-label="Session status">
+            <span id="questionCounter">Question 1 of 20</span>
+            <span><strong id="liveScore">0</strong> correct</span>
+            <span><strong id="comboCount">0</strong> combo</span>
+          </div>
+          <div id="questionProgress" class="question-progress" role="progressbar" aria-label="Session progress" aria-valuemin="0" aria-valuemax="20" aria-valuenow="0"><span id="questionProgressBar"></span></div>
+
+          <div id="questionContent" class="question-content" tabindex="-1" role="group" aria-live="polite"></div>
+          <div id="answerOptions" class="answer-options" aria-label="Answer choices"></div>
+
+          <div id="answerFeedback" class="answer-feedback" aria-live="polite" hidden></div>
+          <div class="question-actions">
+            <button id="hintButton" class="secondary-trainer-button" type="button">Hint <span class="key-hint">H</span></button>
+            <button id="nextQuestionButton" class="primary-trainer-button" type="button" disabled>Next <span class="key-hint">Enter</span></button>
+          </div>
+        </div>
+
+        <div id="resultPanel" class="result-panel" hidden>
+          <div id="resultEmblem" class="result-emblem" aria-hidden="true">✦</div>
+          <p class="section-kicker">Session complete</p>
+          <h2 id="resultHeadline">Strong work.</h2>
+          <p id="resultSummary" class="result-summary"></p>
+          <div class="result-stats">
+            <div><strong id="resultScore">0/20</strong><span>Score</span></div>
+            <div><strong id="resultAccuracy">0%</strong><span>Accuracy</span></div>
+            <div><strong id="resultXp">+0</strong><span>XP earned</span></div>
+          </div>
+          <div id="resultReview" class="result-review"></div>
+          <div class="result-actions">
+            <button id="practiceAgainButton" class="primary-trainer-button" type="button">Practice again</button>
+            <button id="reviewMistakesButton" class="secondary-trainer-button" type="button">Review mistakes</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="bankScreen" class="trainer-screen" role="tabpanel" aria-labelledby="bankTab" hidden>
+        <div class="section-heading bank-heading">
+          <div>
+            <p class="section-kicker">Explore all 300</p>
+            <h2>Your advanced word bank</h2>
+            <p>Search definitions and synonyms, or filter by mastery and difficulty.</p>
+          </div>
+          <span id="bankResultCount" class="result-count" role="status" aria-live="polite">300 words</span>
+        </div>
+        <div class="bank-tools">
+          <label class="search-field">
+            <span class="sr-only">Search word bank</span>
+            <input id="bankSearch" type="search" placeholder="Search a word, meaning, or synonym…" autocomplete="off">
+          </label>
+          <select id="bankDifficulty" aria-label="Filter word bank by difficulty">
+            <option value="all">All levels</option>
+            <option value="1">Challenging</option>
+            <option value="2">Demanding</option>
+            <option value="3">Elite</option>
+          </select>
+          <select id="bankMastery" aria-label="Filter word bank by mastery">
+            <option value="all">All progress</option>
+            <option value="new">Not seen</option>
+            <option value="review">Needs review</option>
+            <option value="mastered">Mastered</option>
+          </select>
+        </div>
+        <div id="wordBankGrid" class="word-bank-grid"></div>
+        <button id="loadMoreWordsButton" class="secondary-trainer-button load-more-button" type="button">Show more words</button>
+      </section>
+
+      <section id="progressScreen" class="trainer-screen" role="tabpanel" aria-labelledby="progressTab" hidden>
+        <div class="section-heading">
+          <p class="section-kicker">Your learning map</p>
+          <h2>Progress that remembers what needs work.</h2>
+          <p>Each word is mastered after three correct answers. A missed word returns to your review queue.</p>
+        </div>
+        <div class="progress-overview">
+          <div><strong id="progressMastered">0</strong><span>Mastered</span></div>
+          <div><strong id="progressReview">0</strong><span>Needs review</span></div>
+          <div><strong id="progressAccuracy">0%</strong><span>Lifetime accuracy</span></div>
+          <div><strong id="progressSessions">0</strong><span>Sessions</span></div>
+        </div>
+        <div class="progress-sections">
+          <section>
+            <div class="mini-heading"><h3>Priority review</h3><button id="startPriorityReviewButton" class="text-button" type="button">Practice these</button></div>
+            <div id="priorityWords" class="chip-cloud"></div>
+          </section>
+          <section>
+            <h3>Recent sessions</h3>
+            <div id="sessionHistory" class="session-history"></div>
+          </section>
+        </div>
+        <button id="resetProgressButton" class="danger-button" type="button">Reset advanced vocabulary progress</button>
+      </section>
+    </section>
+
+    <aside class="trainer-sidebar" aria-label="Learning statistics">
+      <section class="profile-card">
+        <div class="rank-mark" aria-hidden="true">V</div>
+        <div><p>Current rank</p><h2 id="rankName">Word Scout</h2></div>
+        <span id="levelNumber" class="level-number">Level 1</span>
+      </section>
+
+      <section class="sidebar-card">
+        <div class="sidebar-card-heading"><h3>Momentum</h3><span id="totalXp">0 XP</span></div>
+        <div class="sidebar-stat-grid">
+          <div><strong id="sidebarStreak">0</strong><span>day streak</span></div>
+          <div><strong id="sidebarAccuracy">0%</strong><span>accuracy</span></div>
+          <div><strong id="sidebarMastered">0</strong><span>mastered</span></div>
+          <div><strong id="sidebarReview">0</strong><span>to review</span></div>
+        </div>
+      </section>
+
+      <section class="sidebar-card daily-goal-card">
+        <div class="sidebar-card-heading"><h3>Daily goal</h3><span id="dailyGoalText">0 / 20</span></div>
+        <div id="dailyGoalTrack" class="daily-goal-track" role="progressbar" aria-label="Daily vocabulary goal" aria-valuemin="0" aria-valuemax="20" aria-valuenow="0"><span id="dailyGoalBar"></span></div>
+        <p>Answer 20 questions today to keep your learning rhythm.</p>
+      </section>
+
+      <section class="sidebar-card keyboard-card">
+        <h3>Keyboard shortcuts</h3>
+        <p><kbd>1</kbd>–<kbd>4</kbd> answer · <kbd>H</kbd> hint · <kbd>Enter</kbd> next</p>
+      </section>
+    </aside>
+  </main>
+
+  <footer class="advanced-footer">
+    <p>Palladium Advanced Vocabulary · 300 challenging words · Progress is saved here and synced when you sign in.</p>
+  </footer>
+
+  <div id="celebrationLayer" class="celebration-layer" aria-hidden="true"></div>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.2/dist/umd/supabase.min.js"></script>
+  <script defer src="../js/supabase-client.js"></script>
+  <script defer src="../js/progress-store.js"></script>
+  <script defer src="../assets/data/advanced-vocabulary-bank.js"></script>
+  <script defer src="../js/advanced-vocabulary.js"></script>
+</body>
+</html>
