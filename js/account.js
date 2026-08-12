@@ -48,7 +48,8 @@
     "oxidation-numbers-v1": "Oxidation Numbers",
     "trig-angles-v1": "Trigonometric Angles",
     "units-and-dimensions-v1": "Units and Dimensions",
-    "vocabulary-daily-v1": "Vocabulary Trainer"
+    "vocabulary-daily-v1": "Daily Vocabulary",
+    "gre-vocabulary-v1": "Advanced Vocabulary"
   };
 
   function accountUrl() {

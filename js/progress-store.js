@@ -4,6 +4,7 @@
   const MULTIPLICATION_KEY = "multiplication_practice_history_v1";
   const OXIDATION_KEY = "oxidation_numbers_quiz_history_v1";
   const VOCABULARY_KEY = "sat_vocab_daily_quiz_v1";
+  const ADVANCED_VOCABULARY_KEY = "gre_vocabulary_trainer_v1";
   let cachedUserId = null;
 
   function client() {
@@ -46,6 +47,14 @@
     return user;
   }
 
+  async function requireExpectedUser(expectedUserId) {
+    const user = await requireUser();
+    if (expectedUserId && user.id !== expectedUserId) {
+      throw new Error("The signed-in account changed while progress was syncing.");
+    }
+    return user;
+  }
+
   function boundedInteger(value, minimum, maximum) {
     const number = Number(value);
     if (!Number.isFinite(number)) return minimum;
@@ -74,6 +83,7 @@
         (Array.isArray(value.logs) && value.logs.length) ||
         Object.keys(value.progress || {}).length ||
         value.totalXP ||
+        value.totalXp ||
         value.totalAnswered
       )
     );
@@ -114,13 +124,19 @@
       if (changed) writeLocalJson(key, history);
     }
 
-    for (const key of [VOCABULARY_KEY, `${VOCABULARY_KEY}:${userId}`]) {
+    for (const key of [
+      VOCABULARY_KEY,
+      `${VOCABULARY_KEY}:${userId}`,
+      ADVANCED_VOCABULARY_KEY,
+      `${ADVANCED_VOCABULARY_KEY}:${userId}`
+    ]) {
       const vocabulary = readLocalJson(key, null);
       if (!vocabulary || !Array.isArray(vocabulary.logs)) continue;
 
       const matchingLog = vocabulary.logs.find(log => log.clientAttemptId === clientAttemptId);
       if (matchingLog && (!matchingLog.ownerId || matchingLog.ownerId === userId)) {
         matchingLog.ownerId = userId;
+        if (key.startsWith(ADVANCED_VOCABULARY_KEY)) matchingLog.cloudSaved = true;
         if (!vocabulary.ownerId || vocabulary.ownerId === userId) vocabulary.ownerId = userId;
         writeLocalJson(key, vocabulary);
       }
@@ -134,7 +150,8 @@
     total,
     durationSeconds = null,
     details = {},
-    completedAt = null
+    completedAt = null,
+    expectedUserId = null
   }) {
     if (!quizId || typeof quizId !== "string") throw new Error("A quizId is required.");
     if (!Number.isInteger(score) || !Number.isInteger(total) || total <= 0 || score < 0 || score > total) {
@@ -150,6 +167,9 @@
     }
 
     if (!user) return { saved: false, reason: "signed_out", clientAttemptId };
+    if (expectedUserId && user.id !== expectedUserId) {
+      return { saved: false, reason: "owner_changed", clientAttemptId };
+    }
 
     const row = {
       client_attempt_id: clientAttemptId,
@@ -174,6 +194,7 @@
       .maybeSingle();
 
     if (error) throw error;
+    if (expectedUserId) await requireExpectedUser(expectedUserId);
     claimLocalAttempt(clientAttemptId, user.id);
     return { saved: true, attempt: data, clientAttemptId, userId: user.id };
   }
@@ -194,9 +215,10 @@
     return data || [];
   }
 
-  async function saveActivityState(activityId, state) {
+  async function saveActivityState(activityId, state, expectedUserId = null) {
     const user = await currentUser();
     if (!user) return { saved: false, reason: "signed_out" };
+    if (expectedUserId && user.id !== expectedUserId) return { saved: false, reason: "owner_changed" };
 
     const { error } = await client()
       .from("activity_state")
@@ -210,21 +232,47 @@
       );
 
     if (error) throw error;
+    if (expectedUserId) await requireExpectedUser(expectedUserId);
     return { saved: true, userId: user.id };
   }
 
-  async function loadActivityState(activityId) {
+  async function loadActivityState(activityId, expectedUserId = null) {
     const user = await currentUser();
     if (!user) return null;
+    if (expectedUserId && user.id !== expectedUserId) throw new Error("The signed-in account changed while progress was loading.");
 
     const { data, error } = await client()
       .from("activity_state")
       .select("state, updated_at")
+      .eq("user_id", user.id)
       .eq("activity_id", activityId)
       .maybeSingle();
 
     if (error) throw error;
+    if (expectedUserId) await requireExpectedUser(expectedUserId);
     return data ? { ...data, userId: user.id } : null;
+  }
+
+  async function deleteActivityState(activityId, expectedUserId = null) {
+    if (!activityId || typeof activityId !== "string") throw new Error("An activityId is required.");
+    const user = await requireUser();
+    if (expectedUserId && user.id !== expectedUserId) return { deleted: false, reason: "owner_changed" };
+
+    const { error: stateError } = await client()
+      .from("activity_state")
+      .delete()
+      .eq("user_id", user.id)
+      .eq("activity_id", activityId);
+    if (stateError) throw stateError;
+
+    if (expectedUserId) {
+      const userAfterDelete = await currentUser();
+      if (!userAfterDelete || userAfterDelete.id !== expectedUserId) {
+        return { deleted: false, reason: "owner_changed" };
+      }
+    }
+
+    return { deleted: true, userId: user.id };
   }
 
   function belongsToUserOrGuest(entry, userId) {
@@ -333,26 +381,131 @@
     });
   }
 
+  function advancedVocabularyRows(state, userId) {
+    if (state.ownerId && state.ownerId !== userId) return [];
+    if (!Array.isArray(state.logs)) return [];
+
+    return state.logs.filter(log => belongsToUserOrGuest(log, userId)).flatMap(log => {
+      const total = boundedInteger(log.total, 0, 10000);
+      if (!total) return [];
+
+      log.clientAttemptId ||= createAttemptId();
+      log.completedAt = validIsoTimestamp(log.completedAt) || dateOnlyTimestamp(log.date) || new Date().toISOString();
+      return [{
+        client_attempt_id: log.clientAttemptId,
+        user_id: userId,
+        quiz_id: "gre-vocabulary-v1",
+        score: boundedInteger(log.score, 0, total),
+        total,
+        duration_seconds: boundedInteger(log.durationSeconds, 0, 86400) || null,
+        completed_at: log.completedAt,
+        details: {
+          mode: log.mode || "mixed",
+          xp: boundedInteger(log.xp, 0, 1000000),
+          bestCombo: boundedInteger(log.bestCombo, 0, 10000),
+          endedEarly: Boolean(log.endedEarly),
+          wrongWords: Array.isArray(log.mistakes) ? log.mistakes : [],
+          importedFromLocalStorage: true
+        }
+      }];
+    });
+  }
+
+  async function mergeAdditionalVocabularyState({ localKey, activityId, rawState, userId }) {
+    const localState = plainObject(rawState);
+    const belongsToUser = !localState.ownerId || localState.ownerId === userId;
+    const perUserKey = `${localKey}:${userId}`;
+    const existingUserState = plainObject(readLocalJson(perUserKey, null));
+    const hasExistingUserState = hasMeaningfulVocabularyState(existingUserState);
+    const hasGuestState = belongsToUser && hasMeaningfulVocabularyState(localState);
+
+    if (!hasExistingUserState && !hasGuestState) {
+      if (rawState && typeof rawState === "object") writeLocalJson(localKey, localState);
+      return { stateCount: 0, stateSkipped: 0 };
+    }
+
+    const remote = await loadActivityState(activityId, userId);
+    const remoteUpdatedAt = Date.parse(remote?.updated_at || "") || 0;
+    const existingUpdatedAt = Date.parse(existingUserState.localUpdatedAt || "") || 0;
+    let stateForUser = null;
+    let stateCount = 0;
+    let stateSkipped = 0;
+
+    if (hasExistingUserState) {
+      existingUserState.ownerId = userId;
+      if (!remote) {
+        const result = await saveActivityState(activityId, existingUserState, userId);
+        stateCount = result.saved ? 1 : 0;
+        stateForUser = existingUserState;
+      } else if (!existingUpdatedAt) {
+        stateForUser = existingUserState;
+        stateSkipped = 1;
+      } else if (existingUpdatedAt > remoteUpdatedAt) {
+        const result = await saveActivityState(activityId, existingUserState, userId);
+        stateCount = result.saved ? 1 : 0;
+        stateForUser = existingUserState;
+      } else {
+        stateForUser = {
+          ...remote.state,
+          ownerId: userId,
+          localUpdatedAt: remote.state.localUpdatedAt || remote.updated_at
+        };
+      }
+      if (hasGuestState) stateSkipped = 1;
+    } else if (remote) {
+      stateForUser = {
+        ...remote.state,
+        ownerId: userId,
+        localUpdatedAt: remote.state.localUpdatedAt || remote.updated_at
+      };
+      stateSkipped = 1;
+    } else {
+      localState.ownerId = userId;
+      const result = await saveActivityState(activityId, localState, userId);
+      stateCount = result.saved ? 1 : 0;
+      stateForUser = localState;
+    }
+
+    if (stateForUser) {
+      await requireExpectedUser(userId);
+      writeLocalJson(perUserKey, stateForUser);
+      if (hasGuestState && stateSkipped) writeLocalJson(`${localKey}:guest-imported:${userId}`, localState);
+      if (belongsToUser) window.localStorage.removeItem(localKey);
+    }
+
+    return { stateCount, stateSkipped };
+  }
+
   async function importLocalProgress() {
     const user = await requireUser();
     const multiplication = readLocalJson(MULTIPLICATION_KEY, []);
     const oxidation = readLocalJson(OXIDATION_KEY, []);
     const vocabulary = readLocalJson(VOCABULARY_KEY, null);
+    const advancedVocabulary = readLocalJson(ADVANCED_VOCABULARY_KEY, null);
+    const advancedUserKey = `${ADVANCED_VOCABULARY_KEY}:${user.id}`;
+    const advancedUserVocabulary = readLocalJson(advancedUserKey, null);
 
     const multiplicationHistory = Array.isArray(multiplication) ? multiplication : [];
     const oxidationHistory = Array.isArray(oxidation) ? oxidation : [];
     const vocabularyState = plainObject(vocabulary);
+    const advancedVocabularyState = plainObject(advancedVocabulary);
+    const advancedUserVocabularyState = plainObject(advancedUserVocabulary);
     const vocabularyBelongsToUser = !vocabularyState.ownerId || vocabularyState.ownerId === user.id;
+    const advancedVocabularyBelongsToUser = !advancedVocabularyState.ownerId || advancedVocabularyState.ownerId === user.id;
 
-    const attempts = [
+    const candidateAttempts = [
       ...multiplicationRows(multiplicationHistory, user.id),
       ...oxidationRows(oxidationHistory, user.id),
-      ...vocabularyRows(vocabularyState, user.id)
+      ...vocabularyRows(vocabularyState, user.id),
+      ...advancedVocabularyRows(advancedVocabularyState, user.id),
+      ...advancedVocabularyRows(advancedUserVocabularyState, user.id)
     ];
+    const attempts = [...new Map(candidateAttempts.map(row => [row.client_attempt_id, row])).values()];
 
     writeLocalJson(MULTIPLICATION_KEY, multiplicationHistory);
     writeLocalJson(OXIDATION_KEY, oxidationHistory);
     if (vocabulary && typeof vocabulary === "object") writeLocalJson(VOCABULARY_KEY, vocabularyState);
+    if (advancedVocabulary && typeof advancedVocabulary === "object") writeLocalJson(ADVANCED_VOCABULARY_KEY, advancedVocabularyState);
 
     if (attempts.length) {
       const { error } = await client()
@@ -362,6 +515,7 @@
           ignoreDuplicates: true
         });
       if (error) throw error;
+      await requireExpectedUser(user.id);
 
       multiplicationHistory
         .filter(entry => belongsToUserOrGuest(entry, user.id))
@@ -374,6 +528,17 @@
           .filter(log => belongsToUserOrGuest(log, user.id))
           .forEach(log => { log.ownerId = user.id; });
       }
+      if (advancedVocabularyBelongsToUser && Array.isArray(advancedVocabularyState.logs)) {
+        advancedVocabularyState.logs
+          .filter(log => belongsToUserOrGuest(log, user.id))
+          .forEach(log => { log.ownerId = user.id; log.cloudSaved = true; });
+      }
+      if (Array.isArray(advancedUserVocabularyState.logs)) {
+        advancedUserVocabularyState.logs
+          .filter(log => belongsToUserOrGuest(log, user.id))
+          .forEach(log => { log.ownerId = user.id; log.cloudSaved = true; });
+        writeLocalJson(advancedUserKey, advancedUserVocabularyState);
+      }
     }
 
     let stateCount = 0;
@@ -385,7 +550,7 @@
     const hasGuestState = vocabularyBelongsToUser && hasMeaningfulVocabularyState(vocabularyState);
 
     if (hasExistingUserState || hasGuestState) {
-      const remote = await loadActivityState("vocabulary-daily-v1");
+      const remote = await loadActivityState("vocabulary-daily-v1", user.id);
       const remoteUpdatedAt = Date.parse(remote?.updated_at || "") || 0;
       const existingUpdatedAt = Date.parse(existingUserState.localUpdatedAt || "") || 0;
 
@@ -393,7 +558,7 @@
         existingUserState.ownerId = user.id;
 
         if (!remote) {
-          const result = await saveActivityState("vocabulary-daily-v1", existingUserState);
+          const result = await saveActivityState("vocabulary-daily-v1", existingUserState, user.id);
           stateCount = result.saved ? 1 : 0;
           vocabularyStateForUser = existingUserState;
         } else if (!existingUpdatedAt) {
@@ -402,7 +567,7 @@
           vocabularyStateForUser = existingUserState;
           stateSkipped = 1;
         } else if (existingUpdatedAt > remoteUpdatedAt) {
-          const result = await saveActivityState("vocabulary-daily-v1", existingUserState);
+          const result = await saveActivityState("vocabulary-daily-v1", existingUserState, user.id);
           stateCount = result.saved ? 1 : 0;
           vocabularyStateForUser = existingUserState;
         } else {
@@ -423,12 +588,13 @@
         stateSkipped = 1;
       } else {
         vocabularyState.ownerId = user.id;
-        const result = await saveActivityState("vocabulary-daily-v1", vocabularyState);
+        const result = await saveActivityState("vocabulary-daily-v1", vocabularyState, user.id);
         stateCount = result.saved ? 1 : 0;
         vocabularyStateForUser = vocabularyState;
       }
     }
 
+    await requireExpectedUser(user.id);
     writeLocalJson(MULTIPLICATION_KEY, multiplicationHistory);
     writeLocalJson(OXIDATION_KEY, oxidationHistory);
     if (vocabularyStateForUser) {
@@ -441,6 +607,16 @@
       writeLocalJson(VOCABULARY_KEY, vocabularyState);
     }
 
+    const advancedMerge = await mergeAdditionalVocabularyState({
+      localKey: ADVANCED_VOCABULARY_KEY,
+      activityId: "gre-vocabulary-v1",
+      rawState: advancedVocabulary,
+      userId: user.id
+    });
+    stateCount += advancedMerge.stateCount;
+    stateSkipped += advancedMerge.stateSkipped;
+
+    await requireExpectedUser(user.id);
     return { attemptCount: attempts.length, stateCount, stateSkipped };
   }
 
@@ -479,6 +655,7 @@
     listAttempts,
     saveActivityState,
     loadActivityState,
+    deleteActivityState,
     importLocalProgress,
     subscribeToOwnerChanges
   });
