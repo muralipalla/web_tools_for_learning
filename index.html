@@ -5,6 +5,14 @@
   <title>Interactive Learning Lab</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/style.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/"
+    }
+  }
+  </script>
 </head>
 
 <body>
@@ -12,7 +20,7 @@
     <nav class="top-nav">
       <div class="brand">
         <span class="brand-icon">✦</span>
-        <span>Interactive Learning Lab</span>
+        <span>PALLAdium</span>
       </div>
 
       <div class="nav-links">
@@ -32,7 +40,7 @@
     <section class="hero">
       <div class="hero-text">
         <p class="eyebrow">Quizzes • Simulations • Self Practice</p>
-        <h1>Interactive Learning Lab</h1>
+        <h1>Palladium</h1>
         <p class="hero-subtitle">
           A collection of small learning apps for exploring concepts, practicing problems,
           and building confidence in science, mathematics, and vocabulary.
@@ -44,22 +52,31 @@
         </div>
       </div>
 
-      <div class="hero-image-card">
-        <!--
-          Add your own image here:
+      <div class="hero-visual-card">
+        <div
+          id="solarSystemViewer"
+          class="solar-system-viewer"
+          role="img"
+          tabindex="0"
+          aria-label="Interactive animated solar system. Drag to rotate, scroll or pinch to zoom, and use arrow keys to move the view."
+        >
+          <p id="solarSystemLoading" class="solar-system-loading">Preparing the solar system&hellip;</p>
+          <span id="solarSystemLabel" class="solar-system-label" aria-live="polite" hidden></span>
+          <p id="solarSystemError" class="solar-system-error" hidden>
+            The 3D solar system could not load. Please refresh the page or check your internet connection.
+          </p>
+        </div>
 
-          1. Create this folder:
-             assets/images/
-
-          2. Put your image inside it.
-
-          3. Rename your image as:
-             learning-lab.jpg
-
-          Or change the src below to match your own filename.
-        -->
-        <img src="assets/images/IMG_2956.png" alt="Interactive learning illustration">
-        <p class="image-note">Spotted Owlet <strong> Pilani</strong></p>
+        <div class="solar-system-caption">
+          <div>
+            <strong>Explore the solar system</strong>
+            <span>Drag to orbit &middot; Scroll or pinch to zoom &middot; Tap a planet &middot; Not to scale</span>
+          </div>
+          <div class="solar-system-actions" aria-label="Solar system controls">
+            <button id="solarMotionButton" class="solar-control-button" type="button" aria-pressed="false">Pause</button>
+            <button id="solarResetButton" class="solar-control-button" type="button">Reset</button>
+          </div>
+        </div>
       </div>
     </section>
   </header>
@@ -280,5 +297,6 @@
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.2/dist/umd/supabase.min.js"></script>
   <script defer src="js/supabase-client.js"></script>
   <script defer src="js/home-auth.js"></script>
+  <script type="module" src="js/solar-system-hero.mjs"></script>
 </body>
 </html>
