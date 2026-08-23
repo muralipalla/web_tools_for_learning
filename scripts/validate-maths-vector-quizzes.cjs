@@ -51,6 +51,20 @@ const expected = [
     quizId: "cross-product-v1",
     bankSize: 20,
     quizSize: 10
+  },
+  {
+    file: "vector_resolution_quiz_v1.html",
+    topicId: "vector-resolution",
+    quizId: "vector-resolution-v1",
+    bankSize: 20,
+    quizSize: 10
+  },
+  {
+    file: "vector_magnitude_quiz_v1.html",
+    topicId: "vector-magnitude",
+    quizId: "vector-magnitude-v1",
+    bankSize: 20,
+    quizSize: 10
   }
 ];
 
@@ -112,6 +126,14 @@ for (const config of expected) {
     new RegExp('data-quiz-topic="' + config.topicId + '"'),
     config.file + " has the wrong topic ID."
   );
+  assert.ok(
+    html.includes("Question 1 of " + config.quizSize),
+    config.file + " has the wrong initial question count."
+  );
+  assert.ok(
+    html.includes("0/" + config.quizSize),
+    config.file + " has the wrong initial score count."
+  );
   assert.ok(hub.includes('href="' + config.file + '"'), config.file + " is not linked from the hub.");
   assert.ok(html.includes('href="vectors_skill_builder.html"'), config.file + " does not link back to the hub.");
   assert.ok(!html.includes("How it works"), config.file + " still contains explanatory filler.");
@@ -131,7 +153,7 @@ for (const config of expected) {
   }
 }
 
-assert.equal(totalQuestions, 60, "The combined bank must contain 60 questions.");
+assert.equal(totalQuestions, 100, "The combined bank must contain 100 questions.");
 
 const removedConceptPrompts = [
   "Which statement is true for all vectors",
@@ -150,7 +172,7 @@ for (const prompt of removedConceptPrompts) {
 }
 
 console.log(
-  "Maths vector quiz validation passed: 1 hub, 5 pages, 60 direct-practice questions, " +
+  "Maths vector quiz validation passed: 1 hub, 7 pages, 100 direct-practice questions, " +
   engineIds.length +
   " shared DOM bindings, randomized sampling, shuffled options, links, and score labels."
 );

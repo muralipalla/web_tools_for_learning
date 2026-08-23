@@ -53,6 +53,8 @@
     "dot-product-v1": "Dot Product",
     "determinants-2x2-v1": "2 × 2 Determinants",
     "cross-product-v1": "Cross Product of Two Vectors",
+    "vector-resolution-v1": "Vector Resolution",
+    "vector-magnitude-v1": "Magnitude of a Vector",
     "vocabulary-daily-v1": "Daily Vocabulary",
     "gre-vocabulary-v1": "Advanced Vocabulary"
   };
