@@ -13,6 +13,8 @@ const elements = {
   angularMomentumReadout: document.getElementById("angularMomentumReadout"),
   rVector: document.getElementById("rVector"),
   rMagnitude: document.getElementById("rMagnitude"),
+  vVector: document.getElementById("vVector"),
+  vMagnitude: document.getElementById("vMagnitude"),
   pVector: document.getElementById("pVector"),
   pMagnitude: document.getElementById("pMagnitude"),
   lVector: document.getElementById("lVector"),
@@ -183,12 +185,34 @@ function initializeSimulation() {
   );
   scene.add(trail);
 
+  const radiusArrow = createGuideArrow(0x38bdf8);
+  const velocityArrow = createGuideArrow(0x34d399);
   const angularArrow = createProminentArrow(0xfbbf24);
+  const radiusLabel = createLabelSprite("r", "#38bdf8");
+  const velocityLabel = createLabelSprite("v", "#34d399");
   const angularLabel = createLabelSprite("L", "#fbbf24");
-  scene.add(angularArrow, angularLabel);
+  scene.add(
+    radiusArrow,
+    velocityArrow,
+    angularArrow,
+    radiusLabel,
+    velocityLabel,
+    angularLabel
+  );
 
   const zAxis = new THREE.Vector3(0, 0, 1);
   const yAxis = new THREE.Vector3(0, 1, 0);
+
+  function createGuideArrow(color) {
+    return new THREE.ArrowHelper(
+      new THREE.Vector3(1, 0, 0),
+      new THREE.Vector3(),
+      1,
+      color,
+      0.24,
+      0.14
+    );
+  }
 
   function createProminentArrow(color) {
     const material = new THREE.MeshStandardMaterial({
@@ -288,7 +312,7 @@ function initializeSimulation() {
 
     const omegaVector = active.axis.clone().multiplyScalar(omega);
     const velocity = new THREE.Vector3().crossVectors(omegaVector, radiusVector);
-    const momentum = velocity.multiplyScalar(active.mass);
+    const momentum = velocity.clone().multiplyScalar(active.mass);
     const angularMomentum = new THREE.Vector3().crossVectors(radiusVector, momentum);
 
     return {
@@ -296,6 +320,7 @@ function initializeSimulation() {
       radiusVector,
       omega,
       omegaVector,
+      velocity,
       momentum,
       angularMomentum
     };
@@ -347,8 +372,38 @@ function initializeSimulation() {
     return originPoint.clone().addScaledVector(direction, visualLength);
   }
 
+  function setGuideArrow(arrow, vector, originPoint, visualLength) {
+    const magnitude = vector.length();
+    arrow.position.copy(originPoint);
+    if (magnitude < EPSILON || visualLength < EPSILON) {
+      arrow.visible = false;
+      return null;
+    }
+    const direction = vector.clone().normalize();
+    const headLength = Math.min(0.32, Math.max(0.2, visualLength * 0.16));
+    const headWidth = Math.min(0.2, Math.max(0.12, visualLength * 0.1));
+    arrow.visible = true;
+    arrow.setDirection(direction);
+    arrow.setLength(visualLength, headLength, headWidth);
+    return originPoint.clone().addScaledVector(direction, visualLength);
+  }
+
   function updateScene(state) {
     ball.position.copy(state.radiusVector);
+
+    const radiusTip = setGuideArrow(
+      radiusArrow,
+      state.radiusVector,
+      origin.position,
+      active.radius
+    );
+    const velocityLength = 0.9 + Math.min(Math.log1p(state.velocity.length()) * 0.75, 3.2);
+    const velocityTip = setGuideArrow(
+      velocityArrow,
+      state.velocity,
+      state.radiusVector,
+      velocityLength
+    );
 
     const angularLength = 1.25 + Math.min(Math.log1p(state.angularMomentum.length()) * 0.78, 3.8);
     const angularTip = setProminentArrow(
@@ -358,6 +413,8 @@ function initializeSimulation() {
       angularLength
     );
 
+    updateLabel(radiusLabel, radiusTip, Boolean(radiusTip));
+    updateLabel(velocityLabel, velocityTip, Boolean(velocityTip));
     updateLabel(angularLabel, angularTip, Boolean(angularTip));
   }
 
@@ -390,6 +447,8 @@ function initializeSimulation() {
     elements.angularMomentumReadout.textContent = angularMomentumMagnitude.toFixed(2) + " kg·m²/s";
     elements.rVector.textContent = formatVector(state.radiusVector) + " m";
     elements.rMagnitude.textContent = state.radiusVector.length().toFixed(2) + " m";
+    elements.vVector.textContent = formatVector(state.velocity) + " m/s";
+    elements.vMagnitude.textContent = state.velocity.length().toFixed(2) + " m/s";
     elements.pVector.textContent = formatVector(state.momentum) + " kg·m/s";
     elements.pMagnitude.textContent = state.momentum.length().toFixed(2) + " kg·m/s";
     elements.lVector.textContent = formatVector(state.angularMomentum) + " kg·m²/s";

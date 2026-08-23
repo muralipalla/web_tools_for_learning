@@ -40,8 +40,12 @@
         class="viewer"
         role="region"
         tabindex="0"
-        aria-label="Three-dimensional angular momentum simulation. Drag to rotate the view, scroll to zoom, use arrow keys to orbit, plus and minus to zoom, space to pause, and R to reset the camera."
+        aria-label="Three-dimensional angular momentum simulation showing radius r, velocity v, and angular momentum L vectors. Drag to rotate the view, scroll to zoom, use arrow keys to orbit, plus and minus to zoom, space to pause, and R to reset the camera."
+        aria-describedby="vectorSceneDescription"
       >
+        <p id="vectorSceneDescription" class="sr-only">
+          The radius vector r runs from the origin to the ball. The velocity vector v is tangent to the orbit at the ball. The thick angular momentum vector L lies along the rotation axis.
+        </p>
         <p id="loadingMessage" class="viewer-message">Loading 3D simulation…</p>
         <p id="errorMessage" class="viewer-message error-message" role="alert" hidden>
           The 3D view could not load. Refresh the page or check your connection.
@@ -106,6 +110,10 @@
           <li>
             <div class="vector-value-heading"><span>Radius r</span><strong id="rMagnitude">0.00 m</strong></div>
             <code id="rVector">(0.00, 0.00, 0.00) m</code>
+          </li>
+          <li>
+            <div class="vector-value-heading"><span>Velocity v</span><strong id="vMagnitude">0.00 m/s</strong></div>
+            <code id="vVector">(0.00, 0.00, 0.00) m/s</code>
           </li>
           <li>
             <div class="vector-value-heading"><span>Linear momentum p</span><strong id="pMagnitude">0.00 kg·m/s</strong></div>

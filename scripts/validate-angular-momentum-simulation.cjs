@@ -41,7 +41,6 @@ expect(
   html.includes('id="viewer"') && html.includes('role="region"'),
   "The interactive viewer must use exposed region semantics."
 );
-
 const importVersions = [...html.matchAll(/three@([0-9.]+)/g)].map(match => match[1]);
 expect(importVersions.length === 2, "The Three.js import map must pin both core and addons.");
 expect(new Set(importVersions).size === 1, "Three.js core and addons must use the same version.");
@@ -49,6 +48,11 @@ expect(new Set(importVersions).size === 1, "Three.js core and addons must use th
 const htmlIds = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
 const duplicateIds = htmlIds.filter((id, indexValue) => htmlIds.indexOf(id) !== indexValue);
 expect(duplicateIds.length === 0, `Duplicate HTML IDs: ${[...new Set(duplicateIds)].join(", ")}`);
+expect(
+  /id="viewer"[^>]*aria-describedby="vectorSceneDescription"/s.test(html) &&
+    htmlIds.includes("vectorSceneDescription"),
+  "The 3D viewer must describe where the r, v, and L vectors appear."
+);
 
 const queriedIds = [...script.matchAll(/getElementById\("([^"]+)"\)/g)].map(match => match[1]);
 for (const id of queriedIds) {
@@ -88,6 +92,11 @@ expect(
   htmlIds.includes("angularMomentumReadout") && htmlIds.includes("lMagnitude"),
   "Angular-momentum magnitude must be prominent in the viewer status and values panel."
 );
+expect(
+  htmlIds.includes("rVector") && htmlIds.includes("rMagnitude") &&
+    htmlIds.includes("vVector") && htmlIds.includes("vMagnitude"),
+  "Radius and velocity values must both be displayed."
+);
 
 const inputIds = [...html.matchAll(/<input\b[^>]*\bid="([^"]+)"/g)].map(match => match[1]);
 expect(
@@ -118,11 +127,15 @@ for (const expectedSnippet of [
   "phase: INITIAL_PHASE",
   "active.inertia = active.mass * active.radius * active.radius",
   "crossVectors(omegaVector, radiusVector)",
-  "velocity.multiplyScalar(active.mass)",
+  "velocity.clone().multiplyScalar(active.mass)",
   "crossVectors(radiusVector, momentum)",
   "active.torque / active.inertia",
   "0.5 * alpha * pulseTime * pulseTime",
   "createProminentArrow",
+  "createGuideArrow",
+  "radiusArrow",
+  "velocityArrow",
+  "new THREE.ArrowHelper",
   "new THREE.CylinderGeometry(0.09",
   "new THREE.ConeGeometry(0.25",
   "new OrbitControls",
@@ -139,17 +152,63 @@ for (const expectedSnippet of [
 
 for (const forbiddenSnippet of [
   "torqueArrow",
-  "radiusArrow",
   "omegaArrow",
   "momentumArrow",
   "labels.torque",
-  "new THREE.ArrowHelper",
   "elements.pulseBadge",
   "elements.pulseReadout",
   "elements.omegaVector",
   "elements.omegaMagnitude"
 ]) {
   expect(!script.includes(forbiddenSnippet), `Removed vector or pulse display remains: ${forbiddenSnippet}`);
+}
+
+const guideBindings = [...script.matchAll(/const\s+(\w+Arrow)\s*=\s*createGuideArrow\(/g)]
+  .map(match => match[1]);
+expect(
+  JSON.stringify(guideBindings) === JSON.stringify(["radiusArrow", "velocityArrow"]),
+  `Guide arrows must be exactly r and v: ${guideBindings.join(", ")}`
+);
+const prominentBindings = [...script.matchAll(/const\s+(\w+Arrow)\s*=\s*createProminentArrow\(/g)]
+  .map(match => match[1]);
+expect(
+  JSON.stringify(prominentBindings) === JSON.stringify(["angularArrow"]),
+  `Only L may use the prominent arrow mesh: ${prominentBindings.join(", ")}`
+);
+expect(
+  (script.match(/new THREE\.ArrowHelper\(/g) ?? []).length === 1,
+  "The r and v arrows must share one thin ArrowHelper factory."
+);
+expect(
+  /setGuideArrow\(\s*radiusArrow,\s*state\.radiusVector,\s*origin\.position,\s*active\.radius\s*\)/s.test(script),
+  "The r vector must run from the origin to the ball."
+);
+expect(
+  /setGuideArrow\(\s*velocityArrow,\s*state\.velocity,\s*state\.radiusVector,/s.test(script),
+  "The v vector must originate at the ball."
+);
+expect(
+  /setProminentArrow\(\s*angularArrow,\s*state\.angularMomentum,\s*origin\.position,/s.test(script),
+  "The L vector must begin at the rotation origin."
+);
+expect(
+  script.includes("const velocity = new THREE.Vector3().crossVectors(omegaVector, radiusVector)"),
+  "The velocity vector must be calculated as omega cross r."
+);
+expect(
+  script.includes("const momentum = velocity.clone().multiplyScalar(active.mass)") &&
+    !script.includes("const momentum = velocity.multiplyScalar"),
+  "Linear momentum must not overwrite the velocity vector."
+);
+for (const labelSnippet of [
+  'createLabelSprite("r"',
+  'createLabelSprite("v"',
+  'createLabelSprite("L"',
+  "updateLabel(radiusLabel, radiusTip",
+  "updateLabel(velocityLabel, velocityTip",
+  "updateLabel(angularLabel, angularTip"
+]) {
+  expect(script.includes(labelSnippet), `Vector label is missing or unsynchronized: ${labelSnippet}`);
 }
 
 expect(!script.includes("Math.abs(axis.y) < 0.92"), "The orbital basis must not jump at an arbitrary axis threshold.");
@@ -159,7 +218,6 @@ expect(
 );
 expect(script.includes("controls.enabled = false"), "A fatal WebGL state must disable camera interaction.");
 expect(script.includes("elements.viewer.tabIndex = -1"), "A failed viewer must leave the keyboard tab order.");
-expect(script.includes("origin.position"), "The L vector must begin at the rotation origin.");
 
 // Independent acceptance check: the particle begins from rest and receives one axial impulse.
 const mass = 2;
@@ -169,12 +227,14 @@ const pulseDuration = 0.1;
 const initialOmega = 0;
 const inertia = mass * radius ** 2;
 const finalOmega = initialOmega + torque * pulseDuration / inertia;
+const finalVelocityMagnitude = Math.abs(finalOmega) * radius;
 const finalMomentumMagnitude = mass * Math.abs(finalOmega) * radius;
 const finalAngularMomentumMagnitude = inertia * Math.abs(finalOmega);
 
 expectClose(initialOmega, 0, "Initial angular velocity check failed");
 expectClose(inertia, 18, "Moment of inertia check failed");
 expectClose(finalOmega, 0.05, "Torque impulse angular-velocity check failed");
+expectClose(finalVelocityMagnitude, 0.15, "Tangential velocity check failed");
 expectClose(finalMomentumMagnitude, 0.3, "Linear momentum check failed");
 expectClose(finalAngularMomentumMagnitude, 0.9, "Angular-momentum magnitude check failed");
 expectClose(finalAngularMomentumMagnitude, Math.abs(torque) * pulseDuration, "Angular impulse check failed");
@@ -183,5 +243,5 @@ if (failures.length) {
   for (const failure of failures) console.error(`- ${failure}`);
   process.exitCode = 1;
 } else {
-  console.log("Angular momentum simulation: simplified UI, single L vector, routes, and physics checks passed.");
+  console.log("Angular momentum simulation: r, v, and prominent L vectors, routes, and physics checks passed.");
 }
