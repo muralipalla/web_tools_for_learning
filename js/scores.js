@@ -11,6 +11,9 @@
     "general-chemistry-v1": "Custom Chemistry Quiz", "ionic-formula-v1": "Ionic Formula Quiz",
     "multiplication-practice-v1": "Multiplication Practice", "oxidation-numbers-v1": "Oxidation Numbers",
     "trig-angles-v1": "Trigonometric Angles", "units-and-dimensions-v1": "Units and Dimensions",
+    "vector-addition-v1": "Vector Addition", "vector-subtraction-v1": "Vector Subtraction",
+    "dot-product-v1": "Dot Product", "determinants-2x2-v1": "2 × 2 Determinants",
+    "cross-product-v1": "Cross Product of Two Vectors",
     "vocabulary-daily-v1": "Daily Vocabulary", "gre-vocabulary-v1": "Advanced Vocabulary"
   };
 

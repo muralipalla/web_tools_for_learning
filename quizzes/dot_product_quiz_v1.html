@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Randomized dot product formula practice.">
+  <meta name="theme-color" content="#06162f">
+  <title>Dot Product Quiz | Palladium</title>
+  <link rel="stylesheet" href="../styles/maths_vector_quiz.css">
+</head>
+<body data-quiz-topic="dot-product">
+  <header>
+    <nav class="quiz-topbar" aria-label="Quiz navigation">
+      <a class="palladium-brand" href="../index.html" aria-label="Palladium learning lab — Home">
+        <span class="palladium-mark" aria-hidden="true"><span class="palladium-number">46</span><span class="palladium-symbol">Pd</span></span>
+        <span class="palladium-name">Palla<span class="palladium-dium">dium</span></span>
+      </a>
+      <a class="back-link" href="vectors_skill_builder.html">← Vectors Skill Builder</a>
+    </nav>
+  </header>
+  <main class="quiz-shell">
+    <header class="quiz-heading"><p class="eyebrow">Vectors Skill Builder</p><h1>Dot Product</h1></header>
+    <section class="quiz-card" aria-label="Dot Product quiz">
+      <p id="loadStatus" class="screen" role="status">Loading quiz…</p>
+      <p id="loadError" class="bank-error" role="alert" hidden></p>
+      <section id="quizScreen" class="screen" hidden>
+        <div class="quiz-meta"><span id="progress" aria-live="polite">Question 1 of 5</span><span id="timer">00:00</span></div>
+        <div class="progress-track" aria-hidden="true"><div id="progressBar" class="progress-bar"></div></div>
+        <h2 id="question" tabindex="-1">Loading question…</h2>
+        <div id="options" class="options" role="group" aria-labelledby="question"></div>
+        <p id="quizStatus" class="quiz-status" aria-live="polite"></p>
+        <div class="quiz-navigation">
+          <div class="nav-side"><button id="prevBtn" class="action-button secondary" type="button">Previous</button><button id="nextBtn" class="action-button secondary" type="button">Next</button></div>
+          <button id="submitBtn" class="action-button" type="button" hidden>Submit</button>
+        </div>
+      </section>
+      <section id="resultScreen" class="screen result-screen" hidden>
+        <h2 id="resultTitle" tabindex="-1">Result</h2>
+        <div class="result-grid">
+          <div class="result-box"><strong id="finalScore">0/5</strong><span>score</span></div>
+          <div class="result-box"><strong id="finalPercent">0%</strong><span>accuracy</span></div>
+          <div class="result-box"><strong id="finalTime">00:00</strong><span>time</span></div>
+        </div>
+        <h3>Answers</h3>
+        <div id="reviewList" class="review-list"></div>
+        <div class="result-actions"><button id="againBtn" class="action-button" type="button">New quiz</button><a class="all-quizzes-link" href="vectors_skill_builder.html">All quizzes</a></div>
+      </section>
+    </section>
+  </main>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.2/dist/umd/supabase.min.js"></script>
+  <script defer src="../js/supabase-client.js"></script>
+  <script defer src="../js/progress-store.js"></script>
+  <script defer src="../js/maths-vector-quiz.js"></script>
+</body>
+</html>
