@@ -40,11 +40,11 @@
         class="viewer"
         role="region"
         tabindex="0"
-        aria-label="Three-dimensional angular momentum simulation showing radius r, velocity v, and angular momentum L vectors. Drag to rotate the view, scroll to zoom, use arrow keys to orbit, plus and minus to zoom, space to pause, and R to reset the camera."
+        aria-label="Three-dimensional angular momentum simulation showing thick radius r, velocity v, and angular momentum L vectors, with world axes labelled X, Y, and Z. Drag to rotate the view, scroll to zoom, use arrow keys to orbit, plus and minus to zoom, space to pause, and R to reset the camera."
         aria-describedby="vectorSceneDescription"
       >
         <p id="vectorSceneDescription" class="sr-only">
-          The radius vector r runs from the origin to the ball. The velocity vector v is tangent to the orbit at the ball. The thick angular momentum vector L lies along the rotation axis.
+          The fixed world coordinate axes are labelled X, Y, and Z. The dashed line is the adjustable rotation axis. The thick radius vector r runs from the origin to the ball. The thick velocity vector v is tangent to the orbit at the ball. The thick angular momentum vector L lies along the rotation axis.
         </p>
         <p id="loadingMessage" class="viewer-message">Loading 3D simulation…</p>
         <p id="errorMessage" class="viewer-message error-message" role="alert" hidden>

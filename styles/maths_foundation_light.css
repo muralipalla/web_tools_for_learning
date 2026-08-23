@@ -1,0 +1,331 @@
+:root {
+  color-scheme: light;
+  --dark: #ffffff;
+  --dark-panel: #ffffff;
+  --dark-panel-2: #f4f4f4;
+  --dark-border: #d8d8d8;
+  --text: #111111;
+  --muted: #555555;
+  --cyan: #6d28d9;
+  --amber: #a16207;
+  --green: #15803d;
+  --red: #b42318;
+  --blue-soft: #4c1d95;
+  --violet: #6d28d9;
+}
+
+html {
+  background: #ffffff;
+}
+
+body {
+  color: #111111;
+  background: #ffffff;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid #6d28d9;
+  outline-offset: 3px;
+}
+
+.back-link {
+  color: #4c1d95;
+}
+
+.hero {
+  color: #111111;
+  background: #ffffff;
+  border: 1px solid #d8d8d8;
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+.eyebrow {
+  color: #5b21b6;
+}
+
+h1,
+h2,
+h3 {
+  color: #000000;
+}
+
+.subtitle,
+.start-text,
+.hint,
+.note-card p,
+.note-card li,
+.empty-review,
+.empty-history {
+  color: #555555;
+}
+
+.quiz-card,
+.practice-card,
+.control-card,
+.note-card,
+.review-card,
+.history-card {
+  color: #111111;
+  background: #ffffff;
+  border: 1px solid #d8d8d8;
+  border-radius: 10px;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.quiz-panel {
+  color: #111111;
+  background: #fafafa;
+  border: 1px solid #e4e4e4;
+  border-radius: 8px;
+}
+
+.challenge-badge {
+  color: #111111;
+  background: #f4f4f4;
+  border: 1px solid #d8d8d8;
+}
+
+.stat,
+.result-box,
+.formula-box,
+.review-item,
+.history-table {
+  color: #111111;
+  background: #f4f4f4;
+  border-color: #d8d8d8;
+  border-radius: 8px;
+}
+
+.stat strong,
+.result-box strong,
+.review-item strong,
+.history-table th {
+  color: #000000;
+}
+
+.stat span,
+.result-box span,
+.review-item,
+.history-table td {
+  color: #555555;
+}
+
+.question-box {
+  background: #ffffff;
+  border: 1px solid #d8d8d8;
+  border-radius: 8px;
+}
+
+#question {
+  color: #000000;
+  text-shadow: none;
+}
+
+.equals {
+  color: #555555;
+}
+
+.option {
+  color: #111111;
+  background: #ffffff;
+  border: 1px solid #767676;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.option:hover {
+  color: #111111;
+  background: #f4f4f4;
+  border-color: #777777;
+  box-shadow: none;
+  transform: none;
+}
+
+.option.selected {
+  color: #111111;
+  background: #f3efff;
+  border-color: #6d28d9;
+  box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.12);
+}
+
+.option.correct-review {
+  color: #14532d;
+  background: #f0fdf4;
+  border-color: #15803d;
+}
+
+.option.wrong-review {
+  color: #7f1d1d;
+  background: #fff1f2;
+  border-color: #b42318;
+}
+
+button {
+  min-height: 44px;
+  color: #ffffff;
+  background: #333333;
+  border: 1px solid #333333;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+button:hover:not(:disabled) {
+  color: #ffffff;
+  background: #000000;
+  transform: none;
+}
+
+button.secondary {
+  color: #111111;
+  background: #f4f4f4;
+  border-color: #767676;
+}
+
+button.secondary:hover:not(:disabled) {
+  color: #111111;
+  background: #e2e2e2;
+}
+
+button.green {
+  color: #ffffff;
+  background: #5b21b6;
+  border-color: #5b21b6;
+}
+
+button.green:hover:not(:disabled) {
+  color: #ffffff;
+  background: #4c1d95;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.feedback.correct {
+  color: #166534;
+}
+
+.feedback.wrong {
+  color: #991b1b;
+}
+
+label {
+  color: #111111;
+}
+
+label span {
+  color: #5b21b6;
+}
+
+input[type="number"],
+input[type="text"],
+select {
+  color: #111111;
+  background: #ffffff;
+  border: 1px solid #767676;
+  border-radius: 8px;
+}
+
+input::placeholder {
+  color: #6b6b6b;
+}
+
+input:focus,
+select:focus {
+  border-color: #6d28d9;
+  box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.12);
+}
+
+input[type="range"] {
+  accent-color: #6d28d9;
+}
+
+.mode-pill,
+.table-chip {
+  color: #111111;
+  background: #f4f4f4;
+  border: 1px solid #767676;
+  border-radius: 8px;
+}
+
+.table-chip {
+  width: auto;
+}
+
+.mode-pill:hover,
+.table-chip:hover {
+  color: #111111;
+  background: #eaeaea;
+  border-color: #777777;
+  transform: none;
+}
+
+.mode-pill.active,
+.table-chip.active {
+  color: #3b176b;
+  background: #f3efff;
+  border-color: #6d28d9;
+}
+
+.formula-box {
+  color: #333333;
+}
+
+.review-item .bad,
+.wrong-list h3,
+.wrong-item {
+  color: #991b1b;
+}
+
+.review-item .good {
+  color: #166534;
+}
+
+.wrong-item {
+  background: #fff1f2;
+  border-color: #fecdd3;
+  border-radius: 8px;
+}
+
+.history-table th,
+.history-table td {
+  border-bottom-color: #dedede;
+}
+
+.history-table th {
+  background: #ededed;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

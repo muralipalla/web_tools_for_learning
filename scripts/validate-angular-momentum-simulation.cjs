@@ -53,6 +53,14 @@ expect(
     htmlIds.includes("vectorSceneDescription"),
   "The 3D viewer must describe where the r, v, and L vectors appear."
 );
+expect(
+  /vectorSceneDescription[^>]*>[\s\S]*axes[^<]*X[^<]*Y[^<]*Z/i.test(html),
+  "The accessible scene description must name the X, Y, and Z world axes."
+);
+expect(
+  /vectorSceneDescription[^>]*>[\s\S]*dashed[^<]*adjustable rotation axis/i.test(html),
+  "The accessible scene description must distinguish the dashed adjustable rotation axis."
+);
 
 const queriedIds = [...script.matchAll(/getElementById\("([^"]+)"\)/g)].map(match => match[1]);
 for (const id of queriedIds) {
@@ -131,13 +139,23 @@ for (const expectedSnippet of [
   "crossVectors(radiusVector, momentum)",
   "active.torque / active.inertia",
   "0.5 * alpha * pulseTime * pulseTime",
-  "createProminentArrow",
-  "createGuideArrow",
+  "const WORLD_AXIS_LENGTH = 4.6",
+  "const AXIS_LABEL_OFFSET = 0.42",
+  "new THREE.AxesHelper(WORLD_AXIS_LENGTH)",
+  "scene.add(axes)",
+  "scene.add(xAxisLabel, yAxisLabel, zAxisLabel)",
+  "createMeshArrow",
   "radiusArrow",
   "velocityArrow",
-  "new THREE.ArrowHelper",
-  "new THREE.CylinderGeometry(0.09",
-  "new THREE.ConeGeometry(0.25",
+  "angularArrow",
+  "new THREE.CylinderGeometry(shaftRadius, shaftRadius, 1, 20)",
+  "new THREE.ConeGeometry(headRadius, 0.5, 24)",
+  "shaft.position.set(0, shaftLength / 2, 0)",
+  "head.position.set(0, shaftLength + headLength / 2, 0)",
+  "arrow.quaternion.setFromUnitVectors(yAxis, direction)",
+  "depthTest: !overlay",
+  "depthWrite: !overlay",
+  "arrow.renderOrder = overlay ? 6 : 0",
   "new OrbitControls",
   "renderer.setAnimationLoop",
   "new ResizeObserver",
@@ -158,37 +176,42 @@ for (const forbiddenSnippet of [
   "elements.pulseBadge",
   "elements.pulseReadout",
   "elements.omegaVector",
-  "elements.omegaMagnitude"
+  "elements.omegaMagnitude",
+  "new THREE.ArrowHelper",
+  "createGuideArrow",
+  "setGuideArrow",
+  "createProminentArrow",
+  "setProminentArrow"
 ]) {
   expect(!script.includes(forbiddenSnippet), `Removed vector or pulse display remains: ${forbiddenSnippet}`);
 }
 
-const guideBindings = [...script.matchAll(/const\s+(\w+Arrow)\s*=\s*createGuideArrow\(/g)]
+const meshBindings = [...script.matchAll(/const\s+(\w+Arrow)\s*=\s*createMeshArrow\(/g)]
   .map(match => match[1]);
 expect(
-  JSON.stringify(guideBindings) === JSON.stringify(["radiusArrow", "velocityArrow"]),
-  `Guide arrows must be exactly r and v: ${guideBindings.join(", ")}`
+  JSON.stringify(meshBindings) === JSON.stringify(["radiusArrow", "velocityArrow", "angularArrow"]),
+  `Thick mesh arrows must be exactly r, v, and L: ${meshBindings.join(", ")}`
 );
-const prominentBindings = [...script.matchAll(/const\s+(\w+Arrow)\s*=\s*createProminentArrow\(/g)]
-  .map(match => match[1]);
+const guideRadius = Number(script.match(/const GUIDE_SHAFT_RADIUS = ([0-9.]+);/)?.[1]);
+const lRadius = Number(script.match(/const L_SHAFT_RADIUS = ([0-9.]+);/)?.[1]);
 expect(
-  JSON.stringify(prominentBindings) === JSON.stringify(["angularArrow"]),
-  `Only L may use the prominent arrow mesh: ${prominentBindings.join(", ")}`
-);
-expect(
-  (script.match(/new THREE\.ArrowHelper\(/g) ?? []).length === 1,
-  "The r and v arrows must share one thin ArrowHelper factory."
+  Number.isFinite(guideRadius) && Number.isFinite(lRadius) && guideRadius > 0 && lRadius > guideRadius,
+  "All vectors must be thick meshes, with L remaining the most prominent."
 );
 expect(
-  /setGuideArrow\(\s*radiusArrow,\s*state\.radiusVector,\s*origin\.position,\s*active\.radius\s*\)/s.test(script),
+  /const radiusArrow = createMeshArrow\([\s\S]*?overlay: true[\s\S]*?\}\);/.test(script),
+  "The r vector must remain visible over the ball at the minimum radius."
+);
+expect(
+  /setMeshArrow\(\s*radiusArrow,\s*state\.radiusVector,\s*origin\.position,\s*active\.radius\s*\)/s.test(script),
   "The r vector must run from the origin to the ball."
 );
 expect(
-  /setGuideArrow\(\s*velocityArrow,\s*state\.velocity,\s*state\.radiusVector,/s.test(script),
+  /setMeshArrow\(\s*velocityArrow,\s*state\.velocity,\s*state\.radiusVector,/s.test(script),
   "The v vector must originate at the ball."
 );
 expect(
-  /setProminentArrow\(\s*angularArrow,\s*state\.angularMomentum,\s*origin\.position,/s.test(script),
+  /setMeshArrow\(\s*angularArrow,\s*state\.angularMomentum,\s*origin\.position,/s.test(script),
   "The L vector must begin at the rotation origin."
 );
 expect(
@@ -204,6 +227,12 @@ for (const labelSnippet of [
   'createLabelSprite("r"',
   'createLabelSprite("v"',
   'createLabelSprite("L"',
+  'createLabelSprite("X"',
+  'createLabelSprite("Y"',
+  'createLabelSprite("Z"',
+  "xAxisLabel.position.set(WORLD_AXIS_LENGTH + AXIS_LABEL_OFFSET, 0, 0)",
+  "yAxisLabel.position.set(0, WORLD_AXIS_LENGTH + AXIS_LABEL_OFFSET, 0)",
+  "zAxisLabel.position.set(0, 0, WORLD_AXIS_LENGTH + AXIS_LABEL_OFFSET)",
   "updateLabel(radiusLabel, radiusTip",
   "updateLabel(velocityLabel, velocityTip",
   "updateLabel(angularLabel, angularTip"

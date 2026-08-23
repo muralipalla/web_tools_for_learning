@@ -3,6 +3,10 @@ const INITIAL_OMEGA = 0;
 const INITIAL_PHASE = 0;
 const TAU = Math.PI * 2;
 const EPSILON = 1e-7;
+const WORLD_AXIS_LENGTH = 4.6;
+const AXIS_LABEL_OFFSET = 0.42;
+const GUIDE_SHAFT_RADIUS = 0.065;
+const L_SHAFT_RADIUS = 0.1;
 
 const elements = {
   viewer: document.getElementById("viewer"),
@@ -114,10 +118,21 @@ function initializeSimulation() {
   grid.material.opacity = 0.42;
   scene.add(grid);
 
-  const axes = new THREE.AxesHelper(4.6);
+  const axes = new THREE.AxesHelper(WORLD_AXIS_LENGTH);
   axes.material.transparent = true;
   axes.material.opacity = 0.55;
   scene.add(axes);
+
+  const xAxisLabel = createLabelSprite("X", "#ff5a5a");
+  const yAxisLabel = createLabelSprite("Y", "#55e879");
+  const zAxisLabel = createLabelSprite("Z", "#60a5fa");
+  for (const label of [xAxisLabel, yAxisLabel, zAxisLabel]) {
+    label.scale.set(0.56, 0.28, 1);
+  }
+  xAxisLabel.position.set(WORLD_AXIS_LENGTH + AXIS_LABEL_OFFSET, 0, 0);
+  yAxisLabel.position.set(0, WORLD_AXIS_LENGTH + AXIS_LABEL_OFFSET, 0);
+  zAxisLabel.position.set(0, 0, WORLD_AXIS_LENGTH + AXIS_LABEL_OFFSET);
+  scene.add(xAxisLabel, yAxisLabel, zAxisLabel);
 
   const origin = new THREE.Mesh(
     new THREE.SphereGeometry(0.14, 24, 18),
@@ -185,9 +200,25 @@ function initializeSimulation() {
   );
   scene.add(trail);
 
-  const radiusArrow = createGuideArrow(0x38bdf8);
-  const velocityArrow = createGuideArrow(0x34d399);
-  const angularArrow = createProminentArrow(0xfbbf24);
+  const radiusArrow = createMeshArrow(0x38bdf8, {
+    shaftRadius: GUIDE_SHAFT_RADIUS,
+    headRadius: 0.19,
+    minHead: 0.22,
+    maxHead: 0.42,
+    overlay: true
+  });
+  const velocityArrow = createMeshArrow(0x34d399, {
+    shaftRadius: GUIDE_SHAFT_RADIUS,
+    headRadius: 0.19,
+    minHead: 0.22,
+    maxHead: 0.42
+  });
+  const angularArrow = createMeshArrow(0xfbbf24, {
+    shaftRadius: L_SHAFT_RADIUS,
+    headRadius: 0.27,
+    minHead: 0.34,
+    maxHead: 0.58
+  });
   const radiusLabel = createLabelSprite("r", "#38bdf8");
   const velocityLabel = createLabelSprite("v", "#34d399");
   const angularLabel = createLabelSprite("L", "#fbbf24");
@@ -203,37 +234,29 @@ function initializeSimulation() {
   const zAxis = new THREE.Vector3(0, 0, 1);
   const yAxis = new THREE.Vector3(0, 1, 0);
 
-  function createGuideArrow(color) {
-    return new THREE.ArrowHelper(
-      new THREE.Vector3(1, 0, 0),
-      new THREE.Vector3(),
-      1,
-      color,
-      0.24,
-      0.14
-    );
-  }
-
-  function createProminentArrow(color) {
+  function createMeshArrow(color, { shaftRadius, headRadius, minHead, maxHead, overlay = false }) {
+    const baseColor = new THREE.Color(color);
     const material = new THREE.MeshStandardMaterial({
-      color,
-      emissive: 0x8a5a08,
-      emissiveIntensity: 0.62,
-      roughness: 0.24,
-      metalness: 0.08
+      color: baseColor,
+      emissive: baseColor.clone().multiplyScalar(0.28),
+      emissiveIntensity: 0.7,
+      roughness: 0.25,
+      metalness: 0.06,
+      depthTest: !overlay,
+      depthWrite: !overlay
     });
     const shaft = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.09, 0.09, 1, 20),
+      new THREE.CylinderGeometry(shaftRadius, shaftRadius, 1, 20),
       material
     );
     const head = new THREE.Mesh(
-      new THREE.ConeGeometry(0.25, 0.5, 24),
+      new THREE.ConeGeometry(headRadius, 0.5, 24),
       material
     );
     const arrow = new THREE.Group();
     arrow.add(shaft, head);
-    arrow.userData.shaft = shaft;
-    arrow.userData.head = head;
+    arrow.renderOrder = overlay ? 6 : 0;
+    Object.assign(arrow.userData, { shaft, head, minHead, maxHead });
     return arrow;
   }
 
@@ -351,7 +374,7 @@ function initializeSimulation() {
     ball.scale.setScalar(0.88 + Math.cbrt(active.mass) * 0.12);
   }
 
-  function setProminentArrow(arrow, vector, originPoint, visualLength) {
+  function setMeshArrow(arrow, vector, originPoint, visualLength) {
     const magnitude = vector.length();
     arrow.position.copy(originPoint);
     if (magnitude < EPSILON || visualLength < EPSILON) {
@@ -359,8 +382,12 @@ function initializeSimulation() {
       return null;
     }
     const direction = vector.clone().normalize();
-    const headLength = Math.min(0.56, Math.max(0.34, visualLength * 0.2));
-    const shaftLength = Math.max(0.05, visualLength - headLength);
+    const headLength = Math.min(
+      arrow.userData.maxHead,
+      Math.max(arrow.userData.minHead, visualLength * 0.2),
+      visualLength * 0.68
+    );
+    const shaftLength = Math.max(0.02, visualLength - headLength);
     const shaft = arrow.userData.shaft;
     const head = arrow.userData.head;
     shaft.scale.set(1, shaftLength, 1);
@@ -372,33 +399,17 @@ function initializeSimulation() {
     return originPoint.clone().addScaledVector(direction, visualLength);
   }
 
-  function setGuideArrow(arrow, vector, originPoint, visualLength) {
-    const magnitude = vector.length();
-    arrow.position.copy(originPoint);
-    if (magnitude < EPSILON || visualLength < EPSILON) {
-      arrow.visible = false;
-      return null;
-    }
-    const direction = vector.clone().normalize();
-    const headLength = Math.min(0.32, Math.max(0.2, visualLength * 0.16));
-    const headWidth = Math.min(0.2, Math.max(0.12, visualLength * 0.1));
-    arrow.visible = true;
-    arrow.setDirection(direction);
-    arrow.setLength(visualLength, headLength, headWidth);
-    return originPoint.clone().addScaledVector(direction, visualLength);
-  }
-
   function updateScene(state) {
     ball.position.copy(state.radiusVector);
 
-    const radiusTip = setGuideArrow(
+    const radiusTip = setMeshArrow(
       radiusArrow,
       state.radiusVector,
       origin.position,
       active.radius
     );
     const velocityLength = 0.9 + Math.min(Math.log1p(state.velocity.length()) * 0.75, 3.2);
-    const velocityTip = setGuideArrow(
+    const velocityTip = setMeshArrow(
       velocityArrow,
       state.velocity,
       state.radiusVector,
@@ -406,7 +417,7 @@ function initializeSimulation() {
     );
 
     const angularLength = 1.25 + Math.min(Math.log1p(state.angularMomentum.length()) * 0.78, 3.8);
-    const angularTip = setProminentArrow(
+    const angularTip = setMeshArrow(
       angularArrow,
       state.angularMomentum,
       origin.position,

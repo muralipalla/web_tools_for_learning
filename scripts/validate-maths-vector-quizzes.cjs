@@ -148,12 +148,31 @@ for (const config of expected) {
     .filter(reference => !reference.includes("index.html"));
 
   for (const reference of localAssets) {
-    const assetPath = path.resolve(path.dirname(pagePath), reference);
+    const assetReference = reference.split(/[?#]/, 1)[0];
+    const assetPath = path.resolve(path.dirname(pagePath), assetReference);
     assert.ok(fs.existsSync(assetPath), config.file + " is missing asset " + reference);
   }
 }
 
 assert.equal(totalQuestions, 100, "The combined bank must contain 100 questions.");
+
+const resolutionTopic = bank.find(topic => topic.id === "vector-resolution");
+assert.ok(resolutionTopic, "The vector-resolution bank is missing.");
+assert.equal(resolutionTopic.questionCount, 10, "Vector Resolution must draw 10 random questions.");
+assert.equal(resolutionTopic.questions.length, 20, "Vector Resolution must retain its 20-question bank.");
+for (const question of resolutionTopic.questions) {
+  const questionText = [question.prompt, ...question.options, question.answer, question.explanation].join(" ");
+  assert.doesNotMatch(
+    questionText,
+    /\([^()]*,[^()]*,[^()]*\)/,
+    question.id + " contains a three-component coordinate tuple."
+  );
+  assert.doesNotMatch(
+    questionText,
+    /\bz[- ]?(?:axis|component)\b/i,
+    question.id + " contains a z-axis or z-component reference."
+  );
+}
 
 const removedConceptPrompts = [
   "Which statement is true for all vectors",

@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#ffffff" />
   <title>Trigonometric Angle Identities Quiz</title>
 
   <style>
@@ -553,6 +554,7 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="../styles/maths_foundation_light.css?v=1" />
 </head>
 
 <body>
@@ -607,13 +609,13 @@
           </div>
 
           <div class="question-box">
-            <h2 id="question">sin(90° + θ)</h2>
+            <h2 id="question" tabindex="-1">sin(90° + θ)</h2>
             <div class="equals">is equal to</div>
           </div>
 
-          <div id="options" class="options"></div>
+          <div id="options" class="options" role="group" aria-labelledby="question"></div>
 
-          <div id="feedback" class="feedback"></div>
+          <div id="feedback" class="feedback" role="status" aria-live="polite"></div>
 
           <div class="button-row">
             <button id="prevBtn" class="secondary">Previous</button>
@@ -624,7 +626,7 @@
 
         <section id="result-screen" class="screen">
           <div class="challenge-badge">Quiz complete</div>
-          <h2 class="start-title">Result</h2>
+          <h2 id="trigResultTitle" class="start-title" tabindex="-1">Result</h2>
 
           <div class="result-grid">
             <div class="result-box">
@@ -643,7 +645,7 @@
 
           <div class="button-row">
             <button id="againBtn">New Random Quiz</button>
-            <button id="reviewBtn" class="secondary">Review answers</button>
+            <button id="reviewBtn" class="secondary" aria-controls="reviewList">Review answers</button>
           </div>
         </section>
       </div>
@@ -655,9 +657,9 @@
 
         <div class="control-group">
           <label>Angle notation</label>
-          <div class="mode-pill-row">
-            <div class="mode-pill active" data-mode="degrees">Degrees</div>
-            <div class="mode-pill" data-mode="radians">Radians</div>
+          <div class="mode-pill-row" role="group" aria-label="Angle notation">
+            <button type="button" class="mode-pill active" data-mode="degrees" aria-pressed="true">Degrees</button>
+            <button type="button" class="mode-pill" data-mode="radians" aria-pressed="false">Radians</button>
           </div>
           <div class="hint">
             Degrees show 90°, 180°, 270°, 360°. Radians show π/2, π, 3π/2, 2π.
@@ -684,7 +686,7 @@
       </section>
 
       <section class="review-card">
-        <h2>Review</h2>
+        <h2 id="trigReviewTitle" tabindex="-1">Review</h2>
         <div id="reviewList" class="review-list">
           <p class="empty-review">Submit the quiz to see correct and wrong answers here.</p>
         </div>
@@ -842,7 +844,7 @@
       reviewList.innerHTML = `<p class="empty-review">Submit the quiz to see correct and wrong answers here.</p>`;
 
       showScreen(quizScreen);
-      showQuestion();
+      showQuestion({ focusQuestion: true });
     }
 
     function updateTimer() {
@@ -855,7 +857,7 @@
       seconds++;
     }
 
-    function showQuestion() {
+    function showQuestion({ focusQuestion = false } = {}) {
       const q = quiz[current];
 
       document.getElementById("progress").textContent = `${current + 1}/${quiz.length}`;
@@ -865,9 +867,12 @@
       optionsEl.innerHTML = "";
 
       q.options.forEach(option => {
-        const button = document.createElement("div");
+        const button = document.createElement("button");
+        button.type = "button";
         button.className = "option";
-        if (answers[current] === option) {
+        const isSelected = answers[current] === option;
+        button.setAttribute("aria-pressed", String(isSelected));
+        if (isSelected) {
           button.classList.add("selected");
         }
 
@@ -876,23 +881,26 @@
           answers[current] = option;
           feedbackEl.textContent = "";
           showQuestion();
+          optionsEl.querySelector(".option.selected")?.focus();
         });
 
         optionsEl.appendChild(button);
       });
+
+      if (focusQuestion) questionEl.focus();
     }
 
     function nextQuestion() {
       if (current < quiz.length - 1) {
         current++;
-        showQuestion();
+        showQuestion({ focusQuestion: true });
       }
     }
 
     function prevQuestion() {
       if (current > 0) {
         current--;
-        showQuestion();
+        showQuestion({ focusQuestion: true });
       }
     }
 
@@ -937,6 +945,7 @@
 
       buildReview();
       showScreen(resultScreen);
+      document.getElementById("trigResultTitle").focus();
     }
 
     function buildReview() {
@@ -961,8 +970,12 @@
 
     document.querySelectorAll(".mode-pill").forEach(pill => {
       pill.addEventListener("click", () => {
-        document.querySelectorAll(".mode-pill").forEach(item => item.classList.remove("active"));
+        document.querySelectorAll(".mode-pill").forEach(item => {
+          item.classList.remove("active");
+          item.setAttribute("aria-pressed", "false");
+        });
         pill.classList.add("active");
+        pill.setAttribute("aria-pressed", "true");
         angleMode = pill.dataset.mode;
       });
     });
@@ -974,10 +987,12 @@
     document.getElementById("startBtn").addEventListener("click", startQuiz);
     document.getElementById("againBtn").addEventListener("click", () => {
       showScreen(startScreen);
+      document.getElementById("startBtn").focus();
     });
 
     document.getElementById("reviewBtn").addEventListener("click", () => {
-      document.querySelector(".review-card").scrollIntoView({ behavior: "smooth", block: "start" });
+      document.querySelector(".review-card").scrollIntoView({ block: "start" });
+      document.getElementById("trigReviewTitle").focus();
     });
 
     document.getElementById("nextBtn").addEventListener("click", nextQuestion);

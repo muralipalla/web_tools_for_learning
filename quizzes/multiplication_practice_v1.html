@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#ffffff" />
   <title>Multiplication Tables Speed Practice</title>
 
   <style>
@@ -543,6 +544,7 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="../styles/maths_foundation_light.css?v=1" />
 </head>
 
 <body>
@@ -598,16 +600,17 @@
           <div id="question">14 × 7</div>
 
           <div class="answer-row">
-            <input type="number" id="answerInput" placeholder="Type answer" autocomplete="off" />
+            <label id="answerInputLabel" class="sr-only" for="answerInput">Answer</label>
+            <input type="number" id="answerInput" placeholder="Type answer" autocomplete="off" aria-labelledby="question answerInputLabel" />
             <button id="submitBtn">Submit</button>
           </div>
 
-          <div id="feedback" class="feedback"></div>
+          <div id="feedback" class="feedback" role="status" aria-live="polite"></div>
         </section>
 
         <section id="result-screen" class="screen">
           <div class="challenge-badge">Session complete</div>
-          <h2 class="start-title">Good work!</h2>
+          <h2 id="multiplicationResultTitle" class="start-title" tabindex="-1">Good work!</h2>
 
           <div class="result-grid">
             <div class="result-box">
@@ -626,10 +629,10 @@
 
           <div class="button-row" style="justify-content:center;">
             <button id="againBtn">Practice Again</button>
-            <button id="reviewBtn" class="secondary">Review mistakes</button>
+            <button id="reviewBtn" class="secondary" aria-controls="wrongList" aria-expanded="false">Review mistakes</button>
           </div>
 
-          <div id="wrongList" class="wrong-list">
+          <div id="wrongList" class="wrong-list" tabindex="-1">
             <h3>Questions to revise</h3>
             <div id="wrongItems"></div>
           </div>
@@ -665,7 +668,7 @@
 
         <div class="control-group">
           <label>Choose tables</label>
-          <div id="tableChips" class="table-chip-grid"></div>
+          <div id="tableChips" class="table-chip-grid" role="group" aria-label="Multiplication tables"></div>
           <div class="button-row">
             <button id="selectDefaultBtn" class="secondary">Default</button>
             <button id="selectAllBtn" class="secondary">All 1–20</button>
@@ -727,6 +730,7 @@
 
     const questionEl = document.getElementById("question");
     const answerInput = document.getElementById("answerInput");
+    const submitButton = document.getElementById("submitBtn");
     const feedbackEl = document.getElementById("feedback");
 
     const progressEl = document.getElementById("progress");
@@ -744,6 +748,7 @@
 
     const wrongList = document.getElementById("wrongList");
     const wrongItems = document.getElementById("wrongItems");
+    const reviewBtn = document.getElementById("reviewBtn");
 
     function showScreen(screen) {
       [startScreen, quizScreen, resultScreen].forEach(item => item.classList.remove("active"));
@@ -759,19 +764,24 @@
       container.innerHTML = "";
 
       for (let n = 1; n <= 20; n++) {
-        const chip = document.createElement("span");
+        const chip = document.createElement("button");
+        chip.type = "button";
         chip.className = "table-chip";
         chip.textContent = n;
         chip.dataset.table = n;
+        chip.setAttribute("aria-label", `Practice the ${n} times table`);
 
-        if (selectedTables.has(n)) chip.classList.add("active");
+        const isSelected = selectedTables.has(n);
+        chip.setAttribute("aria-pressed", String(isSelected));
+        if (isSelected) chip.classList.add("active");
 
         chip.addEventListener("click", () => {
-          if (selectedTables.has(n)) selectedTables.delete(n);
+          if (selectedTables.has(n) && selectedTables.size > 1) selectedTables.delete(n);
           else selectedTables.add(n);
 
-          if (selectedTables.size === 0) selectedTables.add(n);
-          createTableChips();
+          const selected = selectedTables.has(n);
+          chip.classList.toggle("active", selected);
+          chip.setAttribute("aria-pressed", String(selected));
         });
 
         container.appendChild(chip);
@@ -821,6 +831,8 @@
       streak = 0;
       bestStreak = 0;
       currentAttemptWrong = false;
+      wrongList.style.display = "none";
+      reviewBtn.setAttribute("aria-expanded", "false");
 
       showScreen(quizScreen);
       startTime = Date.now();
@@ -837,7 +849,7 @@
       timerEl.textContent = `${elapsed.toFixed(1)}s`;
     }
 
-    function showQuestion() {
+    function showQuestion({ announceQuestion = false } = {}) {
       if (currentIndex >= questions.length) {
         endGame();
         return;
@@ -847,9 +859,12 @@
 
       questionEl.textContent = q.q;
       answerInput.value = "";
-      feedbackEl.textContent = "";
+      feedbackEl.textContent = announceQuestion ? `Next question: ${q.q}` : "";
       feedbackEl.className = "feedback";
       currentAttemptWrong = false;
+      answerInput.disabled = false;
+      submitButton.disabled = false;
+      answerInput.focus();
 
       updateStats();
     }
@@ -878,11 +893,13 @@
 
         feedbackEl.textContent = currentAttemptWrong ? "Correct now — revise this once more." : "Correct!";
         feedbackEl.className = "feedback correct";
+        answerInput.disabled = true;
+        submitButton.disabled = true;
 
         currentIndex++;
         updateStats();
 
-        setTimeout(showQuestion, 220);
+        setTimeout(() => showQuestion({ announceQuestion: true }), 700);
       } else {
         currentAttemptWrong = true;
         streak = 0;
@@ -917,6 +934,7 @@
       updateHistoryTable();
 
       showScreen(resultScreen);
+      document.getElementById("multiplicationResultTitle").focus();
     }
 
     function renderWrongList() {
@@ -1028,10 +1046,14 @@
     document.getElementById("againBtn").addEventListener("click", () => {
       showScreen(startScreen);
       updateDayDisplay();
+      document.getElementById("startBtn").focus();
     });
 
-    document.getElementById("reviewBtn").addEventListener("click", () => {
-      wrongList.style.display = wrongList.style.display === "block" ? "none" : "block";
+    reviewBtn.addEventListener("click", () => {
+      const shouldOpen = wrongList.style.display !== "block";
+      wrongList.style.display = shouldOpen ? "block" : "none";
+      reviewBtn.setAttribute("aria-expanded", String(shouldOpen));
+      if (shouldOpen) wrongList.focus();
     });
 
     document.getElementById("submitBtn").addEventListener("click", submitAnswer);
