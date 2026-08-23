@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Explore angular momentum, linear momentum, moment of inertia, and a 0.1-second torque pulse in three dimensions.">
+  <meta name="theme-color" content="#06162f">
+  <title>Angular Momentum Simulation | Palladium</title>
+  <link rel="stylesheet" href="css/angular_momentum.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+
+<body>
+  <header class="site-header">
+    <a class="back-link" href="../../index.html#physics">← Physics</a>
+    <section class="hero">
+      <p class="eyebrow">Physics · Mechanics</p>
+      <h1>Angular Momentum</h1>
+      <p class="subtitle">Adjust the rotating mass, radius, angular velocity, rotation axis, and initial torque.</p>
+    </section>
+  </header>
+
+  <main class="simulation-layout">
+    <div class="main-column">
+      <section class="card simulation-card" aria-labelledby="motionTitle">
+        <div class="card-heading viewer-heading">
+          <div>
+            <h2 id="motionTitle">3D motion</h2>
+            <p>Drag to rotate · Scroll or pinch to zoom</p>
+          </div>
+          <span id="pulseBadge" class="pulse-badge" hidden>Torque pulse active</span>
+        </div>
+
+        <div
+          id="viewer"
+          class="viewer"
+          role="region"
+          tabindex="0"
+          aria-label="Three-dimensional angular momentum simulation. Drag to rotate the view, scroll to zoom, use arrow keys to orbit, plus and minus to zoom, space to pause, and R to reset the camera."
+        >
+          <p id="loadingMessage" class="viewer-message">Loading 3D simulation…</p>
+          <p id="errorMessage" class="viewer-message error-message" role="alert" hidden>
+            The 3D view could not load. Refresh the page or check your connection.
+          </p>
+        </div>
+
+        <div class="vector-legend" aria-label="Vector colours">
+          <span><i class="legend-line radius-colour"></i>Radius r</span>
+          <span><i class="legend-line omega-colour"></i>Angular velocity ω</span>
+          <span><i class="legend-line momentum-colour"></i>Linear momentum p</span>
+          <span><i class="legend-line angular-colour"></i>Angular momentum L</span>
+          <span><i class="legend-line torque-colour"></i>Torque τ</span>
+        </div>
+
+        <div class="status-strip">
+          <div class="status-item"><span>Time</span><strong id="timeReadout">0.00 s</strong></div>
+          <div class="status-item"><span>Moment of inertia</span><strong id="inertiaReadout">0.00 kg·m²</strong></div>
+          <div class="status-item"><span>Angular velocity</span><strong id="omegaReadout">0.00 rad/s</strong></div>
+          <div class="status-item"><span>Torque pulse</span><strong id="pulseReadout">0.10 s</strong></div>
+        </div>
+      </section>
+
+      <section class="card vector-card" aria-labelledby="vectorsTitle">
+        <div class="card-heading"><h2 id="vectorsTitle">Vector values</h2></div>
+        <div class="vector-table-wrap">
+          <table>
+            <thead><tr><th>Vector</th><th>Components</th><th>Magnitude</th></tr></thead>
+            <tbody>
+              <tr><th>r</th><td id="rVector">(0.00, 0.00, 0.00) m</td><td id="rMagnitude">0.00 m</td></tr>
+              <tr><th>ω</th><td id="omegaVector">(0.00, 0.00, 0.00) rad/s</td><td id="omegaMagnitude">0.00 rad/s</td></tr>
+              <tr><th>p</th><td id="pVector">(0.00, 0.00, 0.00) kg·m/s</td><td id="pMagnitude">0.00 kg·m/s</td></tr>
+              <tr><th>L</th><td id="lVector">(0.00, 0.00, 0.00) kg·m²/s</td><td id="lMagnitude">0.00 kg·m²/s</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="formula-line">I = mr² &nbsp;·&nbsp; p = m(ω × r) &nbsp;·&nbsp; L = r × p &nbsp;·&nbsp; ΔL = τΔt</p>
+      </section>
+    </div>
+
+    <aside class="card controls-card" aria-labelledby="controlsTitle">
+      <div class="card-heading"><h2 id="controlsTitle">Controls</h2></div>
+
+      <fieldset>
+        <legend>Rotating mass</legend>
+        <div class="control-group">
+          <label for="mass">Mass m <output id="massValue" for="mass">2.0 kg</output></label>
+          <input id="mass" type="range" min="0.5" max="5" step="0.1" value="2">
+        </div>
+        <div class="control-group">
+          <label for="radius">Radius r <output id="radiusValue" for="radius">2.5 m</output></label>
+          <input id="radius" type="range" min="0.5" max="4" step="0.1" value="2.5">
+        </div>
+        <div class="control-group">
+          <label for="phase">Initial radius angle <output id="phaseValue" for="phase">0°</output></label>
+          <input id="phase" type="range" min="0" max="360" step="5" value="0">
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Angular velocity</legend>
+        <div class="control-group">
+          <label for="omega">Initial ω <output id="omegaValue" for="omega">1.5 rad/s</output></label>
+          <input id="omega" type="range" min="-4" max="4" step="0.1" value="1.5">
+        </div>
+        <div class="control-group">
+          <label for="tilt">Axis tilt <output id="tiltValue" for="tilt">25°</output></label>
+          <input id="tilt" type="range" min="0" max="180" step="5" value="25">
+        </div>
+        <div class="control-group">
+          <label for="azimuth">Axis direction <output id="azimuthValue" for="azimuth">30°</output></label>
+          <input id="azimuth" type="range" min="-180" max="180" step="5" value="30">
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Initial torque</legend>
+        <div class="control-group">
+          <label for="torque">Axial torque τ <output id="torqueValue" for="torque">6.0 N·m</output></label>
+          <input id="torque" type="range" min="-15" max="15" step="0.5" value="6">
+        </div>
+        <p class="control-note">Applied along the rotation axis for 0.10 s after restart.</p>
+      </fieldset>
+
+      <div class="control-group">
+        <label for="speed">Animation speed <output id="speedValue" for="speed">1.0×</output></label>
+        <input id="speed" type="range" min="0.25" max="2" step="0.25" value="1">
+      </div>
+
+      <div class="button-grid">
+        <button id="playPause" type="button">Pause</button>
+        <button id="restartBtn" class="secondary" type="button">Restart + torque</button>
+        <button id="resetCameraBtn" class="secondary full-width" type="button">Reset camera</button>
+      </div>
+      <p id="simStatus" class="sr-only" aria-live="polite"></p>
+    </aside>
+  </main>
+
+  <script type="module" src="js/angular_momentum.mjs"></script>
+</body>
+</html>
