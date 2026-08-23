@@ -1,4 +1,6 @@
 const PULSE_DURATION = 0.1;
+const INITIAL_OMEGA = 0;
+const INITIAL_PHASE = 0;
 const TAU = Math.PI * 2;
 const EPSILON = 1e-7;
 
@@ -6,15 +8,11 @@ const elements = {
   viewer: document.getElementById("viewer"),
   loadingMessage: document.getElementById("loadingMessage"),
   errorMessage: document.getElementById("errorMessage"),
-  pulseBadge: document.getElementById("pulseBadge"),
-  timeReadout: document.getElementById("timeReadout"),
   inertiaReadout: document.getElementById("inertiaReadout"),
   omegaReadout: document.getElementById("omegaReadout"),
-  pulseReadout: document.getElementById("pulseReadout"),
+  angularMomentumReadout: document.getElementById("angularMomentumReadout"),
   rVector: document.getElementById("rVector"),
   rMagnitude: document.getElementById("rMagnitude"),
-  omegaVector: document.getElementById("omegaVector"),
-  omegaMagnitude: document.getElementById("omegaMagnitude"),
   pVector: document.getElementById("pVector"),
   pMagnitude: document.getElementById("pMagnitude"),
   lVector: document.getElementById("lVector"),
@@ -23,18 +21,12 @@ const elements = {
   massValue: document.getElementById("massValue"),
   radius: document.getElementById("radius"),
   radiusValue: document.getElementById("radiusValue"),
-  phase: document.getElementById("phase"),
-  phaseValue: document.getElementById("phaseValue"),
-  omega: document.getElementById("omega"),
-  omegaValue: document.getElementById("omegaValue"),
+  torque: document.getElementById("torque"),
+  torqueValue: document.getElementById("torqueValue"),
   tilt: document.getElementById("tilt"),
   tiltValue: document.getElementById("tiltValue"),
   azimuth: document.getElementById("azimuth"),
   azimuthValue: document.getElementById("azimuthValue"),
-  torque: document.getElementById("torque"),
-  torqueValue: document.getElementById("torqueValue"),
-  speed: document.getElementById("speed"),
-  speedValue: document.getElementById("speedValue"),
   playPause: document.getElementById("playPause"),
   restartBtn: document.getElementById("restartBtn"),
   resetCameraBtn: document.getElementById("resetCameraBtn"),
@@ -170,7 +162,13 @@ function initializeSimulation() {
   axisGeometry.setAttribute("position", new THREE.BufferAttribute(axisPositions, 3));
   const axisLine = new THREE.Line(
     axisGeometry,
-    new THREE.LineDashedMaterial({ color: 0xb6a5ef, dashSize: 0.2, gapSize: 0.14, transparent: true, opacity: 0.5 })
+    new THREE.LineDashedMaterial({
+      color: 0xb6a5ef,
+      dashSize: 0.2,
+      gapSize: 0.14,
+      transparent: true,
+      opacity: 0.5
+    })
   );
   scene.add(axisLine);
 
@@ -185,33 +183,34 @@ function initializeSimulation() {
   );
   scene.add(trail);
 
-  const radiusArrow = createArrow(0x38bdf8);
-  const omegaArrow = createArrow(0xc4b5fd);
-  const momentumArrow = createArrow(0x34d399);
-  const angularArrow = createArrow(0xfbbf24);
-  const torqueArrow = createArrow(0xfb7185);
-  scene.add(radiusArrow, omegaArrow, momentumArrow, angularArrow, torqueArrow);
-
-  const labels = {
-    radius: createLabelSprite("r", "#38bdf8"),
-    omega: createLabelSprite("ω", "#c4b5fd"),
-    momentum: createLabelSprite("p", "#34d399"),
-    angular: createLabelSprite("L", "#fbbf24"),
-    torque: createLabelSprite("τ", "#fb7185")
-  };
-  scene.add(labels.radius, labels.omega, labels.momentum, labels.angular, labels.torque);
+  const angularArrow = createProminentArrow(0xfbbf24);
+  const angularLabel = createLabelSprite("L", "#fbbf24");
+  scene.add(angularArrow, angularLabel);
 
   const zAxis = new THREE.Vector3(0, 0, 1);
+  const yAxis = new THREE.Vector3(0, 1, 0);
 
-  function createArrow(color) {
-    return new THREE.ArrowHelper(
-      new THREE.Vector3(1, 0, 0),
-      new THREE.Vector3(),
-      1,
+  function createProminentArrow(color) {
+    const material = new THREE.MeshStandardMaterial({
       color,
-      0.24,
-      0.14
+      emissive: 0x8a5a08,
+      emissiveIntensity: 0.62,
+      roughness: 0.24,
+      metalness: 0.08
+    });
+    const shaft = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.09, 0.09, 1, 20),
+      material
     );
+    const head = new THREE.Mesh(
+      new THREE.ConeGeometry(0.25, 0.5, 24),
+      material
+    );
+    const arrow = new THREE.Group();
+    arrow.add(shaft, head);
+    arrow.userData.shaft = shaft;
+    arrow.userData.head = head;
+    return arrow;
   }
 
   function createLabelSprite(text, color) {
@@ -231,7 +230,9 @@ function initializeSimulation() {
     context.fillText(text, 80, 40);
     const texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
-    const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false }));
+    const sprite = new THREE.Sprite(
+      new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false })
+    );
     sprite.scale.set(0.72, 0.36, 1);
     sprite.renderOrder = 10;
     return sprite;
@@ -259,8 +260,8 @@ function initializeSimulation() {
     return {
       mass: Number(elements.mass.value),
       radius: Number(elements.radius.value),
-      phase: THREE.MathUtils.degToRad(Number(elements.phase.value)),
-      omega0: Number(elements.omega.value),
+      phase: INITIAL_PHASE,
+      omega0: INITIAL_OMEGA,
       torque: Number(elements.torque.value),
       axis,
       basisU,
@@ -296,9 +297,7 @@ function initializeSimulation() {
       omega,
       omegaVector,
       momentum,
-      angularMomentum,
-      pulseActive: time < PULSE_DURATION && Math.abs(active.torque) > EPSILON,
-      pulseRemaining: Math.max(0, PULSE_DURATION - time)
+      angularMomentum
     };
   }
 
@@ -327,7 +326,7 @@ function initializeSimulation() {
     ball.scale.setScalar(0.88 + Math.cbrt(active.mass) * 0.12);
   }
 
-  function setArrow(arrow, vector, originPoint, visualLength) {
+  function setProminentArrow(arrow, vector, originPoint, visualLength) {
     const magnitude = vector.length();
     arrow.position.copy(originPoint);
     if (magnitude < EPSILON || visualLength < EPSILON) {
@@ -335,40 +334,31 @@ function initializeSimulation() {
       return null;
     }
     const direction = vector.clone().normalize();
-    const headLength = Math.min(0.34, Math.max(0.16, visualLength * 0.22));
-    const headWidth = Math.min(0.2, Math.max(0.1, visualLength * 0.12));
+    const headLength = Math.min(0.56, Math.max(0.34, visualLength * 0.2));
+    const shaftLength = Math.max(0.05, visualLength - headLength);
+    const shaft = arrow.userData.shaft;
+    const head = arrow.userData.head;
+    shaft.scale.set(1, shaftLength, 1);
+    shaft.position.set(0, shaftLength / 2, 0);
+    head.scale.set(1, headLength / 0.5, 1);
+    head.position.set(0, shaftLength + headLength / 2, 0);
     arrow.visible = true;
-    arrow.setDirection(direction);
-    arrow.setLength(visualLength, headLength, headWidth);
+    arrow.quaternion.setFromUnitVectors(yAxis, direction);
     return originPoint.clone().addScaledVector(direction, visualLength);
   }
 
   function updateScene(state) {
     ball.position.copy(state.radiusVector);
 
-    const omegaOrigin = active.basisU.clone().multiplyScalar(-0.18);
-    const angularOrigin = active.basisU.clone().multiplyScalar(0.18);
-    const torqueOrigin = active.basisU.clone().multiplyScalar(0.36);
-    const radiusTip = setArrow(radiusArrow, state.radiusVector, origin.position, active.radius);
-    const omegaLength = 0.9 + Math.min(Math.abs(state.omega) * 0.65, 3.2);
-    const omegaTip = setArrow(omegaArrow, state.omegaVector, omegaOrigin, omegaLength);
-    const momentumLength = 0.85 + Math.min(Math.log1p(state.momentum.length()) * 0.72, 3.1);
-    const momentumTip = setArrow(momentumArrow, state.momentum, state.radiusVector, momentumLength);
-    const angularLength = 0.9 + Math.min(Math.log1p(state.angularMomentum.length()) * 0.62, 3.4);
-    const angularTip = setArrow(angularArrow, state.angularMomentum, angularOrigin, angularLength);
-    const torqueVector = active.axis.clone().multiplyScalar(active.torque);
-    const torqueLength = 0.8 + Math.min(Math.abs(active.torque) * 0.12, 2.4);
-    let torqueTip = null;
-    if (state.pulseActive) torqueTip = setArrow(torqueArrow, torqueVector, torqueOrigin, torqueLength);
-    else torqueArrow.visible = false;
+    const angularLength = 1.25 + Math.min(Math.log1p(state.angularMomentum.length()) * 0.78, 3.8);
+    const angularTip = setProminentArrow(
+      angularArrow,
+      state.angularMomentum,
+      origin.position,
+      angularLength
+    );
 
-    updateLabel(labels.radius, radiusTip, Boolean(radiusTip));
-    updateLabel(labels.omega, omegaTip, Boolean(omegaTip));
-    updateLabel(labels.momentum, momentumTip, Boolean(momentumTip));
-    updateLabel(labels.angular, angularTip, Boolean(angularTip));
-    updateLabel(labels.torque, torqueTip, Boolean(torqueTip));
-
-    elements.pulseBadge.hidden = !state.pulseActive;
+    updateLabel(angularLabel, angularTip, Boolean(angularTip));
   }
 
   function updateLabel(label, position, shouldShow) {
@@ -394,22 +384,16 @@ function initializeSimulation() {
   function updateReadouts(state, force = false) {
     if (!force && state.time - lastReadoutTime < 0.075) return;
     lastReadoutTime = state.time;
-    elements.timeReadout.textContent = state.time.toFixed(2) + " s";
+    const angularMomentumMagnitude = state.angularMomentum.length();
     elements.inertiaReadout.textContent = active.inertia.toFixed(2) + " kg·m²";
     elements.omegaReadout.textContent = formatSigned(state.omega) + " rad/s";
-    elements.pulseReadout.textContent = Math.abs(active.torque) <= EPSILON
-      ? "none"
-      : state.pulseActive
-        ? state.pulseRemaining.toFixed(2) + " s left"
-        : "complete";
+    elements.angularMomentumReadout.textContent = angularMomentumMagnitude.toFixed(2) + " kg·m²/s";
     elements.rVector.textContent = formatVector(state.radiusVector) + " m";
     elements.rMagnitude.textContent = state.radiusVector.length().toFixed(2) + " m";
-    elements.omegaVector.textContent = formatVector(state.omegaVector) + " rad/s";
-    elements.omegaMagnitude.textContent = state.omegaVector.length().toFixed(2) + " rad/s";
     elements.pVector.textContent = formatVector(state.momentum) + " kg·m/s";
     elements.pMagnitude.textContent = state.momentum.length().toFixed(2) + " kg·m/s";
     elements.lVector.textContent = formatVector(state.angularMomentum) + " kg·m²/s";
-    elements.lMagnitude.textContent = state.angularMomentum.length().toFixed(2) + " kg·m²/s";
+    elements.lMagnitude.textContent = angularMomentumMagnitude.toFixed(2) + " kg·m²/s";
   }
 
   function formatVector(vector) {
@@ -422,14 +406,22 @@ function initializeSimulation() {
   }
 
   function updateControlOutputs() {
-    elements.massValue.textContent = Number(elements.mass.value).toFixed(1) + " kg";
-    elements.radiusValue.textContent = Number(elements.radius.value).toFixed(1) + " m";
-    elements.phaseValue.textContent = String(Math.round(Number(elements.phase.value))) + "°";
-    elements.omegaValue.textContent = Number(elements.omega.value).toFixed(1) + " rad/s";
-    elements.tiltValue.textContent = String(Math.round(Number(elements.tilt.value))) + "°";
-    elements.azimuthValue.textContent = String(Math.round(Number(elements.azimuth.value))) + "°";
-    elements.torqueValue.textContent = Number(elements.torque.value).toFixed(1) + " N·m";
-    elements.speedValue.textContent = Number(elements.speed.value).toFixed(2).replace(/0$/, "") + "×";
+    const massText = Number(elements.mass.value).toFixed(1) + " kg";
+    const radiusText = Number(elements.radius.value).toFixed(1) + " m";
+    const torqueText = Number(elements.torque.value).toFixed(1) + " N·m";
+    const tiltText = String(Math.round(Number(elements.tilt.value))) + "°";
+    const azimuthText = String(Math.round(Number(elements.azimuth.value))) + "°";
+
+    elements.massValue.textContent = massText;
+    elements.radiusValue.textContent = radiusText;
+    elements.torqueValue.textContent = torqueText;
+    elements.tiltValue.textContent = tiltText;
+    elements.azimuthValue.textContent = azimuthText;
+    elements.mass.setAttribute("aria-valuetext", massText);
+    elements.radius.setAttribute("aria-valuetext", radiusText);
+    elements.torque.setAttribute("aria-valuetext", torqueText);
+    elements.tilt.setAttribute("aria-valuetext", tiltText);
+    elements.azimuth.setAttribute("aria-valuetext", azimuthText);
   }
 
   function requestRender() {
@@ -456,19 +448,14 @@ function initializeSimulation() {
     updateReadouts(initialState, true);
     requestRender();
     if (startPlaying) setPaused(false);
-    if (announce) {
-      const message = Math.abs(active.torque) <= EPSILON
-        ? "Simulation restarted with zero torque."
-        : "Simulation restarted. The torque pulse is active for 0.10 seconds.";
-      announceStatus(message);
-    }
+    if (announce) announceStatus("Motion restarted.");
   }
 
   function setPaused(nextPaused) {
     isPaused = nextPaused;
     elements.playPause.textContent = isPaused ? "Resume" : "Pause";
     requestRender();
-    announceStatus(isPaused ? "Simulation paused." : "Simulation playing.");
+    announceStatus(isPaused ? "Motion paused." : "Motion playing.");
   }
 
   function announceStatus(message) {
@@ -499,11 +486,9 @@ function initializeSimulation() {
   const restartInputs = [
     elements.mass,
     elements.radius,
-    elements.phase,
-    elements.omega,
+    elements.torque,
     elements.tilt,
-    elements.azimuth,
-    elements.torque
+    elements.azimuth
   ];
   for (const input of restartInputs) {
     input.addEventListener("input", () => {
@@ -511,10 +496,9 @@ function initializeSimulation() {
       restartSimulation({ announce: false });
     });
     input.addEventListener("change", () => {
-      announceStatus("Parameters updated. The simulation restarted with the selected torque.");
+      announceStatus("Parameters updated. The motion restarted.");
     });
   }
-  elements.speed.addEventListener("input", updateControlOutputs);
 
   elements.playPause.addEventListener("click", () => {
     userChosePlayback = true;
@@ -632,9 +616,7 @@ function initializeSimulation() {
     if (!isVisible || documentHidden) return;
     if (isPaused && !needsRender) return;
 
-    if (!isPaused) {
-      simulationTime += delta * Number(elements.speed.value);
-    }
+    if (!isPaused) simulationTime += delta;
 
     const state = evaluateState(simulationTime);
     updateScene(state);
@@ -652,7 +634,7 @@ function showError(message) {
   if (message) elements.errorMessage.textContent = message;
   elements.viewer.setAttribute("aria-disabled", "true");
   elements.viewer.tabIndex = -1;
-  for (const control of document.querySelectorAll(".controls-card input, .controls-card button")) {
+  for (const control of document.querySelectorAll(".side-panel input, .side-panel button")) {
     control.disabled = true;
   }
 }
