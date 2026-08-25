@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Tilt an imaginary tunnel through Earth and discover why every ideal chord still takes about 42 minutes to cross.">
+  <meta name="theme-color" content="#06162f">
+  <title>Gravity Tunnel Explorer | Palladium</title>
+  <link rel="stylesheet" href="css/earth_tunnel.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+
+<body>
+  <header class="site-header">
+    <a class="back-link" href="../../index.html#physics">&larr; Physics</a>
+
+    <section class="hero" aria-labelledby="pageTitle">
+      <div class="hero-copy">
+        <p class="eyebrow">Physics thought experiment · Gravity inside Earth</p>
+        <p class="question-kicker">Interactive thought experiment</p>
+        <h1 id="pageTitle">Gravity Tunnel Explorer</h1>
+        <p class="hero-intro">
+          Explore a straight tunnel drawn through Earth at any angle. Steeper paths are longer
+          with a stronger forward pull; shallower paths are shorter with a gentler pull.
+          Predict whether the travel time changes.
+        </p>
+      </div>
+
+      <div class="hero-fact" aria-label="Thought experiment conditions">
+        <span id="heroTunnelLength" class="hero-fact-number">11,035 km</span>
+        <span id="heroTunnelCaption">30&deg; chord · still about 42 minutes</span>
+        <strong>One impossible tunnel. One very curious ball.</strong>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <div class="simulation-layout">
+      <section class="card simulation-card" aria-labelledby="labTitle">
+        <div class="card-heading viewer-heading">
+          <div>
+            <p class="mini-kicker">Live journey</p>
+            <h2 id="labTitle">The planet-sized drop</h2>
+          </div>
+          <p>Drag to orbit · Scroll or pinch to zoom</p>
+        </div>
+
+        <div
+          id="earthViewer"
+          class="viewer"
+          role="region"
+          tabindex="0"
+          aria-label="Three-dimensional cutaway Earth simulation showing a glowing ball travelling through an adjustable straight chord tunnel from one surface to another. Drag to rotate, scroll or pinch to zoom, use arrow keys to orbit, plus and minus to zoom, space to pause, and R to restart the drop."
+          aria-describedby="sceneDescription"
+        >
+          <p id="sceneDescription" class="sr-only">
+            The Earth is shown as a cutaway with crust, mantle, outer core, and inner core.
+            A straight tunnel can run through the centre or tilt into a shorter chord. The ball
+            speeds up toward the tunnel midpoint, passes it at maximum speed, then slows as it
+            climbs toward the far side. A narrow, frictionless tube constrains it to that path.
+          </p>
+
+          <div class="journey-callout" aria-hidden="true">
+            <span id="journeyPhase">Leaving the surface</span>
+            <strong id="journeyNarrative">Earth pulls. The adventure begins.</strong>
+          </div>
+
+          <div class="layer-key" aria-hidden="true">
+            <span><i class="crust"></i>Crust</span>
+            <span><i class="mantle"></i>Mantle</span>
+            <span><i class="outer-core"></i>Outer core</span>
+            <span><i class="inner-core"></i>Inner core</span>
+          </div>
+
+          <p id="loadingMessage" class="viewer-message">Building a tunnel through the planet&hellip;</p>
+          <p id="errorMessage" class="viewer-message error-message" role="alert" hidden>
+            The 3D Earth could not load. Refresh the page or check your connection.
+          </p>
+        </div>
+
+        <div class="journey-progress" aria-label="Journey from the starting surface to the far exit">
+          <div class="progress-labels" aria-hidden="true">
+            <span>Start</span>
+            <span id="tunnelMidpointLabel">Tunnel midpoint</span>
+            <span>Far exit</span>
+          </div>
+          <div class="progress-track">
+            <span id="progressFill"></span>
+          </div>
+        </div>
+
+        <div class="status-strip" aria-label="Live physics readings">
+          <div class="status-item">
+            <span>Journey clock</span>
+            <strong id="journeyClock">00:00</strong>
+          </div>
+          <div class="status-item">
+            <span>Depth below surface</span>
+            <strong id="depthReadout">0 km</strong>
+          </div>
+          <div class="status-item speed-status">
+            <span>Ball speed</span>
+            <strong id="speedReadout">0.00 km/s</strong>
+          </div>
+          <div class="status-item">
+            <span>Gravity along tunnel</span>
+            <strong id="gravityReadout">8.50 m/s²</strong>
+          </div>
+          <div class="status-item angle-status">
+            <span>Tunnel tilt</span>
+            <strong id="angleReadout">30&deg; from straight down</strong>
+          </div>
+          <div class="status-item">
+            <span>Chord length</span>
+            <strong id="chordReadout">11,035 km</strong>
+          </div>
+        </div>
+      </section>
+
+      <aside class="card side-panel" aria-label="Prediction, simulation controls, and model assumptions">
+        <section class="panel-section prediction-section" aria-labelledby="predictionTitle">
+          <p class="mini-kicker">Before you peek</p>
+          <h2 id="predictionTitle">A shorter tunnel: a shorter trip?</h2>
+          <div class="prediction-list">
+            <button class="prediction-option" type="button" data-answer="faster">
+              <span>A</span>
+              It arrives sooner
+            </button>
+            <button class="prediction-option" type="button" data-answer="slower">
+              <span>B</span>
+              It arrives later
+            </button>
+            <button class="prediction-option" type="button" data-answer="same">
+              <span>C</span>
+              Exactly the same time
+            </button>
+          </div>
+          <p id="predictionFeedback" class="prediction-feedback" role="status" aria-live="polite">
+            Shorter road, weaker pull&mdash;which effect wins?
+          </p>
+        </section>
+
+        <section class="panel-section controls-section" aria-labelledby="controlsTitle">
+          <div class="section-heading">
+            <div>
+              <p class="mini-kicker">Mission control</p>
+              <h2 id="controlsTitle">Run the experiment</h2>
+            </div>
+          </div>
+
+          <div class="control-group angle-control">
+            <label for="tunnelAngle">
+              Tunnel tilt from straight down
+              <output id="tunnelAngleValue" for="tunnelAngle">30&deg;</output>
+            </label>
+            <input id="tunnelAngle" type="range" min="0" max="75" step="5" value="30" aria-describedby="tunnelAngleHelp">
+            <p id="tunnelAngleHelp" class="control-note">
+              0&deg; crosses Earth&rsquo;s centre. A larger angle makes a shorter, shallower chord.
+            </p>
+          </div>
+
+          <div class="control-group">
+            <label for="timeScale">
+              Time accelerator
+              <output id="timeScaleValue" for="timeScale">240&times;</output>
+            </label>
+            <input id="timeScale" type="range" min="60" max="600" step="60" value="240">
+            <p class="control-note">At 240&times;, every real second reveals four minutes of the journey.</p>
+          </div>
+
+          <div class="button-grid">
+            <button id="playPause" type="button">Pause</button>
+            <button id="restartBtn" class="secondary" type="button">Restart drop</button>
+            <button id="resetCameraBtn" class="secondary full-width" type="button">Reset view</button>
+          </div>
+        </section>
+
+        <section class="panel-section assumptions-section" aria-labelledby="rulesTitle">
+          <p class="mini-kicker">Our imaginary Earth</p>
+          <h2 id="rulesTitle">The thought-experiment rules</h2>
+          <ul class="rule-list">
+            <li><span>01</span>A narrow, perfectly smooth vacuum tube keeps the ball on the chord.</li>
+            <li><span>02</span>Earth does not rotate.</li>
+            <li><span>03</span>Density is uniform, so the maths stays beautifully simple.</li>
+            <li><span>04</span>In a wide angled hole, the ball would curve toward Earth&rsquo;s centre and hit the wall.</li>
+          </ul>
+        </section>
+
+        <p id="simStatus" class="sr-only" aria-live="polite"></p>
+      </aside>
+    </div>
+
+    <section class="explanation-card" aria-labelledby="whyTitle">
+      <div class="explanation-heading">
+        <div>
+          <p class="eyebrow">Unpack the surprise</p>
+          <h2 id="whyTitle">Gravity fades. Momentum carries on.</h2>
+        </div>
+        <p>
+          Inside a uniform Earth, only the mass closer to the centre than the ball
+          pulls it inward overall. The deeper it falls, the weaker that inward pull becomes.
+        </p>
+      </div>
+
+      <div class="concept-grid">
+        <article class="concept-card">
+          <span class="concept-number">01</span>
+          <div>
+            <h3>At the surface</h3>
+            <p>The ball starts from rest. Gravity is strongest here and points toward the centre.</p>
+          </div>
+        </article>
+        <article class="concept-card centre-card">
+          <span class="concept-number">02</span>
+          <div>
+            <h3>At the tunnel midpoint</h3>
+            <p>The pull along the tube is zero, but speed is greatest. On a tilted path, gravity still pulls sideways and the smooth tube pushes back.</p>
+          </div>
+        </article>
+        <article class="concept-card">
+          <span class="concept-number">03</span>
+          <div>
+            <h3>At the far exit</h3>
+            <p>It slows to a momentary stop, then falls back. With no drag, the cosmic commute repeats forever.</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="formula-row">
+        <div>
+          <span>The along-tunnel rule</span>
+          <strong>a<sub>&parallel;</sub>(s) = &minus;(g/R)s</strong>
+        </div>
+        <p>
+          Here <em>s</em> is distance from the chord&rsquo;s midpoint. The same simple-harmonic rule
+          survives every angle: midpoint in about <strong>21 minutes</strong>, the other end in
+          about <strong>42 minutes</strong>&mdash;even when the tunnel is shorter.
+        </p>
+      </div>
+
+      <p class="reality-note">
+        <strong>Reality check:</strong> Earth&rsquo;s heat, pressure, rotation, changing density, and atmosphere
+        make this tunnel impossible. That is exactly why physicists love thought experiments:
+        remove the mess, reveal the idea.
+      </p>
+    </section>
+  </main>
+
+  <script type="module" src="js/earth_tunnel.mjs"></script>
+</body>
+</html>
