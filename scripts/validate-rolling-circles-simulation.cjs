@@ -167,6 +167,11 @@ expect(!/<h2\b[^>]*\bid\s*=\s*(["'])labTitle\1[^>]*>[^<]*extra.?turn/i.test(html
 expect(!/<header\b[\s\S]*?one more[\s\S]*?<\/header>/i.test(html), "The introductory copy must not imply the +1 answer.");
 expect(/id\s*=\s*(["'])rotationReadout\1[^>]*>\s*Predict first\s*</i.test(html), "The initial actual-turn readout must be gated.");
 expect(/id\s*=\s*(["'])naiveReadout\1[^>]*>\s*Predict first\s*</i.test(html), "The initial comparison readout must be gated.");
+const rotationInsetTag = openingTagWithId(html, "rotationInset");
+expect(/^<output\b/i.test(rotationInsetTag), "The simulation inset must be a numeric output.");
+expect(attributeValue(rotationInsetTag, "aria-live") === "off", "The per-frame inset must not flood screen readers with live updates.");
+expect(/id\s*=\s*(["'])rotationInset\1[^>]*>\s*\?\s*</i.test(html), "The inset must remain gated before a prediction.");
+expect(!htmlIds.includes("motionPhase") && !htmlIds.includes("motionNarrative"), "The explanatory inset text must be removed.");
 expect(
   /<h1\b[^>]*\bid\s*=\s*(["'])pageTitle\1[^>]*>\s*The Coin Rotation Paradox: How Many Spins in One Orbit\?\s*<\/h1>/i.test(html),
   "The requested Coin Rotation Paradox page title is missing."
@@ -224,6 +229,9 @@ expect(!script.includes("fillText("), "The diagram must not label the circles or
 expect(/cartoon face/i.test(html), "The rolling circle needs a visible cartoon-face orientation cue.");
 expect(!script.includes("elements.traceToggle"), "The removed independent trajectory control is still referenced.");
 expect(!script.includes("answerRevealed"), "Answer visibility must be controlled only by the prediction gate.");
+expect(!script.includes("updateMotionCue") && !script.includes("motionNarrative"), "The old narrative inset logic must be removed.");
+expect(script.includes('elements.rotationInset.textContent = explanationUnlocked ? actualTurns.toFixed(2) : "?"'), "The inset must show only the gated small-circle rotation count.");
+expect(/\.rotation-inset\s*\{[\s\S]*?font-variant-numeric:\s*tabular-nums/i.test(style), "The numeric rotation inset styles are missing.");
 expect(
   (script.match(/explanationUnlocked\s*=\s*true/g) || []).length === 1,
   "Only the quiz-selection unlock function may reveal the explanation."

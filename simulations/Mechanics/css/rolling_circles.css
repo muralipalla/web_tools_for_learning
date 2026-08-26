@@ -349,36 +349,24 @@ main {
   display: block;
 }
 
-.motion-callout {
+.rotation-inset {
   position: absolute;
   z-index: 3;
-  pointer-events: none;
-  background: rgba(3, 12, 25, 0.72);
-  border: 1px solid rgba(103, 232, 249, 0.2);
-  border-radius: 13px;
-  backdrop-filter: blur(8px);
-}
-
-.motion-callout {
   top: 15px;
   left: 15px;
-  max-width: min(330px, calc(100% - 30px));
-  padding: 11px 13px;
-  display: grid;
-  gap: 4px;
-}
-
-.motion-callout span {
-  color: var(--cyan);
-  font-size: 0.65rem;
+  min-width: 78px;
+  padding: 9px 13px;
+  color: var(--text);
+  background: rgba(3, 12, 25, 0.78);
+  border: 1px solid rgba(103, 232, 249, 0.24);
+  border-radius: 13px;
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
   font-weight: 900;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
-}
-
-.motion-callout strong {
-  font-size: 0.86rem;
-  line-height: 1.42;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  text-align: center;
+  pointer-events: none;
+  backdrop-filter: blur(8px);
 }
 
 .scrubber-row {
@@ -1208,8 +1196,8 @@ input[type="range"] {
     min-height: 0;
   }
 
-  .motion-callout {
-    right: 12px;
+  .rotation-inset {
+    top: 12px;
     left: 12px;
   }
 

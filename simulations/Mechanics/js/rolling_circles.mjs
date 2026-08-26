@@ -19,8 +19,7 @@ const elements = {
   visualModeToggle: document.getElementById("visualModeToggle"),
   visualizationPicker: document.getElementById("visualizationPicker"),
   contactToggle: document.getElementById("contactToggle"),
-  motionPhase: document.getElementById("motionPhase"),
-  motionNarrative: document.getElementById("motionNarrative"),
+  rotationInset: document.getElementById("rotationInset"),
   playPause: document.getElementById("playPause"),
   restart: document.getElementById("restartBtn"),
   step: document.getElementById("stepBtn"),
@@ -260,55 +259,6 @@ function draw() {
   context.restore();
 }
 
-function updateMotionCue(state) {
-  const actualTurns = state.progress * state.actualTurnsPerOrbit;
-  const temptingTurns = state.progress * state.temptingTurnsPerOrbit;
-
-  if (!explanationUnlocked && state.progress > 0.001) {
-    if (state.progress < 0.25) {
-      elements.motionPhase.textContent = "The first quarter";
-      elements.motionNarrative.textContent = "Notice how quickly the orientation cue turns along the curved path.";
-    } else if (state.progress < 0.5) {
-      elements.motionPhase.textContent = "A wider route";
-      elements.motionNarrative.textContent = "The roller’s centre follows the dashed circle outside the fixed rim.";
-    } else if (state.progress < 0.75) {
-      elements.motionPhase.textContent = "Past halfway";
-      elements.motionNarrative.textContent = "Keep your own count, but do not commit until the centre returns home.";
-    } else if (state.progress < 0.999) {
-      elements.motionPhase.textContent = "Closing the orbit";
-      elements.motionNarrative.textContent = "The centre is nearly home. What is your final prediction?";
-    } else {
-      elements.motionPhase.textContent = "One orbit complete";
-      elements.motionNarrative.textContent = "Choose a prediction in the challenge card to unlock the count and explanation.";
-    }
-    return;
-  }
-
-  if (state.progress <= 0.001) {
-    elements.motionPhase.textContent = "Ready at the start";
-    elements.motionNarrative.textContent = isArrowMode()
-      ? "Follow the yellow arrow tip as it traces one point on the rim."
-      : "Watch the face turn, not just the roller’s centre.";
-  } else if (state.progress < 0.25) {
-    elements.motionPhase.textContent = "The first quarter";
-    elements.motionNarrative.textContent = `${actualTurns.toFixed(2)} actual turns so far; the circumference-only count is ${temptingTurns.toFixed(2)}.`;
-  } else if (state.progress < 0.5) {
-    elements.motionPhase.textContent = "A wider route";
-    elements.motionNarrative.textContent = "The roller’s centre follows the dashed circle outside the fixed rim.";
-  } else if (state.progress < 0.75) {
-    elements.motionPhase.textContent = "Past halfway";
-    elements.motionNarrative.textContent = `${actualTurns.toFixed(2)} turns counted in the room’s frame of reference.`;
-  } else if (state.progress < 0.999) {
-    elements.motionPhase.textContent = "Closing the orbit";
-    elements.motionNarrative.textContent = isArrowMode()
-      ? "The centre is nearly home. Check whether the arrow returns to its starting direction."
-      : "The centre is nearly home. Check whether the face will return upright.";
-  } else {
-    elements.motionPhase.textContent = "One orbit complete";
-    elements.motionNarrative.textContent = `${state.actualTurnsPerOrbit.toFixed(2)} actual turns, not ${state.temptingTurnsPerOrbit.toFixed(2)}—the centre path adds one.`;
-  }
-}
-
 function formatTurnCount(value) {
   const nearestInteger = Math.round(value);
   return Math.abs(value - nearestInteger) < 1e-9 ? String(nearestInteger) : value.toFixed(2);
@@ -326,6 +276,7 @@ function updateReadouts() {
   elements.speedValue.textContent = `${Number(elements.speed.value).toFixed(2)}×`;
   elements.progressValue.textContent = `${Math.round(percent)}%`;
   elements.orbitReadout.textContent = `${Math.round(percent)}%`;
+  elements.rotationInset.textContent = explanationUnlocked ? actualTurns.toFixed(2) : "?";
   elements.rotationReadout.textContent = explanationUnlocked ? `${actualTurns.toFixed(2)} turns` : "Predict first";
   elements.naiveReadout.textContent = explanationUnlocked ? `${temptingTurns.toFixed(2)} turns` : "Predict first";
   elements.answerReadout.textContent = explanationUnlocked ? state.actualTurnsPerOrbit.toFixed(2) : "?";
@@ -341,7 +292,6 @@ function updateReadouts() {
       ? `After one lap, the ${activeOrientationCue()} returns to its starting orientation.`
       : `After one lap, the centre returns to the start but the ${activeOrientationCue()} does not.`
     : `Run one lap to see whether the ${activeOrientationCue()} returns to its starting orientation.`;
-  updateMotionCue(state);
 }
 
 function render() {
