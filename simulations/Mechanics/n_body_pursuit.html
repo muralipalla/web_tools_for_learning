@@ -96,6 +96,26 @@
           </div>
         </div>
 
+        <div id="velocityLegend" class="velocity-legend" role="group" aria-label="Velocity component values for person 1" hidden>
+          <span class="velocity-legend-title">Person 1 &middot; velocity split</span>
+          <span class="velocity-legend-row radial-legend">
+            <i aria-hidden="true"></i>
+            <span id="radialVectorFormula">Inward <var>v</var> sin(&pi;/5)</span>
+            <output id="radialVectorValue" for="nCount speed" aria-live="off">1.18 m/s</output>
+          </span>
+          <span class="velocity-legend-row tangential-legend">
+            <i aria-hidden="true"></i>
+            <span id="tangentialVectorFormula">Tangential <var>v</var> cos(&pi;/5)</span>
+            <output id="tangentialVectorValue" for="nCount speed" aria-live="off">1.62 m/s</output>
+          </span>
+          <span class="velocity-legend-row resultant-legend">
+            <i aria-hidden="true"></i>
+            <span>Resultant <var>v</var></span>
+            <output id="resultantVectorValue" for="speed" aria-live="off">2.00 m/s</output>
+          </span>
+          <small>Arrow lengths are normalized to <var>v</var> so their proportions stay readable.</small>
+        </div>
+
         <div class="scrubber-row">
           <label for="timeProgress">
             Chase progress
@@ -206,6 +226,12 @@
               <span class="toggle-control" aria-hidden="true"></span>
               <span>Pursuit arrows</span>
             </label>
+            <label class="toggle-row" for="vectorToggle">
+              <input id="vectorToggle" type="checkbox" aria-describedby="vectorToggleHelp">
+              <span class="toggle-control" aria-hidden="true"></span>
+              <span>Velocity components</span>
+            </label>
+            <p id="vectorToggleHelp" class="vector-toggle-help">Shows the inward, tangential, and resultant vectors for person 1.</p>
           </fieldset>
         </section>
 
@@ -266,7 +292,8 @@
             <p>
               With &alpha; = &pi;/<var>N</var>, the inward radial component is
               <strong><var>v</var> sin &alpha;</strong>, while the tangential component is
-              <strong><var>v</var> cos &alpha;</strong>.
+              <strong><var>v</var> cos &alpha;</strong>. Turn on <strong>Velocity components</strong>
+              to compare the two components directly on person 1.
             </p>
           </div>
         </article>

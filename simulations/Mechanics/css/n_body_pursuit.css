@@ -388,6 +388,80 @@ main {
   gap: 6px;
 }
 
+.velocity-legend {
+  width: 100%;
+  padding: 12px 18px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 8px 16px;
+  color: #dce9ed;
+  background: rgba(3, 13, 22, 0.94);
+  border-top: 1px solid rgba(169, 190, 201, 0.22);
+  font-variant-numeric: tabular-nums;
+}
+
+.velocity-legend-title {
+  grid-column: 1 / -1;
+  display: block;
+  color: #f4f8fa;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.velocity-legend-row {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 21px minmax(0, 1fr) auto;
+  gap: 7px;
+  align-items: center;
+  color: #c4d5dc;
+  font-size: 0.7rem;
+  line-height: 1.35;
+}
+
+.velocity-legend-row + .velocity-legend-row {
+  margin-top: 0;
+}
+
+.velocity-legend-row i {
+  position: relative;
+  width: 19px;
+  height: 2px;
+  display: block;
+  background: currentColor;
+  border-radius: 2px;
+}
+
+.velocity-legend-row i::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  right: -1px;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 6px solid currentColor;
+}
+
+.velocity-legend-row output {
+  color: #f5fafb;
+  font-size: 0.7rem;
+  white-space: nowrap;
+}
+
+.velocity-legend small {
+  grid-column: 1 / -1;
+  display: block;
+  color: #8fa8b3;
+  font-size: 0.68rem;
+  line-height: 1.35;
+}
+
+.radial-legend i { color: var(--gold); }
+.tangential-legend i { color: var(--sky); }
+.resultant-legend i { color: var(--coral); }
+
 .key-dot {
   width: 9px;
   height: 9px;
@@ -677,7 +751,7 @@ input[type="range"] {
   margin: 16px 0 0;
   padding: 13px 0 0;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   border: 0;
   border-top: 1px solid var(--border);
@@ -747,6 +821,15 @@ input[type="range"] {
 .toggle-row input:focus-visible + .toggle-control {
   outline: 3px solid var(--mint);
   outline-offset: 3px;
+}
+
+.vector-toggle-help {
+  grid-column: 1 / -1;
+  margin: 2px 0 0;
+  color: #8fa8b3;
+  font-size: 0.68rem;
+  line-height: 1.45;
+  text-align: center;
 }
 
 .watch-list {
@@ -1188,6 +1271,14 @@ input[type="range"] {
     justify-items: start;
     align-items: center;
     text-align: left;
+  }
+
+  .vector-toggle-help {
+    text-align: left;
+  }
+
+  .velocity-legend {
+    grid-template-columns: 1fr;
   }
 
   .formula-block,

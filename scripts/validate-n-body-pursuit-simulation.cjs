@@ -78,6 +78,30 @@ function pursuitPositions(count, speed, progress, initialRadius = 10) {
   });
 }
 
+function velocityComponents(count, speed, theta) {
+  const halfVertexAngle = Math.PI / count;
+  const inwardFactor = Math.sin(halfVertexAngle);
+  const tangentialFactor = Math.cos(halfVertexAngle);
+  const inward = { x: -Math.cos(theta), y: -Math.sin(theta) };
+  const tangent = { x: -Math.sin(theta), y: Math.cos(theta) };
+  const radial = {
+    x: inward.x * speed * inwardFactor,
+    y: inward.y * speed * inwardFactor,
+  };
+  const tangential = {
+    x: tangent.x * speed * tangentialFactor,
+    y: tangent.y * speed * tangentialFactor,
+  };
+  return {
+    radial,
+    tangential,
+    resultant: {
+      x: radial.x + tangential.x,
+      y: radial.y + tangential.y,
+    },
+  };
+}
+
 const html = requireFile(htmlPath);
 const style = requireFile(stylePath);
 const script = requireFile(scriptPath);
@@ -139,11 +163,21 @@ for (const [id, minimum, maximum, step, value] of rangeExpectations) {
 for (const id of ["playPauseBtn", "restartBtn", "stepBtn"]) {
   expect(/^<button\b/i.test(openingTagWithId(html, id)), `${id} must be a native button.`);
 }
-for (const id of ["trailToggle", "polygonToggle", "arrowToggle"]) {
+for (const id of ["trailToggle", "polygonToggle", "arrowToggle", "vectorToggle"]) {
   const tag = openingTagWithId(html, id);
   expect(/^<input\b/i.test(tag), `${id} must be a native input.`);
   expect(attributeValue(tag, "type") === "checkbox", `${id} must be a checkbox.`);
 }
+expect(!/id\s*=\s*(["'])vectorToggle\1[^>]*\bchecked\b/i.test(html), "The velocity overlay must default to off so the diagram remains uncluttered.");
+const velocityLegendTag = openingTagWithId(html, "velocityLegend");
+expect(attributeValue(velocityLegendTag, "role") === "group", "The velocity legend must expose grouped semantics.");
+expect(/id\s*=\s*(["'])velocityLegend\1[^>]*\bhidden\b/i.test(html), "The velocity legend must be hidden until its toggle is enabled.");
+expect(/<\/div>\s*<div\s+id\s*=\s*(["'])velocityLegend\1/i.test(html), "The velocity key must be docked below the drawing instead of covering the canvas.");
+for (const id of ["radialVectorValue", "tangentialVectorValue", "resultantVectorValue"]) {
+  expect(/^<output\b/i.test(openingTagWithId(html, id)), `${id} must be a native output.`);
+}
+expect(/Velocity components/i.test(html), "The diagram options must label the velocity decomposition toggle.");
+expect(/Arrow lengths are normalized/i.test(html), "The normalized vector-length convention must be disclosed.");
 
 const predictionValues = [...html.matchAll(/\bdata-prediction\s*=\s*(["'])([^"']+)\1/gi)].map((match) => match[2]).sort();
 expect(
@@ -177,6 +211,18 @@ for (const expectedSnippet of [
   "elements.explanationGate.hidden = true",
   "let explanationUnlocked = false",
   "explanationUnlocked = true",
+  "function drawVelocityOverlay",
+  "function velocityOverlayVisibility",
+  "if (!elements.vectorToggle.checked || progress >= 1) return",
+  "const velocityOverlayVisible = elements.vectorToggle.checked && velocityOverlayVisibility(radiusPixels) > 0",
+  "if (velocityOverlayVisible && index === 0) return",
+  "const inward = { x: -Math.cos(focusAngle), y: -Math.sin(focusAngle) }",
+  "const tangent = { x: -Math.sin(focusAngle), y: Math.cos(focusAngle) }",
+  "x: radial.x + tangential.x",
+  "drawVelocityOverlay(context, model, positions, radiusPixels)",
+  "elements.velocityLegend.hidden = !elements.vectorToggle.checked || progress >= 1",
+  "model.radialSpeed.toFixed(2)",
+  "model.tangentialSpeed.toFixed(2)",
 ]) {
   expect(script.includes(expectedSnippet), `Required pursuit behavior is missing: ${expectedSnippet}`);
 }
@@ -188,6 +234,10 @@ expect(/@media\s*\(max-width:\s*760px\)/i.test(style), "The layout needs a narro
 expect(/@media\s*\(max-width:\s*480px\)/i.test(style), "The layout needs a phone breakpoint.");
 expect(/@media\s*\(prefers-reduced-motion:\s*reduce\)/i.test(style), "Reduced-motion preferences are not respected in CSS.");
 expect(/\.simulation-layout\s*\{[\s\S]*?grid-template-columns:\s*1fr;/i.test(style), "The simulation layout must collapse to one column.");
+expect(/\.display-options\s*\{[\s\S]*?grid-template-columns:\s*repeat\(2,/i.test(style), "The four diagram options must use a readable two-column layout.");
+expect(/\.velocity-legend\s*\{/i.test(style), "The velocity key is missing its styles.");
+const velocityLegendRule = style.match(/\.velocity-legend\s*\{[^}]*\}/i)?.[0] ?? "";
+expect(!/position\s*:\s*absolute/i.test(velocityLegendRule), "The velocity key must not cover the live drawing.");
 
 for (const [count, expectedTime] of [
   [3, 5.773502691896258],
@@ -203,7 +253,21 @@ expectNear(pursuitModel(5, 2, 0.5).angleAdvance, 0.9540352475482768, 1e-12, "N =
 expectNear(pursuitModel(4, 2, 0.9).angleAdvance, 2.302585092994046, 1e-10, "N = 4 late angular displacement is incorrect");
 expectNear(pursuitModel(5, 0.5, 0).pathLength, pursuitModel(5, 5, 0).pathLength, 1e-12, "Path length should not depend on speed");
 
-for (const count of [3, 4, 5, 8, 12]) {
+const fivePersonComponents = velocityComponents(5, 2, -Math.PI / 2);
+expectNear(fivePersonComponents.radial.x, 0, 1e-12, "N = 5 radial component x is incorrect");
+expectNear(fivePersonComponents.radial.y, 1.1755705045849463, 1e-12, "N = 5 radial component y is incorrect");
+expectNear(fivePersonComponents.tangential.x, 1.618033988749895, 1e-12, "N = 5 tangential component x is incorrect");
+expectNear(fivePersonComponents.tangential.y, 0, 1e-12, "N = 5 tangential component y is incorrect");
+expectNear(fivePersonComponents.resultant.x, 1.618033988749895, 1e-12, "N = 5 resultant x is incorrect");
+expectNear(fivePersonComponents.resultant.y, 1.1755705045849463, 1e-12, "N = 5 resultant y is incorrect");
+
+const twelvePersonComponents = velocityComponents(12, 2, 0);
+expectNear(twelvePersonComponents.radial.x, -0.5176380902050415, 1e-12, "N = 12 radial component x is incorrect");
+expectNear(twelvePersonComponents.radial.y, 0, 1e-12, "N = 12 radial component y is incorrect");
+expectNear(twelvePersonComponents.tangential.x, 0, 1e-12, "N = 12 tangential component x is incorrect");
+expectNear(twelvePersonComponents.tangential.y, 1.9318516525781366, 1e-12, "N = 12 tangential component y is incorrect");
+
+for (const count of Array.from({ length: 10 }, (_, indexValue) => indexValue + 3)) {
   for (const progress of [0, 0.25, 0.5, 0.9, 0.99]) {
     const model = pursuitModel(count, 2.5, progress);
     const positions = pursuitPositions(count, 2.5, progress);
@@ -212,6 +276,23 @@ for (const count of [3, 4, 5, 8, 12]) {
     expectNear(firstRadius, model.radius, 1e-9, `Circumradius invariant failed for N = ${count}, q = ${progress}`);
     expectNear(firstSide, 2 * model.radius * Math.sin(Math.PI / count), 1e-9, `Regular-polygon invariant failed for N = ${count}, q = ${progress}`);
     expectNear(Math.hypot(model.radialSpeed, model.tangentialSpeed), 2.5, 1e-12, `Speed decomposition failed for N = ${count}`);
+
+    const theta = -Math.PI / 2 + model.angleAdvance;
+    const components = velocityComponents(count, 2.5, theta);
+    const radialMagnitude = Math.hypot(components.radial.x, components.radial.y);
+    const tangentialMagnitude = Math.hypot(components.tangential.x, components.tangential.y);
+    const resultantMagnitude = Math.hypot(components.resultant.x, components.resultant.y);
+    const componentDotProduct = components.radial.x * components.tangential.x + components.radial.y * components.tangential.y;
+    const chord = {
+      x: positions[1].x - positions[0].x,
+      y: positions[1].y - positions[0].y,
+    };
+    const alignment = (components.resultant.x * chord.x + components.resultant.y * chord.y) / (resultantMagnitude * Math.hypot(chord.x, chord.y));
+    expectNear(radialMagnitude, 2.5 * Math.sin(Math.PI / count), 1e-12, `Radial-vector magnitude failed for N = ${count}, q = ${progress}`);
+    expectNear(tangentialMagnitude, 2.5 * Math.cos(Math.PI / count), 1e-12, `Tangential-vector magnitude failed for N = ${count}, q = ${progress}`);
+    expectNear(componentDotProduct, 0, 1e-11, `Velocity components are not orthogonal for N = ${count}, q = ${progress}`);
+    expectNear(resultantMagnitude, 2.5, 1e-12, `Resultant velocity magnitude failed for N = ${count}, q = ${progress}`);
+    expectNear(alignment, 1, 1e-12, `Resultant does not point to the next person for N = ${count}, q = ${progress}`);
   }
 }
 

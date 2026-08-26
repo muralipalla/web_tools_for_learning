@@ -21,6 +21,13 @@ const elements = {
   trailToggle: document.getElementById("trailToggle"),
   polygonToggle: document.getElementById("polygonToggle"),
   arrowToggle: document.getElementById("arrowToggle"),
+  vectorToggle: document.getElementById("vectorToggle"),
+  velocityLegend: document.getElementById("velocityLegend"),
+  radialVectorFormula: document.getElementById("radialVectorFormula"),
+  tangentialVectorFormula: document.getElementById("tangentialVectorFormula"),
+  radialVectorValue: document.getElementById("radialVectorValue"),
+  tangentialVectorValue: document.getElementById("tangentialVectorValue"),
+  resultantVectorValue: document.getElementById("resultantVectorValue"),
   elapsedReadout: document.getElementById("elapsedReadout"),
   radiusReadout: document.getElementById("radiusReadout"),
   remainingReadout: document.getElementById("remainingReadout"),
@@ -38,6 +45,11 @@ if (missingElement) {
 const context = elements.canvas.getContext("2d");
 const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 const colourPalette = ["#ff8a79", "#55dfc1", "#ffd166", "#70b7ff", "#b89cff", "#ff9bc6"];
+const velocityColours = {
+  radial: "#ffd166",
+  tangential: "#70b7ff",
+  resultant: "#ff8a79",
+};
 
 let progress = 0;
 let isPlaying = false;
@@ -71,6 +83,8 @@ function readModel(atProgress = progress) {
     halfVertexAngle,
     inwardFactor,
     tangentialFactor,
+    radialSpeed: speed * inwardFactor,
+    tangentialSpeed: speed * tangentialFactor,
     cotangent: tangentialFactor / inwardFactor,
     meetingTime,
     elapsedTime,
@@ -230,11 +244,105 @@ function drawArrow(ctx, start, end, colour) {
   ctx.restore();
 }
 
-function drawDirectionArrows(ctx, positions) {
+function velocityOverlayVisibility(radiusPixels) {
+  const currentRadiusPixels = radiusPixels * (1 - progress);
+  return clamp((currentRadiusPixels - 9) / 28, 0, 1);
+}
+
+function drawDirectionArrows(ctx, positions, radiusPixels) {
   if (!elements.arrowToggle.checked || progress >= 1) return;
+  const velocityOverlayVisible = elements.vectorToggle.checked && velocityOverlayVisibility(radiusPixels) > 0;
   positions.forEach((point, index) => {
+    if (velocityOverlayVisible && index === 0) return;
     drawArrow(ctx, point, positions[(index + 1) % positions.length], colourPalette[index % colourPalette.length]);
   });
+}
+
+function drawVelocityVector(ctx, origin, vector, colour, lineWidth) {
+  const length = Math.hypot(vector.x, vector.y);
+  if (length < 4) return;
+
+  const unitX = vector.x / length;
+  const unitY = vector.y / length;
+  const tipX = origin.x + vector.x;
+  const tipY = origin.y + vector.y;
+  const headLength = clamp(length * 0.18, 5.5, 10);
+
+  ctx.save();
+  ctx.strokeStyle = colour;
+  ctx.fillStyle = colour;
+  ctx.lineWidth = lineWidth;
+  ctx.lineCap = "round";
+  ctx.shadowColor = "rgba(0, 0, 0, 0.32)";
+  ctx.shadowBlur = 5;
+  ctx.beginPath();
+  ctx.moveTo(origin.x, origin.y);
+  ctx.lineTo(tipX, tipY);
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+  ctx.beginPath();
+  ctx.moveTo(tipX, tipY);
+  ctx.lineTo(
+    tipX - unitX * headLength - unitY * headLength * 0.48,
+    tipY - unitY * headLength + unitX * headLength * 0.48
+  );
+  ctx.lineTo(
+    tipX - unitX * headLength + unitY * headLength * 0.48,
+    tipY - unitY * headLength - unitX * headLength * 0.48
+  );
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawVelocityOverlay(ctx, model, positions, radiusPixels) {
+  if (!elements.vectorToggle.checked || progress >= 1) return;
+
+  const visibility = velocityOverlayVisibility(radiusPixels);
+  if (visibility <= 0) return;
+
+  const focusAngle = -Math.PI / 2 + angleAdvance(model);
+  const inward = { x: -Math.cos(focusAngle), y: -Math.sin(focusAngle) };
+  const tangent = { x: -Math.sin(focusAngle), y: Math.cos(focusAngle) };
+  const normalizedLength = clamp(radiusPixels * 0.32, 64, 96);
+  const radial = {
+    x: inward.x * normalizedLength * model.inwardFactor,
+    y: inward.y * normalizedLength * model.inwardFactor,
+  };
+  const tangential = {
+    x: tangent.x * normalizedLength * model.tangentialFactor,
+    y: tangent.y * normalizedLength * model.tangentialFactor,
+  };
+  const resultant = {
+    x: radial.x + tangential.x,
+    y: radial.y + tangential.y,
+  };
+  const origin = positions[0];
+  const radialTip = { x: origin.x + radial.x, y: origin.y + radial.y };
+  const tangentialTip = { x: origin.x + tangential.x, y: origin.y + tangential.y };
+  const resultantTip = { x: origin.x + resultant.x, y: origin.y + resultant.y };
+
+  ctx.save();
+  ctx.globalAlpha = visibility;
+  ctx.lineWidth = 1.2;
+  ctx.setLineDash([4, 5]);
+  ctx.strokeStyle = velocityColours.tangential;
+  ctx.globalAlpha = visibility * 0.42;
+  ctx.beginPath();
+  ctx.moveTo(radialTip.x, radialTip.y);
+  ctx.lineTo(resultantTip.x, resultantTip.y);
+  ctx.stroke();
+  ctx.strokeStyle = velocityColours.radial;
+  ctx.beginPath();
+  ctx.moveTo(tangentialTip.x, tangentialTip.y);
+  ctx.lineTo(resultantTip.x, resultantTip.y);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.globalAlpha = visibility;
+  drawVelocityVector(ctx, origin, radial, velocityColours.radial, 2.5);
+  drawVelocityVector(ctx, origin, tangential, velocityColours.tangential, 2.5);
+  drawVelocityVector(ctx, origin, resultant, velocityColours.resultant, 3.4);
+  ctx.restore();
 }
 
 function drawCentre(ctx, centreX, centreY, radiusPixels) {
@@ -356,7 +464,8 @@ function renderCanvas() {
   drawTrails(context, model, centreX, centreY, radiusPixels);
   drawCurrentPolygon(context, positions);
   drawCentre(context, centreX, centreY, radiusPixels);
-  drawDirectionArrows(context, positions);
+  drawDirectionArrows(context, positions, radiusPixels);
+  drawVelocityOverlay(context, model, positions, radiusPixels);
   drawPeople(context, model, positions, radiusPixels);
   drawCanvasLabels(context, model, canvasWidth, canvasHeight);
 }
@@ -376,7 +485,12 @@ function updateSceneDescription(model) {
         : `They are ${Math.round(progress * 100)} percent through the displayed chase and the polygon radius is ${model.radius.toFixed(2)} metres.`;
 
   const pathDescription = explanationUnlocked ? "logarithmic spiral paths" : "displayed paths";
-  elements.sceneDescription.textContent = `${model.count} numbered people form a regular polygon of circumradius ${INITIAL_RADIUS_METRES} metres. Each person moves at ${model.speed.toFixed(1)} metres per second toward the next person. ${stage} Coloured curves show their ${pathDescription} when trails are enabled.`;
+  const vectorDescription = elements.vectorToggle.checked
+    ? progress >= 1
+      ? " Velocity component arrows and their key are hidden at the meeting point because the pursuit direction is no longer defined."
+      : ` For person 1, the velocity overlay gives an inward component of ${model.radialSpeed.toFixed(2)} metres per second, a tangential component of ${model.tangentialSpeed.toFixed(2)} metres per second, and their resultant of ${model.speed.toFixed(2)} metres per second toward person 2. The arrows fade when the positions become visually indistinguishable near the centre.`
+    : "";
+  elements.sceneDescription.textContent = `${model.count} numbered people form a regular polygon of circumradius ${INITIAL_RADIUS_METRES} metres. Each person moves at ${model.speed.toFixed(1)} metres per second toward the next person. ${stage} Coloured curves show their ${pathDescription} when trails are enabled.${vectorDescription}`;
 }
 
 function updateInterface({ announce = false } = {}) {
@@ -389,6 +503,15 @@ function updateInterface({ announce = false } = {}) {
   elements.speedValue.textContent = `${model.speed.toFixed(1)} m/s`;
   elements.playbackSpeedValue.value = `${Number(elements.playbackSpeed.value).toFixed(1)}×`;
   elements.playbackSpeedValue.textContent = `${Number(elements.playbackSpeed.value).toFixed(1)}×`;
+  elements.velocityLegend.hidden = !elements.vectorToggle.checked || progress >= 1;
+  elements.radialVectorFormula.textContent = `Inward v sin(π/${model.count})`;
+  elements.tangentialVectorFormula.textContent = `Tangential v cos(π/${model.count})`;
+  elements.radialVectorValue.value = `${model.radialSpeed.toFixed(2)} m/s`;
+  elements.radialVectorValue.textContent = `${model.radialSpeed.toFixed(2)} m/s`;
+  elements.tangentialVectorValue.value = `${model.tangentialSpeed.toFixed(2)} m/s`;
+  elements.tangentialVectorValue.textContent = `${model.tangentialSpeed.toFixed(2)} m/s`;
+  elements.resultantVectorValue.value = `${model.speed.toFixed(2)} m/s`;
+  elements.resultantVectorValue.textContent = `${model.speed.toFixed(2)} m/s`;
   elements.timeProgress.value = String(Math.round(progress * 1000));
   elements.timeProgressValue.value = `${percentage}%`;
   elements.timeProgressValue.textContent = `${percentage}%`;
@@ -558,6 +681,16 @@ elements.timeProgress.addEventListener("change", () => updateInterface({ announc
 
 [elements.trailToggle, elements.polygonToggle, elements.arrowToggle].forEach((toggle) => {
   toggle.addEventListener("change", () => updateInterface());
+});
+
+elements.vectorToggle.addEventListener("change", () => {
+  updateInterface();
+  const model = readModel();
+  elements.simStatus.textContent = !elements.vectorToggle.checked
+    ? "Velocity component overlay hidden."
+    : progress >= 1
+      ? "Step back from the meeting point to view the velocity components, where the pursuit direction is defined."
+      : `Velocity components shown for person 1: inward ${model.radialSpeed.toFixed(2)}, tangential ${model.tangentialSpeed.toFixed(2)}, and resultant ${model.speed.toFixed(2)} metres per second.`;
 });
 
 document.querySelectorAll(".prediction-option").forEach((button) => {
