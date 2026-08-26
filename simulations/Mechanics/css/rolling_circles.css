@@ -161,7 +161,7 @@ h1 {
 
 .hero-visual {
   position: relative;
-  min-height: 230px;
+  min-height: 270px;
   border: 1px solid rgba(103, 232, 249, 0.16);
   border-radius: 22px;
   background: rgba(2, 10, 22, 0.46);
@@ -169,20 +169,11 @@ h1 {
   backdrop-filter: blur(8px);
 }
 
-.hero-orbit-ring,
-.hero-fixed-circle,
-.hero-roller-circle {
+.hero-fixed-circle {
   position: absolute;
   left: 50%;
   border-radius: 50%;
   transform: translateX(-50%);
-}
-
-.hero-orbit-ring {
-  width: 178px;
-  height: 178px;
-  top: 15px;
-  border: 1px dashed rgba(103, 232, 249, 0.55);
 }
 
 .hero-fixed-circle {
@@ -206,36 +197,61 @@ h1 {
   font-weight: 900;
 }
 
-.hero-roller-circle {
-  width: 40px;
-  height: 40px;
-  top: 4px;
-  background: var(--coral);
-  border: 3px solid #fecdd3;
-}
-
-.hero-roller-circle::before {
-  content: "";
-  position: absolute;
-  left: 9px;
-  top: 10px;
-  width: 5px;
-  height: 6px;
-  background: #4b1527;
-  border-radius: 50%;
-  box-shadow: 14px 0 #4b1527;
-}
-
-.hero-roller-circle::after {
-  content: "";
+.hero-orbit-motion {
   position: absolute;
   left: 50%;
-  top: 20px;
-  width: 16px;
-  height: 8px;
-  border-bottom: 2px solid #4b1527;
-  border-radius: 0 0 50% 50%;
-  transform: translateX(-50%);
+  top: 24px;
+  width: 160px;
+  height: 160px;
+  margin-left: -80px;
+  pointer-events: none;
+  animation: hero-centre-orbit 9s linear infinite;
+  will-change: transform;
+}
+
+.hero-roller-circle {
+  position: absolute;
+  left: 60px;
+  top: -20px;
+  width: 40px;
+  height: 40px;
+  background: var(--coral);
+  border: 3px solid #fecdd3;
+  border-radius: 50%;
+  animation: hero-body-roll 9s linear infinite;
+  will-change: transform;
+}
+
+.hero-gear-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  margin: -2.5px;
+  background: #4b1527;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 50%;
+  transform: rotate(var(--gear-angle)) translateY(-15px);
+}
+
+.hero-gear-dot:nth-child(1) { --gear-angle: 0deg; }
+.hero-gear-dot:nth-child(2) { --gear-angle: 36deg; }
+.hero-gear-dot:nth-child(3) { --gear-angle: 72deg; }
+.hero-gear-dot:nth-child(4) { --gear-angle: 108deg; }
+.hero-gear-dot:nth-child(5) { --gear-angle: 144deg; }
+.hero-gear-dot:nth-child(6) { --gear-angle: 180deg; }
+.hero-gear-dot:nth-child(7) { --gear-angle: 216deg; }
+.hero-gear-dot:nth-child(8) { --gear-angle: 252deg; }
+.hero-gear-dot:nth-child(9) { --gear-angle: 288deg; }
+.hero-gear-dot:nth-child(10) { --gear-angle: 324deg; }
+
+@keyframes hero-centre-orbit {
+  to { transform: rotate(1turn); }
+}
+
+@keyframes hero-body-roll {
+  to { transform: rotate(3turn); }
 }
 
 .hero-question {
@@ -1112,7 +1128,7 @@ input[type="range"] {
   }
 
   .hero-visual {
-    min-height: 220px;
+    min-height: 270px;
   }
 
   .viewer {

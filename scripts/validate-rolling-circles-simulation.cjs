@@ -238,6 +238,21 @@ expect(
 );
 expect(!/for\s*\(let\s+radius\s*=/.test(script), "Decorative background rings are still being drawn.");
 expect(!/\.hero::before\s*\{/i.test(style), "Decorative hero rings are still present.");
+expect(!html.includes("hero-orbit-ring"), "The hero must not show an orbit trajectory.");
+expect(!/\.hero-orbit-ring\b/i.test(style), "The removed hero trajectory still has styles.");
+expect((html.match(/class\s*=\s*(["'])hero-gear-dot\1/g) || []).length === 10, "The hero roller must have ten identical gear-like dots.");
+expect(/class\s*=\s*(["'])hero-orbit-motion\1[\s\S]*?class\s*=\s*(["'])hero-roller-circle\2/i.test(html), "The hero roller must move on an orbit wrapper.");
+expect(!/\.hero-roller-circle::(?:before|after)/i.test(style), "The hero smiley must be removed.");
+expect(/animation:\s*hero-centre-orbit\s+9s\s+linear\s+infinite/i.test(style), "The hero centre-orbit animation is missing.");
+expect(/animation:\s*hero-body-roll\s+9s\s+linear\s+infinite/i.test(style), "The hero rolling animation is missing.");
+expect(/@keyframes\s+hero-centre-orbit\s*\{[\s\S]*?rotate\(1turn\)/i.test(style), "The hero centre must complete one orbit per cycle.");
+expect(/@keyframes\s+hero-body-roll\s*\{[\s\S]*?rotate\(3turn\)/i.test(style), "The hero roller must add three relative turns for the 3:1 setup.");
+for (const [dotIndex, angle] of [0, 36, 72, 108, 144, 180, 216, 252, 288, 324].entries()) {
+  expect(
+    new RegExp(`\\.hero-gear-dot:nth-child\\(${dotIndex + 1}\\)\\s*\\{\\s*--gear-angle:\\s*${angle}deg;\\s*\\}`, "i").test(style),
+    `Hero gear dot ${dotIndex + 1} is not evenly spaced.`
+  );
+}
 expect(/\.radius-options\s*\{[\s\S]*?grid-template-columns:\s*repeat\(5,/i.test(style), "The five rolling-radius choices must be shown as discrete peers.");
 expect(/@media\s*\(max-width:\s*1040px\)/i.test(style), "The desktop layout needs a tablet breakpoint.");
 expect(/@media\s*\(max-width:\s*480px\)/i.test(style), "The layout needs a phone breakpoint.");
