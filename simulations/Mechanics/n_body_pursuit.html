@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Explore the N-body pursuit problem: people at the corners of a regular polygon continuously chase one another. Predict the outcome, then test it in an interactive simulation.">
+  <meta name="theme-color" content="#07131f">
+  <title>The N-Body Pursuit Problem: Where Does the Chase Lead? | Palladium</title>
+  <link rel="stylesheet" href="css/n_body_pursuit.css">
+</head>
+
+<body>
+  <header class="site-header">
+    <a class="back-link" href="../../index.html#physics">&larr; Physics</a>
+
+    <section class="hero" aria-labelledby="pageTitle">
+      <div class="hero-copy">
+        <p class="eyebrow">Physics &middot; Mechanics &middot; Continuous pursuit</p>
+        <p class="question-kicker">Every target is moving</p>
+        <h1 id="pageTitle">The N-Body Pursuit Problem: Where Does the Chase Lead?</h1>
+        <p class="hero-intro">
+          <var>N</var> people stand at the vertices of a regular polygon. At the same instant,
+          each runs at speed <var>v</var> directly toward the next person. No one aims at the
+          centre&mdash;so what path will they trace, and will the chase ever end?
+        </p>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <svg class="hero-pursuit-diagram" viewBox="0 0 320 300">
+          <defs>
+            <marker id="heroArrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+              <path d="M 0 0 L 8 4 L 0 8 Z"></path>
+            </marker>
+          </defs>
+          <path class="hero-orbit-guide" d="M160 38 L274 120 L230 254 L90 254 L46 120 Z"></path>
+          <path class="hero-chase-link link-one" d="M160 38 L274 120"></path>
+          <path class="hero-chase-link link-two" d="M274 120 L230 254"></path>
+          <path class="hero-chase-link link-three" d="M230 254 L90 254"></path>
+          <path class="hero-chase-link link-four" d="M90 254 L46 120"></path>
+          <path class="hero-chase-link link-five" d="M46 120 L160 38"></path>
+          <g class="hero-runner runner-one" transform="translate(160 38)">
+            <circle r="16"></circle><text y="5">1</text>
+          </g>
+          <g class="hero-runner runner-two" transform="translate(274 120)">
+            <circle r="16"></circle><text y="5">2</text>
+          </g>
+          <g class="hero-runner runner-three" transform="translate(230 254)">
+            <circle r="16"></circle><text y="5">3</text>
+          </g>
+          <g class="hero-runner runner-four" transform="translate(90 254)">
+            <circle r="16"></circle><text y="5">4</text>
+          </g>
+          <g class="hero-runner runner-five" transform="translate(46 120)">
+            <circle r="16"></circle><text y="5">5</text>
+          </g>
+          <circle class="hero-mystery-ring" cx="160" cy="158" r="30"></circle>
+          <text class="hero-mystery" x="160" y="169">?</text>
+        </svg>
+        <div class="hero-question">
+          <span>Each runner looks at the next</span>
+          <strong>Straight, spiral, or forever?</strong>
+        </div>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <div class="simulation-layout">
+      <section class="card simulation-card" aria-labelledby="labTitle">
+        <div class="card-heading viewer-heading">
+          <div>
+            <p class="mini-kicker">Live experiment</p>
+            <h2 id="labTitle">The polygon pursuit lab</h2>
+          </div>
+          <p>Play the chase or scrub through time</p>
+        </div>
+
+        <div
+          id="pursuitViewer"
+          class="viewer"
+          role="region"
+          tabindex="0"
+          aria-label="Two-dimensional N-body pursuit simulation. People begin at the vertices of a regular polygon and each continuously runs toward the next person. Use Space to play or pause, the arrow keys to step through time, Home to restart, and End to jump to the outcome."
+          aria-describedby="sceneDescription"
+        >
+          <p id="sceneDescription" class="sr-only">
+            A top-down view shows numbered people starting on a regular polygon with circumradius
+            10 metres. Each person moves at the selected speed toward the next person around the
+            polygon. Optional trails reveal their paths, a connecting polygon shows their changing
+            separation, and arrows show their instantaneous directions of motion.
+          </p>
+          <canvas id="pursuitCanvas" aria-hidden="true"></canvas>
+          <div class="viewer-key" aria-hidden="true">
+            <span><i class="key-dot runner-dot"></i>People</span>
+            <span><i class="key-line trail-line"></i>Paths</span>
+          </div>
+        </div>
+
+        <div class="scrubber-row">
+          <label for="timeProgress">
+            Chase progress
+            <output id="timeProgressValue" for="timeProgress">0%</output>
+          </label>
+          <input id="timeProgress" type="range" min="0" max="1000" step="1" value="0">
+          <div class="scrubber-labels" aria-hidden="true"><span>Start</span><span>Halfway</span><span>End</span></div>
+        </div>
+
+        <div class="status-strip" aria-label="Live pursuit-motion readings">
+          <div class="status-item">
+            <span>Elapsed time</span>
+            <strong id="elapsedReadout">0.00 s</strong>
+          </div>
+          <div class="status-item">
+            <span>Radius from centre</span>
+            <strong id="radiusReadout">10.00 m</strong>
+          </div>
+          <div class="status-item accent-status">
+            <span>Time to outcome</span>
+            <strong id="remainingReadout">Predict first</strong>
+          </div>
+        </div>
+      </section>
+
+      <aside class="card side-panel" aria-label="Prediction, pursuit controls, and observation guide">
+        <section class="panel-section prediction-section" aria-labelledby="predictionTitle">
+          <p class="mini-kicker">Call it before they run</p>
+          <h2 id="predictionTitle">What shape will each path make?</h2>
+          <p class="prediction-question">
+            Everyone always faces a neighbour, and that neighbour is moving too. Make a prediction
+            before revealing the mathematics.
+          </p>
+          <div class="prediction-list" aria-label="Choose a prediction">
+            <button class="prediction-option" type="button" data-prediction="straight" aria-pressed="false" aria-controls="explanationCard">
+              <span>A</span>Straight lines to the centre
+            </button>
+            <button class="prediction-option" type="button" data-prediction="spiral" aria-pressed="false" aria-controls="explanationCard">
+              <span>B</span>Spirals that meet
+            </button>
+            <button class="prediction-option" type="button" data-prediction="forever" aria-pressed="false" aria-controls="explanationCard">
+              <span>C</span>An endless chase
+            </button>
+            <button class="prediction-option unsure" type="button" data-prediction="unsure" aria-pressed="false" aria-controls="explanationCard">
+              I&rsquo;m not sure&mdash;let me observe
+            </button>
+          </div>
+          <p id="predictionFeedback" class="prediction-feedback" role="status" aria-live="polite">
+            The controls are ready. Commit to an idea, then test it in the lab.
+          </p>
+        </section>
+
+        <section class="panel-section controls-section" aria-labelledby="controlsTitle">
+          <div class="section-heading">
+            <div>
+              <p class="mini-kicker">Experiment controls</p>
+              <h2 id="controlsTitle">Set up the chase</h2>
+            </div>
+            <span class="fixed-radius">Initial radius <strong>10 m</strong></span>
+          </div>
+
+          <div class="control-group">
+            <label for="nCount">
+              Number of people, <var>N</var>
+              <output id="nCountValue" for="nCount">5 people</output>
+            </label>
+            <input id="nCount" type="range" min="3" max="12" step="1" value="5">
+            <div class="range-labels" aria-hidden="true"><span>3</span><span>12</span></div>
+          </div>
+
+          <div class="control-group">
+            <label for="speed">
+              Running speed, <var>v</var>
+              <output id="speedValue" for="speed">2.0 m/s</output>
+            </label>
+            <input id="speed" type="range" min="0.5" max="5" step="0.5" value="2">
+            <div class="range-labels" aria-hidden="true"><span>0.5 m/s</span><span>5 m/s</span></div>
+          </div>
+
+          <div class="control-group compact-control">
+            <label for="playbackSpeed">
+              Playback rate
+              <output id="playbackSpeedValue" for="playbackSpeed">1&times;</output>
+            </label>
+            <input id="playbackSpeed" type="range" min="0.5" max="4" step="0.5" value="1">
+          </div>
+
+          <div class="button-grid">
+            <button id="playPauseBtn" type="button" aria-pressed="false">Start the chase</button>
+            <button id="restartBtn" class="secondary" type="button">Restart</button>
+            <button id="stepBtn" class="secondary full-width" type="button">Step forward 5%</button>
+          </div>
+
+          <fieldset class="display-options">
+            <legend>Diagram options</legend>
+            <label class="toggle-row" for="trailToggle">
+              <input id="trailToggle" type="checkbox" checked>
+              <span class="toggle-control" aria-hidden="true"></span>
+              <span>Spiral trails</span>
+            </label>
+            <label class="toggle-row" for="polygonToggle">
+              <input id="polygonToggle" type="checkbox" checked>
+              <span class="toggle-control" aria-hidden="true"></span>
+              <span>Current polygon</span>
+            </label>
+            <label class="toggle-row" for="arrowToggle">
+              <input id="arrowToggle" type="checkbox" checked>
+              <span class="toggle-control" aria-hidden="true"></span>
+              <span>Pursuit arrows</span>
+            </label>
+          </fieldset>
+        </section>
+
+        <section class="panel-section watch-section" aria-labelledby="watchTitle">
+          <p class="mini-kicker">Three things to notice</p>
+          <h2 id="watchTitle">Watch the symmetry</h2>
+          <ol class="watch-list">
+            <li><span>01</span>The shape stays a <strong>regular polygon</strong> as it shrinks and turns.</li>
+            <li><span>02</span>Each velocity points at a neighbour, with both <strong>inward</strong> and <strong>sideways</strong> components.</li>
+            <li><span>03</span>Changing <var>v</var> changes the clock, but not the <strong>geometric path</strong>.</li>
+          </ol>
+        </section>
+
+        <p id="simStatus" class="sr-only" aria-live="polite"></p>
+      </aside>
+    </div>
+
+    <section id="explanationGate" class="explanation-gate" aria-labelledby="explanationGateTitle">
+      <div>
+        <p class="mini-kicker">Reasoning locked</p>
+        <h2 id="explanationGateTitle">Make a prediction to reveal the path.</h2>
+      </div>
+      <p>
+        Choose one response in <strong>Call it before they run</strong>. The full explanation,
+        derivation, timing equation, and distance result will appear after you commit.
+      </p>
+    </section>
+
+    <section id="explanationCard" class="explanation-card" aria-labelledby="whyTitle" hidden>
+      <div class="explanation-heading">
+        <div>
+          <p class="eyebrow">Resolve the chase</p>
+          <h2 id="whyTitle">A constant inward component guarantees a meeting.</h2>
+        </div>
+        <p>
+          The direction to the next person always makes the same angle with the inward radius.
+          Every velocity therefore splits into an unchanging radial speed and a tangential speed.
+          The inward part closes the radius in finite time; the sideways part bends every path
+          into a logarithmic spiral.
+        </p>
+      </div>
+
+      <div class="concept-grid">
+        <article class="concept-card">
+          <span class="concept-number">01</span>
+          <div>
+            <h3>Symmetry survives</h3>
+            <p>
+              Rotating the whole scene by 2&pi;/<var>N</var> swaps every person with the next.
+              So the group must remain a smaller, rotated regular polygon throughout the chase.
+            </p>
+          </div>
+        </article>
+        <article class="concept-card highlight-card">
+          <span class="concept-number">02</span>
+          <div>
+            <h3>Split the velocity</h3>
+            <p>
+              With &alpha; = &pi;/<var>N</var>, the inward radial component is
+              <strong><var>v</var> sin &alpha;</strong>, while the tangential component is
+              <strong><var>v</var> cos &alpha;</strong>.
+            </p>
+          </div>
+        </article>
+        <article class="concept-card">
+          <span class="concept-number">03</span>
+          <div>
+            <h3>Radius falls steadily</h3>
+            <p>
+              Because the inward speed is constant,
+              <strong><var>R</var>(<var>t</var>) = R<sub>0</sub> &minus; <var>v</var> sin(&pi;/<var>N</var>)<var>t</var></strong>.
+              The radius reaches zero instead of merely approaching it.
+            </p>
+          </div>
+        </article>
+      </div>
+
+      <div class="formula-row">
+        <article class="formula-block">
+          <span>Meeting time</span>
+          <strong><var>T</var> = <span class="fraction"><i>R<sub>0</sub></i><i><var>v</var> sin(&pi;/<var>N</var>)</i></span></strong>
+          <p>Faster runners meet sooner. More people make the inward component smaller, so the chase lasts longer.</p>
+        </article>
+        <article class="formula-block distance-formula">
+          <span>Path length each person runs</span>
+          <strong><var>L</var> = <var>vT</var> = <span class="fraction"><i>R<sub>0</sub></i><i>sin(&pi;/<var>N</var>)</i></span></strong>
+          <p>The speed cancels: changing <var>v</var> changes the duration, not the length or shape of the path.</p>
+        </article>
+      </div>
+
+      <div class="spiral-note">
+        <div>
+          <span>Path equation</span>
+          <strong><var>R</var> = R<sub>0</sub> e<sup>&minus;tan(&pi;/<var>N</var>)&Delta;&theta;</sup></strong>
+        </div>
+        <p>
+          Here &Delta;&theta; is the angle swept from each person&rsquo;s own starting radius. This is a
+          <strong>logarithmic spiral</strong>. Near the meeting point the group turns ever
+          faster while its radius becomes ever smaller&mdash;an infinite amount of turning squeezed
+          into a finite time and distance.
+        </p>
+      </div>
+
+      <p class="reality-note">
+        <strong>Model rules:</strong> all people start simultaneously at the vertices of a perfect
+        regular polygon, move at constant speed, turn continuously with no delay, and always pursue
+        the next person in the same direction around the polygon. The initial circumradius is fixed at 10 m.
+      </p>
+    </section>
+  </main>
+
+  <script type="module" src="js/n_body_pursuit.mjs"></script>
+</body>
+</html>
