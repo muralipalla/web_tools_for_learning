@@ -666,6 +666,85 @@ a {
   margin: 0;
 }
 
+.share-panel {
+  max-width: 720px;
+  margin: 0 auto 24px;
+}
+
+.share-panel .share-title {
+  color: #0f172a;
+  font-size: 1.1rem;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+}
+
+.share-panel .share-copy {
+  margin-top: 5px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.share-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.share-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-width: 132px;
+  padding: 10px 15px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 850;
+  text-decoration: none;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.14);
+  transition: transform 120ms ease, filter 120ms ease, box-shadow 120ms ease;
+}
+
+.share-link:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.2);
+}
+
+.share-linkedin {
+  background: #0a66c2;
+}
+
+.share-facebook {
+  background: #1877f2;
+}
+
+.share-x {
+  background: #111827;
+}
+
+.share-mark {
+  display: inline-grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border-radius: 5px;
+  color: currentColor;
+  background: rgba(255, 255, 255, 0.16);
+  font-family: Arial, sans-serif;
+  font-size: 0.92rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.share-mark-x {
+  font-size: 0.78rem;
+}
+
 /* Homepage-only midnight theme. Account and dashboard pages keep their light canvas. */
 .home-page {
   --bg: #06162f;
@@ -781,6 +860,20 @@ a {
 .home-page .site-footer a:hover,
 .home-page .site-footer a:focus-visible {
   color: #bae6fd;
+}
+
+.home-page .share-panel .share-title {
+  color: #f8fafc;
+}
+
+.home-page .share-panel .share-copy {
+  color: #9fb2cc;
+}
+
+.home-page .site-footer .share-link,
+.home-page .site-footer .share-link:hover,
+.home-page .site-footer .share-link:focus-visible {
+  color: white;
 }
 
 .home-page .palladium-palla {
